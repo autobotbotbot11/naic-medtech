@@ -1,0 +1,372 @@
+sheet,row,field,kind,input_type,normal_value,notes,template,mapped_r,map_status
+URINE- Clinical Microscopy,2,PATIENT INFORMATION,section_header,,,,URINE,,
+URINE- Clinical Microscopy,3,Name,patient_header,Manual Entry,,,URINE,,
+URINE- Clinical Microscopy,4,Age,patient_header,Manual Entry,,,URINE,,
+URINE- Clinical Microscopy,5,Sex,patient_header,Predefined Selection,,,URINE,,
+URINE- Clinical Microscopy,6,Date/Time,patient_header,Predefined Selection,,,URINE,,
+URINE- Clinical Microscopy,7,Examination,patient_header,Predefined Selection,,,URINE,,
+URINE- Clinical Microscopy,8,Requesting Physician,patient_header,Predefined Selection,,,URINE,,
+URINE- Clinical Microscopy,9,Room,patient_header,Predefined Selection,,,URINE,,
+URINE- Clinical Microscopy,10,Case Number,patient_header,Manual Entry,,,URINE,,
+URINE- Clinical Microscopy,11,MACROSCOPIC FINDING,section_header,,,,URINE,,
+URINE- Clinical Microscopy,12,Color,test_input,Predefined Selection,,,URINE,R1,mapped
+URINE- Clinical Microscopy,13,Transparency,test_input,Predefined Selection,,,URINE,R2,mapped
+URINE- Clinical Microscopy,14,Reaction,test_input,Predefined Selection,,,URINE,R3,mapped
+URINE- Clinical Microscopy,15,Specific Gravity,test_input,Predefined Selection,,,URINE,R4,mapped
+URINE- Clinical Microscopy,16,CLINICAL FINDING,section_header,,,,URINE,,
+URINE- Clinical Microscopy,17,Sugar,test_input,Predefined Selection,,,URINE,R5,mapped
+URINE- Clinical Microscopy,18,Protein,test_input,Predefined Selection,,,URINE,R6,mapped
+URINE- Clinical Microscopy,19,MICROSCOPIC FINDING,section_header,,,,URINE,,
+URINE- Clinical Microscopy,20,White Blood Cell,test_input,Manual Entry,,,URINE,R9,mapped
+URINE- Clinical Microscopy,21,Red Blood Cell,test_input,Manual Entry,,,URINE,R8,mapped
+URINE- Clinical Microscopy,22,Epithelial Cell,test_input,Predefined Selection,,,URINE,R10,mapped
+URINE- Clinical Microscopy,23,Amorphous Urates,test_input,Predefined Selection,,,URINE,R11,mapped
+URINE- Clinical Microscopy,24,Amorphous Phosphate,test_input,Predefined Selection,,,URINE,R12,mapped
+URINE- Clinical Microscopy,25,Calcium Oxalate,test_input,Predefined Selection,,,URINE,R13,mapped
+URINE- Clinical Microscopy,26,Uric Acid Crystal,test_input,Predefined Selection,,,URINE,R14,mapped
+URINE- Clinical Microscopy,27,Mucus Thread,test_input,Predefined Selection,,,URINE,R15,mapped
+URINE- Clinical Microscopy,28,Bacteria,test_input,Predefined Selection,,,URINE,R16,mapped
+URINE- Clinical Microscopy,30,Others,other_input,Manual Entry,,,URINE,,
+URINE- Clinical Microscopy,32,Pregnancy Test,test_input,Predefined Selection,,,URINE,R7,mapped
+URINE- Clinical Microscopy,34,Medical Technologist,signatory,Predefined Selection,,,URINE,,
+URINE- Clinical Microscopy,35,Medical Technologist,signatory,Predefined Selection,,,URINE,,
+URINE- Clinical Microscopy,36,Pathologist,signatory,Fixed including the signature,,,URINE,,
+SEROLOGY,2,PATIENT INFORMATION,section_header,,,,SEROLOGY,,
+SEROLOGY,3,Name,patient_header,Manual Entry,,,SEROLOGY,,
+SEROLOGY,4,Age,patient_header,Manual Entry,,,SEROLOGY,,
+SEROLOGY,5,Sex,patient_header,Predefined Selection,,,SEROLOGY,,
+SEROLOGY,6,Date/Time,patient_header,Predefined Selection,,,SEROLOGY,,
+SEROLOGY,7,Examination,patient_header,Predefined Selection,,,SEROLOGY,,
+SEROLOGY,8,Requesting Physician,patient_header,Predefined Selection,,,SEROLOGY,,
+SEROLOGY,9,Room,patient_header,Predefined Selection,,,SEROLOGY,,
+SEROLOGY,10,Case Number,patient_header,Manual Entry,,,SEROLOGY,,
+SEROLOGY,11,TYPHIDOT,section_header,,,,SEROLOGY,,
+SEROLOGY,12,IgM,test_input,Predefined Selection,,,SEROLOGY,R1,mapped
+SEROLOGY,13,IgG,test_input,Predefined Selection,,,SEROLOGY,R2,mapped
+SEROLOGY,14,DENGUE TEST,section_header,,,,SEROLOGY,,
+SEROLOGY,15,Ns1Ag,test_input,Predefined Selection,,,SEROLOGY,R3,mapped
+SEROLOGY,16,IgM,test_input,Predefined Selection,,,SEROLOGY,R4,mapped
+SEROLOGY,17,IgG,test_input,Predefined Selection,,,SEROLOGY,R5,mapped
+SEROLOGY,18,MALARIAL TEST,section_header,,,,SEROLOGY,,
+SEROLOGY,19,ANTI-PLASMODIUM FALCIFARUM,test_input,Predefined Selection,,,SEROLOGY,R6,mapped
+SEROLOGY,20,ANTI PLASMODIUM VIVAX,test_input,Predefined Selection,,,SEROLOGY,R7,mapped
+SEROLOGY,22,HbsAg SCREENING:,test_input,Predefined Selection,,,SEROLOGY,R9,mapped
+SEROLOGY,23,VDRL:,test_input,Predefined Selection,,,SEROLOGY,R8,mapped
+SEROLOGY,24,ANTI-HCV:,test_input,Predefined Selection,,,SEROLOGY,R1,mapped
+SEROLOGY,25,ASO TITER:,test_input,Predefined Selection,,,SEROLOGY,R11,mapped
+SEROLOGY,27,OTHERS,other_input,Manual Entry,,,SEROLOGY,,
+SEROLOGY,29,Medical Technologist,signatory,Predefined Selection,,,SEROLOGY,,
+SEROLOGY,30,Medical Technologist,signatory,Predefined Selection,,,SEROLOGY,,
+SEROLOGY,31,Pathologist,signatory,Fixed including the signature,,,SEROLOGY,,
+SEMEN - Clinical Microscopy,2,PATIENT INFORMATION,section_header,,,,SEMEN,,
+SEMEN - Clinical Microscopy,3,Name,patient_header,Manual Entry,,,SEMEN,,
+SEMEN - Clinical Microscopy,4,Age,patient_header,Manual Entry,,,SEMEN,,
+SEMEN - Clinical Microscopy,5,Sex,patient_header,Predefined Selection,,,SEMEN,,
+SEMEN - Clinical Microscopy,6,Date,patient_header,Predefined Selection,,,SEMEN,,
+SEMEN - Clinical Microscopy,7,Examination,patient_header,Predefined Selection,,,SEMEN,,
+SEMEN - Clinical Microscopy,8,Requesting Physician,patient_header,Predefined Selection,,,SEMEN,,
+SEMEN - Clinical Microscopy,9,Room,patient_header,Predefined Selection,,,SEMEN,,
+SEMEN - Clinical Microscopy,10,Case Number,patient_header,Manual Entry,,,SEMEN,,
+SEMEN - Clinical Microscopy,12,TIME COLLECTED:,test_input,Manual Entry,,,SEMEN,R1,mapped
+SEMEN - Clinical Microscopy,13,TIME RECEIVED:,test_input,Manual Entry,,,SEMEN,R2,mapped
+SEMEN - Clinical Microscopy,14,TOTAL VOLUME:,test_input,Manual Entry,,,SEMEN,R3,mapped
+SEMEN - Clinical Microscopy,15,LIQUEFACTION TIME:,test_input,Manual Entry,,,SEMEN,R4,mapped
+SEMEN - Clinical Microscopy,16,MOTILITY,section_header,,,,SEMEN,,
+SEMEN - Clinical Microscopy,17,MOTILE:,test_input,Manual Entry,,,SEMEN,R5,mapped
+SEMEN - Clinical Microscopy,18,NON MOTILE:,test_input,Manual Entry,,,SEMEN,R6,mapped
+SEMEN - Clinical Microscopy,19,MORPHOLOGY,section_header,,,,SEMEN,,
+SEMEN - Clinical Microscopy,20,NORMAL,test_input,Manual Entry,,,SEMEN,R7,mapped
+SEMEN - Clinical Microscopy,21,ABNORMAL,test_input,Manual Entry,,,SEMEN,R8,mapped
+SEMEN - Clinical Microscopy,22,SPERM COUNT,test_input,,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,,SEMEN,R1,mapped
+SEMEN - Clinical Microscopy,23,RESULT,test_input,Manual Entry,,,SEMEN,R9,mapped
+SEMEN - Clinical Microscopy,24,OTHERS,other_input,,,,SEMEN,,
+SEMEN - Clinical Microscopy,25,WBC,test_input,Manual Entry,,,SEMEN,R1,mapped
+SEMEN - Clinical Microscopy,26,RBC,test_input,Manual Entry,,,SEMEN,R1,mapped
+SEMEN - Clinical Microscopy,27,EPITHELIAL CELL,test_input,Predefined Selection,,,SEMEN,R12,mapped
+SEMEN - Clinical Microscopy,29,Medical Technologist,signatory,Predefined Selection,,,SEMEN,,
+SEMEN - Clinical Microscopy,30,Medical Technologist,signatory,Predefined Selection,,,SEMEN,,
+SEMEN - Clinical Microscopy,31,Pathologist,signatory,Fixed including the signature,,,SEMEN,,
+OGTT - Blood Chemistry,2,PATIENT INFORMATION,section_header,,,,OGTT,,
+OGTT - Blood Chemistry,3,Name,patient_header,Manual Entry,,,OGTT,,
+OGTT - Blood Chemistry,4,Age,patient_header,Manual Entry,,,OGTT,,
+OGTT - Blood Chemistry,5,Sex,patient_header,Predefined Selection,,,OGTT,,
+OGTT - Blood Chemistry,6,Date,patient_header,Predefined Selection,,,OGTT,,
+OGTT - Blood Chemistry,7,Examination,patient_header,Predefined Selection,,,OGTT,,
+OGTT - Blood Chemistry,8,Requesting Physician,patient_header,Predefined Selection,,,OGTT,,
+OGTT - Blood Chemistry,9,Room,patient_header,Predefined Selection,,,OGTT,,
+OGTT - Blood Chemistry,10,Case Number,patient_header,Manual Entry,,,OGTT,,
+OGTT - Blood Chemistry,11,50G ORAL GLUCOSE TOLERANCE,section_header,,,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,OGTT,,
+OGTT - Blood Chemistry,12,1ST HOUR,test_input,Manual Entry,< 200 mg/dl,,OGTT,R1,mapped
+OGTT - Blood Chemistry,13,2ND HOUR,test_input,Manual Entry,< 140 mg/d,,OGTT,R2,mapped
+OGTT - Blood Chemistry,14,75G ORAL GLUCOSE TOLERANCE,section_header,,,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,OGTT,,
+OGTT - Blood Chemistry,15,FASTING BLOOD SUGAR,test_input,Manual Entry,70.27-124.32 mg/dl,,OGTT,R3,mapped
+OGTT - Blood Chemistry,16,1ST HOUR,test_input,Manual Entry,< 200 mg/dl,,OGTT,R4,mapped
+OGTT - Blood Chemistry,17,2ND HOUR,test_input,Manual Entry,< 140 mg/dl,,OGTT,R5,mapped
+OGTT - Blood Chemistry,18,100G ORAL GLUCOSE TOLERANCE,section_header,,,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,OGTT,,
+OGTT - Blood Chemistry,19,FASTING BLOOD SUGAR,test_input,Manual Entry,70.27-124.32 mg/dl,,OGTT,R6,mapped
+OGTT - Blood Chemistry,20,1ST HOUR,test_input,Manual Entry,< 180 mg/dl,,OGTT,R7,mapped
+OGTT - Blood Chemistry,21,2ND HOUR,test_input,Manual Entry,< 155 mg/dl,,OGTT,R8,mapped
+OGTT - Blood Chemistry,22,3RD HOUR,test_input,Manual Entry,< 140 mg/dl,,OGTT,R9,mapped
+OGTT - Blood Chemistry,24,2 HOURS POST PRANDIAL,test_input,Manual Entry,,,OGTT,R10,mapped
+OGTT - Blood Chemistry,25,50 G ORAL GLUCOSE CHALLENGE,test_input,Manual Entry,,,OGTT,R11,mapped
+OGTT - Blood Chemistry,27,Others,other_input,Manual Entry,,,OGTT,,
+OGTT - Blood Chemistry,29,Medical Technologist,signatory,Predefined Selection,,,OGTT,,
+OGTT - Blood Chemistry,30,Medical Technologist,signatory,Predefined Selection,,,OGTT,,
+OGTT - Blood Chemistry,31,Pathologist,signatory,Fixed including the signature,,,OGTT,,
+MICROBIOLOGY,2,PATIENT INFORMATION,section_header,,,,MICROBIOLOGY,,
+MICROBIOLOGY,3,Name,patient_header,Manual Entry,,,MICROBIOLOGY,,
+MICROBIOLOGY,4,Age,patient_header,Manual Entry,,,MICROBIOLOGY,,
+MICROBIOLOGY,5,Sex,patient_header,Predefined Selection,,,MICROBIOLOGY,,
+MICROBIOLOGY,6,Date,patient_header,Predefined Selection,,,MICROBIOLOGY,,
+MICROBIOLOGY,7,Examination,patient_header,Predefined Selection,,,MICROBIOLOGY,,
+MICROBIOLOGY,8,Requesting Physician,patient_header,Predefined Selection,,,MICROBIOLOGY,,
+MICROBIOLOGY,9,Room,patient_header,Predefined Selection,,,MICROBIOLOGY,,
+MICROBIOLOGY,10,Case Number,patient_header,Manual Entry,,,MICROBIOLOGY,,
+MICROBIOLOGY,12,RESULT,test_input,Predefined Selection,,,MICROBIOLOGY,,unmapped
+MICROBIOLOGY,14,Medical Technologist,signatory,Predefined Selection,,,MICROBIOLOGY,,
+MICROBIOLOGY,15,Medical Technologist,signatory,Predefined Selection,,,MICROBIOLOGY,,
+MICROBIOLOGY,16,Pathologist,signatory,Fixed including the signature,,,MICROBIOLOGY,,
+HEMATOLOGY,2,PATIENT INFORMATION,section_header,,,,HEMATOLOGY,,
+HEMATOLOGY,3,Name,patient_header,Manual Entry,,,HEMATOLOGY,,
+HEMATOLOGY,4,Age,patient_header,Manual Entry,,,HEMATOLOGY,,
+HEMATOLOGY,5,Sex,patient_header,Predefined Selection,,,HEMATOLOGY,,
+HEMATOLOGY,6,Date,patient_header,Predefined Selection,,,HEMATOLOGY,,
+HEMATOLOGY,7,Examination,patient_header,Predefined Selection,,,HEMATOLOGY,,
+HEMATOLOGY,8,Requesting Physician,patient_header,Predefined Selection,,,HEMATOLOGY,,
+HEMATOLOGY,9,Room,patient_header,Predefined Selection,,,HEMATOLOGY,,
+HEMATOLOGY,10,Case Number,patient_header,Manual Entry,,,HEMATOLOGY,,
+HEMATOLOGY,12,RBC COUNT (M),test_input,Manual Entry,4.6 - 6.2 X 1012/L,,HEMATOLOGY,R1,mapped
+HEMATOLOGY,13,RBC COUNT (F),test_input,Manual Entry,4.2 - 5.4 X 1012/L,,HEMATOLOGY,R1,mapped
+HEMATOLOGY,14,WBC COUNT,test_input,Manual Entry,5.0 - 10.0 X 109/L,,HEMATOLOGY,R3,mapped
+HEMATOLOGY,15,HEMOGLOBIN (M),test_input,Manual Entry,140-180 g/L,,HEMATOLOGY,R4,mapped
+HEMATOLOGY,16,HEMOGLOBIN (F),test_input,Manual Entry,120 - 160 g/L,,HEMATOLOGY,R1,mapped
+HEMATOLOGY,17,HEMATOCRIT (M),test_input,Manual Entry,0.40-0.54 /L,,HEMATOLOGY,R6,mapped
+HEMATOLOGY,18,HEMATOCRIT (F),test_input,Manual Entry,0.37 - 0.42 /L,,HEMATOLOGY,R1,mapped
+HEMATOLOGY,19,PLATELET COUNT,test_input,Manual Entry,150 - 450 X 109/L,,HEMATOLOGY,R8,mapped
+HEMATOLOGY,20,CLOTTING TIME,test_input,Manual Entry,1 - 6 minutes,,HEMATOLOGY,R9,mapped
+HEMATOLOGY,21,BLEEDING TIME,test_input,Manual Entry,1 - 6 minutes,,HEMATOLOGY,R10,mapped
+HEMATOLOGY,22,BLOOD TYPING,test_input,Predefined Selection,,,HEMATOLOGY,R11,mapped
+HEMATOLOGY,24,SEGMENTERS,test_input,Manual Entry,0.50 - 0.70,,HEMATOLOGY,R12,mapped
+HEMATOLOGY,25,LYMPHOCYTES,test_input,Manual Entry,0.25 - 0.40,,HEMATOLOGY,R13,mapped
+HEMATOLOGY,26,MONOCYTES,test_input,Manual Entry,0.03 - 0.08,,HEMATOLOGY,R14,mapped
+HEMATOLOGY,27,EOSINOPHILS,test_input,Manual Entry,0.01 - 0.04,,HEMATOLOGY,R15,mapped
+HEMATOLOGY,28,STAB,test_input,Manual Entry,0 - 0.05,,HEMATOLOGY,R16,mapped
+HEMATOLOGY,29,E.S.R . (M),test_input,Manual Entry,0 - 10 mm/hr,,HEMATOLOGY,R17,mapped
+HEMATOLOGY,30,E.S.R . (F),test_input,Manual Entry,0 - 20 mm/hr,,HEMATOLOGY,R1,mapped
+HEMATOLOGY,32,OTHERS,other_input,Manual Entry,,,HEMATOLOGY,,
+HEMATOLOGY,34,Medical Technologist,signatory,Predefined Selection,,,HEMATOLOGY,,
+HEMATOLOGY,35,Medical Technologist,signatory,Predefined Selection,,,HEMATOLOGY,,
+HEMATOLOGY,36,Pathologist,signatory,Fixed including the signature,,,HEMATOLOGY,,
+HBA1C - Blood Chemistry,2,PATIENT INFORMATION,section_header,,,,HBA1C,,
+HBA1C - Blood Chemistry,3,Name,patient_header,Manual Entry,,,HBA1C,,
+HBA1C - Blood Chemistry,4,Age,patient_header,Manual Entry,,,HBA1C,,
+HBA1C - Blood Chemistry,5,Sex,patient_header,Predefined Selection,,,HBA1C,,
+HBA1C - Blood Chemistry,6,Date,patient_header,Predefined Selection,,,HBA1C,,
+HBA1C - Blood Chemistry,7,Examination,patient_header,Predefined Selection,,,HBA1C,,
+HBA1C - Blood Chemistry,8,Requesting Physician,patient_header,Predefined Selection,,,HBA1C,,
+HBA1C - Blood Chemistry,9,Room,patient_header,Predefined Selection,,,HBA1C,,
+HBA1C - Blood Chemistry,10,Case Number,patient_header,Manual Entry,,,HBA1C,,
+HBA1C - Blood Chemistry,12,Result,test_input,Manual Entry,NORMAL VALUE = 4.0 - 5.6 %,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,HBA1C,R1,mapped
+HBA1C - Blood Chemistry,14,Medical Technologist,signatory,Predefined Selection,,,HBA1C,,
+HBA1C - Blood Chemistry,15,Medical Technologist,signatory,Predefined Selection,,,HBA1C,,
+HBA1C - Blood Chemistry,16,Pathologist,signatory,Fixed including the signature,,,HBA1C,,
+FECALYSIS - Clinical Microscopy,2,PATIENT INFORMATION,section_header,,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,3,Name,patient_header,Manual Entry,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,4,Age,patient_header,Manual Entry,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,5,Sex,patient_header,Predefined Selection,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,6,Date,patient_header,Predefined Selection,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,7,Examination,patient_header,Predefined Selection,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,8,Requesting Physician,patient_header,Predefined Selection,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,9,Room,patient_header,Predefined Selection,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,10,Case Number,patient_header,Manual Entry,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,11,MACROSCOPIC FINDING,section_header,,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,12,COLOR,test_input,Predefined Selection,,,FECALYSIS,R1,mapped
+FECALYSIS - Clinical Microscopy,13,CONSISTENCY,test_input,Predefined Selection,,,FECALYSIS,R2,mapped
+FECALYSIS - Clinical Microscopy,14,FECAL OCCULT BLOOD,test_input,Predefined Selection,,,FECALYSIS,R3,mapped
+FECALYSIS - Clinical Microscopy,15,MICROSCOPIC FINDING,section_header,,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,16,PUS,test_input,Manual Entry,,,FECALYSIS,R4,mapped
+FECALYSIS - Clinical Microscopy,17,RED BLOOD CELL,test_input,Manual Entry,,,FECALYSIS,R5,mapped
+FECALYSIS - Clinical Microscopy,18,BUDDING YEAST,test_input,Predefined Selection,,,FECALYSIS,R6,mapped
+FECALYSIS - Clinical Microscopy,19,BACTERIA,test_input,Predefined Selection,,,FECALYSIS,R7,mapped
+FECALYSIS - Clinical Microscopy,20,FAT GLOBULES,test_input,Predefined Selection,,,FECALYSIS,R8,mapped
+FECALYSIS - Clinical Microscopy,21,MICROSCOPIC FINDING,section_header,,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,22,PARASITES,test_input,Predefined Selection,,,FECALYSIS,R9,mapped
+FECALYSIS - Clinical Microscopy,23,AMOEBA,test_input,Predefined Selection,,,FECALYSIS,R10,mapped
+FECALYSIS - Clinical Microscopy,25,OTHERS,other_input,Predefined Selection,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,27,Medical Technologist,signatory,Predefined Selection,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,28,Medical Technologist,signatory,Predefined Selection,,,FECALYSIS,,
+FECALYSIS - Clinical Microscopy,29,Pathologist,signatory,Fixed including the signature,Please double check the name,,FECALYSIS,,
+CARDIACI - Serology,2,PATIENT INFORMATION,section_header,,,,CARDIACI,,
+CARDIACI - Serology,3,Name,patient_header,Manual Entry,,,CARDIACI,,
+CARDIACI - Serology,4,Age,patient_header,Manual Entry,,,CARDIACI,,
+CARDIACI - Serology,5,Sex,patient_header,Predefined Selection,,,CARDIACI,,
+CARDIACI - Serology,6,Date,patient_header,Predefined Selection,,,CARDIACI,,
+CARDIACI - Serology,7,Examination,patient_header,Predefined Selection,,,CARDIACI,,
+CARDIACI - Serology,8,Requesting Physician,patient_header,Predefined Selection,,,CARDIACI,,
+CARDIACI - Serology,9,Room,patient_header,Predefined Selection,,,CARDIACI,,
+CARDIACI - Serology,10,Case Number,patient_header,Manual Entry,,,CARDIACI,,
+CARDIACI - Serology,12,CK-MB,test_input,Manual Entry,0.0 - 4.3 ng / mL,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,CARDIACI,R1,mapped
+CARDIACI - Serology,13,TROPONIN - I,test_input,Manual Entry,0.0 - 0.02 ng /mL,,CARDIACI,R3,mapped
+CARDIACI - Serology,14,BNP,test_input,Manual Entry,0.0 - 100 pg / mL,,CARDIACI,R4,mapped
+CARDIACI - Serology,16,Medical Technologist,signatory,Predefined Selection,,,CARDIACI,,
+CARDIACI - Serology,17,Medical Technologist,signatory,Predefined Selection,,,CARDIACI,,
+CARDIACI - Serology,18,Pathologist,signatory,Fixed including the signature,,,CARDIACI,,
+BCMALE - Blood Chemistry,2,PATIENT INFORMATION,section_header,,,,BCMALE,,
+BCMALE - Blood Chemistry,3,Name,patient_header,Manual Entry,,,BCMALE,,
+BCMALE - Blood Chemistry,4,Age,patient_header,Manual Entry,,,BCMALE,,
+BCMALE - Blood Chemistry,5,Sex,patient_header,Predefined Selection,,,BCMALE,,
+BCMALE - Blood Chemistry,6,Date,patient_header,Predefined Selection,,,BCMALE,,
+BCMALE - Blood Chemistry,7,Examination,patient_header,Predefined Selection,,,BCMALE,,
+BCMALE - Blood Chemistry,8,Requesting Physician,patient_header,Predefined Selection,,,BCMALE,,
+BCMALE - Blood Chemistry,9,Room,patient_header,Predefined Selection,,,BCMALE,,
+BCMALE - Blood Chemistry,10,Case Number,patient_header,Manual Entry,,,BCMALE,,
+BCMALE - Blood Chemistry,12,FASTING BLOOD SUGAR,test_input,Manual Entry,70.27-124.32 mg/dL,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,BCMALE,R1,mapped
+BCMALE - Blood Chemistry,13,RANDOM BLOOD SUGAR,test_input,Manual Entry,60 - 140 mg/dl,"note: pde po kaya na incase na magpplit po ng normal values  pde nmin sya maedit, ty",BCMALE,R2,mapped
+BCMALE - Blood Chemistry,14,HGT,test_input,Manual Entry,53 - 103 mg/dl,,BCMALE,R3,mapped
+BCMALE - Blood Chemistry,15,BLOOD UREA NITROGEN,test_input,Manual Entry,7.9- 20.2 mg/dl,,BCMALE,R4,mapped
+BCMALE - Blood Chemistry,16,CREATININE,test_input,Manual Entry,0.5-1.3 mg/dl,,BCMALE,R5,mapped
+BCMALE - Blood Chemistry,17,BLOOD URIC ACID,test_input,Manual Entry,3.5 - 7.2 mg/dl,,BCMALE,R6,mapped
+BCMALE - Blood Chemistry,18,SODIUM,test_input,Manual Entry,135 - 148 mEq/L,,BCMALE,R7,mapped
+BCMALE - Blood Chemistry,19,POTASSIUM,test_input,Manual Entry,3.5 - 5.3 mEq/L,,BCMALE,R8,mapped
+BCMALE - Blood Chemistry,20,CHLORIDE,test_input,Manual Entry,98 - 107 mEq/L,,BCMALE,R9,mapped
+BCMALE - Blood Chemistry,22,CHOLESTEROL,test_input,Manual Entry,0 - 200 mg/dl,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,BCMALE,R10,mapped
+BCMALE - Blood Chemistry,23,TRIGLYCERIDE,test_input,Manual Entry,0 - 150 mg/dl,,BCMALE,R11,mapped
+BCMALE - Blood Chemistry,24,HDL CHOLESTEROL,test_input,Manual Entry,30 - 85 mg/dl,,BCMALE,R12,mapped
+BCMALE - Blood Chemistry,25,LDL CHOLESTEROL,test_input,Manual Entry,66 - 178 mg/dl,,BCMALE,R13,mapped
+BCMALE - Blood Chemistry,26,VLDL CHOLESTEROL,test_input,Manual Entry,0-40 mg/dl,,BCMALE,R14,mapped
+BCMALE - Blood Chemistry,27,SGOT(AST),test_input,Manual Entry,0 - 31 U/L,,BCMALE,R15,mapped
+BCMALE - Blood Chemistry,28,SGPT(ALT),test_input,Manual Entry,0 - 34 U/L,,BCMALE,R16,mapped
+BCMALE - Blood Chemistry,29,IONIZED CALCIUM,test_input,Manual Entry,1.13-1.32 mEq/L,,BCMALE,R17,mapped
+BCMALE - Blood Chemistry,31,OTHERS,other_input,Manual Entry,,,BCMALE,,
+BCMALE - Blood Chemistry,33,Medical Technologist,signatory,Predefined Selection,,,BCMALE,,
+BCMALE - Blood Chemistry,34,Medical Technologist,signatory,Predefined Selection,,,BCMALE,,
+BCMALE - Blood Chemistry,35,Pathologist,signatory,Fixed including the signature,,,BCMALE,,
+BCFEMALE - Blood Chemistry,2,PATIENT INFORMATION,section_header,,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,3,Name,patient_header,Manual Entry,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,4,Age,patient_header,Manual Entry,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,5,Sex,patient_header,Predefined Selection,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,6,Date,patient_header,Predefined Selection,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,7,Examination,patient_header,Predefined Selection,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,8,Requesting Physician,patient_header,Predefined Selection,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,9,Room,patient_header,Predefined Selection,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,10,Case Number,patient_header,Manual Entry,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,12,FASTING BLOOD SUGAR,test_input,Manual Entry,70.27-124.32 mg/dL,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,BCFEMALE,R1,mapped
+BCFEMALE - Blood Chemistry,13,RANDOM BLOOD SUGAR,test_input,Manual Entry,60 - 140 mg/dl,,BCFEMALE,R2,mapped
+BCFEMALE - Blood Chemistry,14,HGT,test_input,Manual Entry,53 - 103 mg/dl,,BCFEMALE,R3,mapped
+BCFEMALE - Blood Chemistry,15,BLOOD UREA NITROGEN,test_input,Manual Entry,7.9- 20.2 mg/dl,,BCFEMALE,R4,mapped
+BCFEMALE - Blood Chemistry,16,CREATININE,test_input,Manual Entry,0.4-1.2 mg/dl,,BCFEMALE,R5,mapped
+BCFEMALE - Blood Chemistry,17,BLOOD URIC ACID,test_input,Manual Entry,2.6 - 6.0 mg/dl,,BCFEMALE,R6,mapped
+BCFEMALE - Blood Chemistry,18,SODIUM,test_input,Manual Entry,135 - 148 mEq/L,,BCFEMALE,R7,mapped
+BCFEMALE - Blood Chemistry,19,POTASSIUM,test_input,Manual Entry,3.5 - 5.3 mEq/l,,BCFEMALE,R8,mapped
+BCFEMALE - Blood Chemistry,20,CHLORIDE,test_input,Manual Entry,98 - 107 mEq/L,,BCFEMALE,R9,mapped
+BCFEMALE - Blood Chemistry,22,CHOLESTEROL,test_input,Manual Entry,0 - 200 mg/dl,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,BCFEMALE,R10,mapped
+BCFEMALE - Blood Chemistry,23,TRIGLYCERIDE,test_input,Manual Entry,0 - 150 mg/dl,,BCFEMALE,R11,mapped
+BCFEMALE - Blood Chemistry,24,HDL CHOLESTEROL,test_input,Manual Entry,30 - 85 mg/dl,,BCFEMALE,R12,mapped
+BCFEMALE - Blood Chemistry,25,LDL CHOLESTEROL,test_input,Manual Entry,66 - 178 mg/dl,,BCFEMALE,R13,mapped
+BCFEMALE - Blood Chemistry,26,VLDL CHOLESTEROL,test_input,Manual Entry,0-40 mg/dl,,BCFEMALE,R14,mapped
+BCFEMALE - Blood Chemistry,27,SGOT(AST),test_input,Manual Entry,0 - 31 U/L,,BCFEMALE,R15,mapped
+BCFEMALE - Blood Chemistry,28,SGPT(ALT),test_input,Manual Entry,0 - 34 U/L,,BCFEMALE,R16,mapped
+BCFEMALE - Blood Chemistry,29,IONIZED CALCIUM,test_input,Manual Entry,1.13-1.32 mEq/L,,BCFEMALE,R17,mapped
+BCFEMALE - Blood Chemistry,31,OTHERS,other_input,Manual Entry,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,33,Medical Technologist,signatory,Predefined Selection,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,34,Medical Technologist,signatory,Predefined Selection,,,BCFEMALE,,
+BCFEMALE - Blood Chemistry,35,Pathologist,signatory,Fixed including the signature,,,BCFEMALE,,
+BBANK - Blood Bank,2,PATIENT INFORMATION,section_header,,,,BBANK,,
+BBANK - Blood Bank,3,Name,patient_header,Manual Entry,,,BBANK,,
+BBANK - Blood Bank,4,Age,patient_header,Manual Entry,,,BBANK,,
+BBANK - Blood Bank,5,Sex,patient_header,Predefined Selection,,,BBANK,,
+BBANK - Blood Bank,6,Date,patient_header,Predefined Selection,,,BBANK,,
+BBANK - Blood Bank,7,Examination,patient_header,Predefined Selection,,,BBANK,,
+BBANK - Blood Bank,8,Requesting Physician,patient_header,Predefined Selection,,,BBANK,,
+BBANK - Blood Bank,9,Room,patient_header,Predefined Selection,,,BBANK,,
+BBANK - Blood Bank,10,Case Number,patient_header,Manual Entry,,,BBANK,,
+BBANK - Blood Bank,12,PATIENT’S BLOOD TYPE,test_input,Predefined Selection,,,BBANK,R1,mapped
+BBANK - Blood Bank,13,BLOOD COMPONENT,test_input,Predefined Selection,,,BBANK,R2,mapped
+BBANK - Blood Bank,14,DONOR’S BLOOD TYPE,test_input,Predefined Selection,,,BBANK,R3,mapped
+BBANK - Blood Bank,15,SOURCE OF BLOOD,test_input,Predefined Selection,,,BBANK,R4,mapped
+BBANK - Blood Bank,16,SERIAL NUMBER,test_input,Manual Entry,,,BBANK,R5,mapped
+BBANK - Blood Bank,17,DATE EXTRACTED,test_input,Manual Entry,,,BBANK,R6,mapped
+BBANK - Blood Bank,18,DATE EXPIRY,test_input,Manual Entry,,,BBANK,R7,mapped
+BBANK - Blood Bank,19,TYPE OF CROSSMATCHING,section_header,,,,BBANK,,
+BBANK - Blood Bank,20,IMMEDIATE SPIN/ SALINE PHASE,test_input,manual entry,,,BBANK,R8,mapped
+BBANK - Blood Bank,21,ALBUMIN PHASE /37 °C,test_input,manual entry,,,BBANK,R9,mapped
+BBANK - Blood Bank,22,ANTI HUMAN GLOBILIN PHASE,test_input,manual entry,,,BBANK,R10,mapped
+BBANK - Blood Bank,24,REMARKS,test_input,Predefined Selection,,,BBANK,R11,mapped
+BBANK - Blood Bank,25,VITAL SIGNS,test_input,Predefined Selection,"dapat meron na dropdownlist sa blood pressure, pulse rate, resparatory rate, temperature then mag iinput na lang ng result",,BBANK,R12,mapped
+BBANK - Blood Bank,27,RELEASED BY,test_input,Manual Entry,,,BBANK,R13,mapped
+BBANK - Blood Bank,28,RELEASED TO,test_input,Manual Entry,,,BBANK,R14,mapped
+BBANK - Blood Bank,29,DATE/TIME,patient_header,Manual Entry,,,BBANK,,
+BBANK - Blood Bank,31,Medical Technologist,signatory,Predefined Selection,,,BBANK,,
+BBANK - Blood Bank,32,Medical Technologist,signatory,Predefined Selection,,,BBANK,,
+BBANK - Blood Bank,33,Pathologist,signatory,Fixed including the signature,,,BBANK,,
+ABG - Blood Gas Analysis,2,PATIENT INFORMATION,section_header,,,,ABG,,
+ABG - Blood Gas Analysis,3,Name,patient_header,Manual Entry,,,ABG,,
+ABG - Blood Gas Analysis,4,Age,patient_header,Manual Entry,,,ABG,,
+ABG - Blood Gas Analysis,5,Sex,patient_header,Predefined Selection,,,ABG,,
+ABG - Blood Gas Analysis,6,Date,patient_header,Predefined Selection,,,ABG,,
+ABG - Blood Gas Analysis,7,Examination,patient_header,Predefined Selection,,,ABG,,
+ABG - Blood Gas Analysis,8,Requesting Physician,patient_header,Predefined Selection,,,ABG,,
+ABG - Blood Gas Analysis,9,Room,patient_header,Predefined Selection,,,ABG,,
+ABG - Blood Gas Analysis,10,Case Number,patient_header,Manual Entry,,,ABG,,
+ABG - Blood Gas Analysis,11,Blood gas value (ABG),section_header,,,,ABG,,
+ABG - Blood Gas Analysis,12,pH,test_input,Manual Entry,7.35-7.45,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,ABG,R1,mapped
+ABG - Blood Gas Analysis,13,pO2,test_input,Manual Entry,80-105 mmHg,,ABG,R2,mapped
+ABG - Blood Gas Analysis,14,pCO2,test_input,Manual Entry,35.0-45.0 mmHg,,ABG,R3,mapped
+ABG - Blood Gas Analysis,15,Calculated values (OXIMETRY),section_header,,,,ABG,,
+ABG - Blood Gas Analysis,16,sO2,test_input,Manual Entry,95-100 %,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,ABG,R4,mapped
+ABG - Blood Gas Analysis,17,Calculated values (ACID BASE STATUS),section_header,,,,ABG,,
+ABG - Blood Gas Analysis,18,HCO3,test_input,Manual Entry,22-28 mmol/L,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,ABG,R5,mapped
+ABG - Blood Gas Analysis,19,BE(ecf),test_input,Manual Entry,-2 to +2 mmol/L,,ABG,R6,mapped
+ABG - Blood Gas Analysis,20,pO2(A-a),test_input,Manual Entry,5-10 mmHg,,ABG,R7,mapped
+ABG - Blood Gas Analysis,21,TCO2,test_input,Manual Entry,23-29 mmol/L,,ABG,R8,mapped
+ABG - Blood Gas Analysis,23,NOTE,other_input,Manual Entry,,,ABG,,
+ABG - Blood Gas Analysis,25,Medical Technologist,signatory,Predefined Selection,,,ABG,,
+ABG - Blood Gas Analysis,26,Medical Technologist,signatory,Predefined Selection,,,ABG,,
+ABG - Blood Gas Analysis,27,Pathologist,signatory,Fixed including the signature,,,ABG,,
+HIV 1&2 TESTING - Serology,2,PATIENT INFORMATION,section_header,,,,SEROLOGYI,,
+HIV 1&2 TESTING - Serology,3,Name,patient_header,Manual Entry,,,SEROLOGYI,,
+HIV 1&2 TESTING - Serology,4,Age,patient_header,Manual Entry,,,SEROLOGYI,,
+HIV 1&2 TESTING - Serology,5,Sex,patient_header,Predefined Selection,,,SEROLOGYI,,
+HIV 1&2 TESTING - Serology,6,Date,patient_header,Predefined Selection,,,SEROLOGYI,,
+HIV 1&2 TESTING - Serology,7,Examination,patient_header,Predefined Selection,,,SEROLOGYI,,
+HIV 1&2 TESTING - Serology,8,Requesting Physician,patient_header,Predefined Selection,,,SEROLOGYI,,
+HIV 1&2 TESTING - Serology,9,Room,patient_header,Predefined Selection,,,SEROLOGYI,,
+HIV 1&2 TESTING - Serology,10,Case Number,patient_header,Manual Entry,,,SEROLOGYI,,
+HIV 1&2 TESTING - Serology,12,LOT NUMBER,test_input,Manual Entry,,,SEROLOGYI,R1,mapped
+HIV 1&2 TESTING - Serology,14,TEST RESULT,test_input,Predefined Selection,,,SEROLOGYI,R1,mapped
+HIV 1&2 TESTING - Serology,16,Medical Technologist,signatory,Predefined Selection,,,SEROLOGYI,,
+HIV 1&2 TESTING - Serology,17,Medical Technologist,signatory,Predefined Selection,,,SEROLOGYI,,
+HIV 1&2 TESTING - Serology,18,Pathologist,signatory,Fixed including the signature,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,2,PATIENT INFORMATION,section_header,,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,3,Name,patient_header,Manual Entry,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,4,Age,patient_header,Manual Entry,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,5,Sex,patient_header,Predefined Selection,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,6,Date,patient_header,Predefined Selection,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,7,Examination,patient_header,Predefined Selection,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,8,Requesting Physician,patient_header,Predefined Selection,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,9,Room,patient_header,Predefined Selection,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,10,Case Number,patient_header,Manual Entry,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,12,TEST RESULT,test_input,Predefined Selection,,,SEROLOGYI,R1,mapped
+COVID 19 ANTIGEN (RAPID TEST) -,14,Medical Technologist,signatory,Predefined Selection,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,15,Medical Technologist,signatory,Predefined Selection,,,SEROLOGYI,,
+COVID 19 ANTIGEN (RAPID TEST) -,16,Pathologist,signatory,Fixed including the signature,,,SEROLOGYI,,
+"PROTIME, APTT - Hematology",2,PATIENT INFORMATION,section_header,,,,COAG,,
+"PROTIME, APTT - Hematology",3,Name,patient_header,Manual Entry,,,COAG,,
+"PROTIME, APTT - Hematology",4,Age,patient_header,Manual Entry,,,COAG,,
+"PROTIME, APTT - Hematology",5,Sex,patient_header,Predefined Selection,,,COAG,,
+"PROTIME, APTT - Hematology",6,Date,patient_header,Predefined Selection,,,COAG,,
+"PROTIME, APTT - Hematology",7,Examination,patient_header,Predefined Selection,,,COAG,,
+"PROTIME, APTT - Hematology",8,Requesting Physician,patient_header,Predefined Selection,,,COAG,,
+"PROTIME, APTT - Hematology",9,Room,patient_header,Predefined Selection,,,COAG,,
+"PROTIME, APTT - Hematology",10,Case Number,patient_header,Manual Entry,,,COAG,,
+"PROTIME, APTT - Hematology",11,PRO TIME,section_header,,NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED,,COAG,,
+"PROTIME, APTT - Hematology",12,TEST,test_input,Manual Entry,10.0-13.9 seconds,,COAG,R1,mapped
+"PROTIME, APTT - Hematology",13,CONTROL,test_input,Manual Entry,SECONDS,,COAG,R1,mapped
+"PROTIME, APTT - Hematology",14,INR,test_input,Manual Entry,0.70-1.30,,COAG,R2,mapped
+"PROTIME, APTT - Hematology",15,% ACTIVITY,test_input,Manual Entry,% ACTIVITY,,COAG,R3,mapped
+"PROTIME, APTT - Hematology",16,APTT,section_header,,,,COAG,,
+"PROTIME, APTT - Hematology",17,TEST,test_input,Manual Entry,22.2-37.9 seconds,,COAG,R4,mapped
+"PROTIME, APTT - Hematology",18,CONTROL,test_input,Manual Entry,SECONDS,,COAG,R4,mapped
+"PROTIME, APTT - Hematology",20,Medical Technologist,signatory,Predefined Selection,,,COAG,,
+"PROTIME, APTT - Hematology",21,Medical Technologist,signatory,Predefined Selection,,,COAG,,
+"PROTIME, APTT - Hematology",22,Pathologist,signatory,Fixed including the signature,,,COAG,,

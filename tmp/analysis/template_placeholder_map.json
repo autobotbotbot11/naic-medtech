@@ -1,0 +1,957 @@
+{
+  "ABG": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "EXAM",
+        "INATIONEXAM"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "pH"
+      ],
+      "R2": [
+        "mmHg"
+      ],
+      "R3": [
+        "mmHg"
+      ],
+      "R4": [
+        "sO2"
+      ],
+      "R5": [
+        "mmol L"
+      ],
+      "R6": [
+        "mmol L"
+      ],
+      "R7": [
+        "mmHg"
+      ],
+      "R8": [
+        "mmol L"
+      ]
+    }
+  },
+  "BBANK": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D",
+        "EXPIRY",
+        "EXTRACTED"
+      ],
+      "examination": [
+        "EXAM",
+        "INATIONEXAM"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "PATIENT\u2019S BLOOD TYPE"
+      ],
+      "R2": [
+        "BLOOD COMPONENT"
+      ],
+      "R3": [
+        "DONOR\u2019S BLOOD TYPE"
+      ],
+      "R4": [
+        "SOURCE OF BLOOD"
+      ],
+      "R5": [
+        "SERIAL NUMBER"
+      ],
+      "R6": [
+        "DATE EXTRACTED"
+      ],
+      "R7": [
+        "DATE EXPIRY"
+      ],
+      "R8": [
+        "IMMEDIATE SPIN/ SALINE PHASE"
+      ],
+      "R9": [
+        "ALBUMIN PHASE /37 \u00b0C"
+      ],
+      "R10": [
+        "ANTI HUMAN GLOBILIN PHASE"
+      ],
+      "R11": [
+        "REMARKS"
+      ],
+      "R12": [
+        "VITAL SIGNS"
+      ],
+      "R13": [
+        "RELEASED BY"
+      ],
+      "R14": [
+        "RELEASED TO"
+      ],
+      "R15": [
+        "DATE TIME"
+      ]
+    }
+  },
+  "BCFEMALE": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "LIPIDPROFILE"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "FASTING BLOOD SUGAR"
+      ],
+      "R2": [
+        "RANDOM BLOOD SUGAR"
+      ],
+      "R3": [
+        "HGT"
+      ],
+      "R4": [
+        "BLOOD UREA NITROGEN"
+      ],
+      "R5": [
+        "CREATININE"
+      ],
+      "R6": [
+        "BLOOD URIC ACID"
+      ],
+      "R7": [
+        "SODIUM"
+      ],
+      "R8": [
+        "POTASSIUM"
+      ],
+      "R9": [
+        "CHLORIDE"
+      ],
+      "R10": [
+        "CHOLESTEROL"
+      ],
+      "R11": [
+        "TRIGLYCERIDE"
+      ],
+      "R12": [
+        "HDL CHOLESTEROL"
+      ],
+      "R13": [
+        "LDL CHOLESTEROL"
+      ],
+      "R14": [
+        "VLDL CHOLESTEROL"
+      ],
+      "R15": [
+        "SGOT(AST)"
+      ],
+      "R16": [
+        "SGPT(ALT)"
+      ],
+      "R17": [
+        "IONIZED CALCIUM"
+      ]
+    }
+  },
+  "BCMALE": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "LIPIDPROFILE"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "FASTING BLOOD SUGAR"
+      ],
+      "R2": [
+        "RANDOM BLOOD SUGAR"
+      ],
+      "R3": [
+        "HGT"
+      ],
+      "R4": [
+        "BLOOD UREA NITROGEN"
+      ],
+      "R5": [
+        "CREATININE"
+      ],
+      "R6": [
+        "BLOOD URIC ACID"
+      ],
+      "R7": [
+        "SODIUM"
+      ],
+      "R8": [
+        "POTASSIUM"
+      ],
+      "R9": [
+        "CHLORIDE"
+      ],
+      "R10": [
+        "CHOLESTEROL"
+      ],
+      "R11": [
+        "TRIGLYCERIDE"
+      ],
+      "R12": [
+        "HDL CHOLESTEROL"
+      ],
+      "R13": [
+        "LDL CHOLESTEROL"
+      ],
+      "R14": [
+        "VLDL CHOLESTEROL"
+      ],
+      "R15": [
+        "SGOT(AST)"
+      ],
+      "R16": [
+        "SGPT(ALT)"
+      ],
+      "R17": [
+        "IONIZED CALCIUM"
+      ]
+    }
+  },
+  "CARDIAC": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "E",
+        "INATIONE"
+      ],
+      "requesting_physician": [
+        "R"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "TROPONIN I"
+      ],
+      "R2": [
+        "CK-MB"
+      ],
+      "R3": [
+        "MYOGLOBULIN"
+      ]
+    }
+  },
+  "CARDIACI": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "E",
+        "INATIONE"
+      ],
+      "requesting_physician": [
+        "R"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "ng mL"
+      ],
+      "R3": [
+        "ng mL"
+      ],
+      "R4": [
+        "pg mL"
+      ]
+    }
+  },
+  "COAG": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "E",
+        "INATIONE"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "TEST"
+      ],
+      "R2": [
+        "INR"
+      ],
+      "R3": [
+        "% ACTIVITY"
+      ],
+      "R4": [
+        "TEST"
+      ]
+    }
+  },
+  "FECALYSIS": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "EXAM",
+        "INATIONEXAM"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "COLOR"
+      ],
+      "R2": [
+        "CONSISTENCY"
+      ],
+      "R3": [
+        "FECAL OCCULT BLOOD"
+      ],
+      "R4": [
+        "HPF"
+      ],
+      "R5": [
+        "HPF"
+      ],
+      "R6": [
+        "BUDDING YEAST"
+      ],
+      "R7": [
+        "BACTERIA"
+      ],
+      "R8": [
+        "FAT GLOBULES"
+      ],
+      "R9": [
+        "PARASITES"
+      ],
+      "R10": [
+        "AMOEBA"
+      ]
+    }
+  },
+  "HBA1C": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "E",
+        "INATIONE"
+      ],
+      "requesting_physician": [
+        "R"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "RESULT"
+      ]
+    }
+  },
+  "HBA1CI": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "E",
+        "INATIONE"
+      ],
+      "requesting_physician": [
+        "R"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "RESULT"
+      ]
+    }
+  },
+  "HEMATOLOGY": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "E",
+        "INATIONE"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "RBC COUNT (M)"
+      ],
+      "R2": [
+        "(F)"
+      ],
+      "R3": [
+        "WBC COUNT"
+      ],
+      "R4": [
+        "HEMOGLOBIN (M)"
+      ],
+      "R5": [
+        "(F)"
+      ],
+      "R6": [
+        "HEMATOCRIT (M)"
+      ],
+      "R7": [
+        "(F)"
+      ],
+      "R8": [
+        "PLATELET COUNT"
+      ],
+      "R9": [
+        "CLOTTING TIME"
+      ],
+      "R10": [
+        "BLEEDING TIME"
+      ],
+      "R11": [
+        "BLOOD TYPING"
+      ],
+      "R12": [
+        "SEGMENTERS"
+      ],
+      "R13": [
+        "LYMPHOCYTES"
+      ],
+      "R14": [
+        "MONOCYTES"
+      ],
+      "R15": [
+        "EOSINOPHILS"
+      ],
+      "R16": [
+        "STAB"
+      ],
+      "R17": [
+        "E.S.R . (M)"
+      ],
+      "R18": [
+        "(F)"
+      ]
+    }
+  },
+  "HSCRP": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "E",
+        "INATIONE"
+      ],
+      "requesting_physician": [
+        "R"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "mg L"
+      ]
+    }
+  },
+  "MICROBIOLOGY": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "EXAM",
+        "INATIONEXAM"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {}
+  },
+  "OGTT": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "1ST HOUR"
+      ],
+      "R2": [
+        "2ND HOUR"
+      ],
+      "R3": [
+        "FASTING BLOOD SUGAR"
+      ],
+      "R4": [
+        "1ST HOUR"
+      ],
+      "R5": [
+        "2ND HOUR"
+      ],
+      "R6": [
+        "FASTING BLOOD SUGAR"
+      ],
+      "R7": [
+        "1ST HOUR"
+      ],
+      "R8": [
+        "2ND HOUR"
+      ],
+      "R9": [
+        "3RD HOUR"
+      ],
+      "R10": [
+        "2 HOURS POST PRANDIAL"
+      ],
+      "R11": [
+        "50 G ORAL GLUCOSE CHALLENGE"
+      ]
+    }
+  },
+  "SEMEN": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "EXAM",
+        "INATIONEXAM"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "TIME COLLECTED:"
+      ],
+      "R2": [
+        "TIME RECEIVED:"
+      ],
+      "R3": [
+        "TOTAL VOLUME:"
+      ],
+      "R4": [
+        "LIQUEFACTION TIME:"
+      ],
+      "R5": [
+        "MOTILE:"
+      ],
+      "R6": [
+        "NON MOTILE:"
+      ],
+      "R7": [
+        "NORMAL:"
+      ],
+      "R8": [
+        "ABNORMAL:"
+      ],
+      "R9": [
+        "RESULT"
+      ],
+      "R10": [
+        "WBC HPF"
+      ],
+      "R11": [
+        "RBC HPF"
+      ],
+      "R12": [
+        "EPITHELIAL CELL"
+      ]
+    }
+  },
+  "SEROLOGY": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "EXAM",
+        "INATIONEXAM"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "lgM"
+      ],
+      "R2": [
+        "lgG"
+      ],
+      "R3": [
+        "Ns1Ag"
+      ],
+      "R4": [
+        "lgM"
+      ],
+      "R5": [
+        "lgG"
+      ],
+      "R6": [
+        "ANTI-PLASMODIUM FALCIFARUM"
+      ],
+      "R7": [
+        "ANTI PLASMODIUM VIVAX"
+      ],
+      "R8": [
+        "VDRL"
+      ],
+      "R9": [
+        "HbsAg SCREENING"
+      ],
+      "R10": [
+        "TROPONIN I"
+      ],
+      "R11": [
+        "ASO TITER"
+      ]
+    }
+  },
+  "SEROLOGYI": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "E",
+        "INATIONE"
+      ],
+      "requesting_physician": [
+        "R"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "IU mL"
+      ],
+      "R2": [
+        "IU mL"
+      ],
+      "R3": [
+        "IU mL"
+      ],
+      "R4": [
+        "mg dL"
+      ]
+    }
+  },
+  "URINE": {
+    "patient_tokens": {
+      "patient_name": [
+        "N"
+      ],
+      "age": [
+        "A"
+      ],
+      "sex": [
+        "S"
+      ],
+      "date": [
+        "D"
+      ],
+      "examination": [
+        "EXAM",
+        "INATIONEXAM"
+      ],
+      "requesting_physician": [
+        "P"
+      ],
+      "room": [
+        "R"
+      ]
+    },
+    "r_placeholder_map": {
+      "R1": [
+        "COLOR"
+      ],
+      "R2": [
+        "TRANSPARENCY"
+      ],
+      "R3": [
+        "REACTION"
+      ],
+      "R4": [
+        "SPECIFIC GRAVITY"
+      ],
+      "R5": [
+        "SUGAR"
+      ],
+      "R6": [
+        "PROTEIN"
+      ],
+      "R7": [
+        "PREGNANCY TEST"
+      ],
+      "R8": [
+        "HPF"
+      ],
+      "R9": [
+        "HPF"
+      ],
+      "R10": [
+        "EPITHELIAL CELL"
+      ],
+      "R11": [
+        "AMORPHOUS URATES"
+      ],
+      "R12": [
+        "AMORPHOUS PHOSPHATE"
+      ],
+      "R13": [
+        "CALCIUM OXALATE"
+      ],
+      "R14": [
+        "URIC ACID CRYSTAL"
+      ],
+      "R15": [
+        "MUCUS THREAD"
+      ],
+      "R16": [
+        "BACTERIA"
+      ]
+    }
+  }
+}

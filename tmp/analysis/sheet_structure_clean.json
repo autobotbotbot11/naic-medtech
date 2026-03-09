@@ -1,0 +1,3130 @@
+{
+  "URINE- Clinical Microscopy": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date/Time",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 7,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 11,
+        "field": "MACROSCOPIC FINDING",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "CLINICAL FINDING",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 19,
+        "field": "MICROSCOPIC FINDING",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "Color",
+        "input_type": "Predefined Selection",
+        "options_count": 6,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 13,
+        "field": "Transparency",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 14,
+        "field": "Reaction",
+        "input_type": "Predefined Selection",
+        "options_count": 7,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "Specific Gravity",
+        "input_type": "Predefined Selection",
+        "options_count": 6,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "Sugar",
+        "input_type": "Predefined Selection",
+        "options_count": 6,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 18,
+        "field": "Protein",
+        "input_type": "Predefined Selection",
+        "options_count": 6,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 20,
+        "field": "White Blood Cell",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 21,
+        "field": "Red Blood Cell",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 22,
+        "field": "Epithelial Cell",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 23,
+        "field": "Amorphous Urates",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 24,
+        "field": "Amorphous Phosphate",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 25,
+        "field": "Calcium Oxalate",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 26,
+        "field": "Uric Acid Crystal",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 27,
+        "field": "Mucus Thread",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 28,
+        "field": "Bacteria",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 30,
+        "field": "Others",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 32,
+        "field": "Pregnancy Test",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 34,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 35,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 36,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "SEROLOGY": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date/Time",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 6,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 11,
+        "field": "TYPHIDOT",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 14,
+        "field": "DENGUE TEST",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 18,
+        "field": "MALARIAL TEST",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "IgM",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 13,
+        "field": "IgG",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "Ns1Ag",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "IgM",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "IgG",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 19,
+        "field": "ANTI-PLASMODIUM FALCIFARUM",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 20,
+        "field": "ANTI PLASMODIUM VIVAX",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 22,
+        "field": "HbsAg SCREENING:",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 23,
+        "field": "VDRL:",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 24,
+        "field": "ANTI-HCV:",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 25,
+        "field": "ASO TITER:",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 27,
+        "field": "OTHERS",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 29,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 30,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 31,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "SEMEN - Clinical Microscopy": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "MOTILITY",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 19,
+        "field": "MORPHOLOGY",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 22,
+        "field": "SPERM COUNT",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED",
+        "notes": ""
+      },
+      {
+        "row": 24,
+        "field": "OTHERS",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "TIME COLLECTED:",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 13,
+        "field": "TIME RECEIVED:",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 14,
+        "field": "TOTAL VOLUME:",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "LIQUEFACTION TIME:",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "MOTILE:",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 18,
+        "field": "NON MOTILE:",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 20,
+        "field": "NORMAL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 21,
+        "field": "ABNORMAL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 23,
+        "field": "RESULT",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 25,
+        "field": "WBC",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 26,
+        "field": "RBC",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 27,
+        "field": "EPITHELIAL CELL",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 29,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 30,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 31,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "OGTT - Blood Chemistry": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 5,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 11,
+        "field": "50G ORAL GLUCOSE TOLERANCE",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      },
+      {
+        "row": 14,
+        "field": "75G ORAL GLUCOSE TOLERANCE",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      },
+      {
+        "row": 18,
+        "field": "100G ORAL GLUCOSE TOLERANCE",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "1ST HOUR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "< 200 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 13,
+        "field": "2ND HOUR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "< 140 mg/d",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "FASTING BLOOD SUGAR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "70.27-124.32 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "1ST HOUR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "< 200 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "2ND HOUR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "< 140 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 19,
+        "field": "FASTING BLOOD SUGAR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "70.27-124.32 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 20,
+        "field": "1ST HOUR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "< 180 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 21,
+        "field": "2ND HOUR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "< 155 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 22,
+        "field": "3RD HOUR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "< 140 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 24,
+        "field": "2 HOURS POST PRANDIAL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 25,
+        "field": "50 G ORAL GLUCOSE CHALLENGE",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 27,
+        "field": "Others",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 29,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 30,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 31,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "MICROBIOLOGY": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "RESULT",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 14,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "HEMATOLOGY": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 5,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "RBC COUNT (M)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "4.6 - 6.2 X 1012/L",
+        "notes": ""
+      },
+      {
+        "row": 13,
+        "field": "RBC COUNT (F)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "4.2 - 5.4 X 1012/L",
+        "notes": ""
+      },
+      {
+        "row": 14,
+        "field": "WBC COUNT",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "5.0 - 10.0 X 109/L",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "HEMOGLOBIN (M)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "140-180 g/L",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "HEMOGLOBIN (F)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "120 - 160 g/L",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "HEMATOCRIT (M)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0.40-0.54 /L",
+        "notes": ""
+      },
+      {
+        "row": 18,
+        "field": "HEMATOCRIT (F)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0.37 - 0.42 /L",
+        "notes": ""
+      },
+      {
+        "row": 19,
+        "field": "PLATELET COUNT",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "150 - 450 X 109/L",
+        "notes": ""
+      },
+      {
+        "row": 20,
+        "field": "CLOTTING TIME",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "1 - 6 minutes",
+        "notes": ""
+      },
+      {
+        "row": 21,
+        "field": "BLEEDING TIME",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "1 - 6 minutes",
+        "notes": ""
+      },
+      {
+        "row": 22,
+        "field": "BLOOD TYPING",
+        "input_type": "Predefined Selection",
+        "options_count": 8,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 24,
+        "field": "SEGMENTERS",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "0.50 - 0.70",
+        "notes": ""
+      },
+      {
+        "row": 25,
+        "field": "LYMPHOCYTES",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "0.25 - 0.40",
+        "notes": ""
+      },
+      {
+        "row": 26,
+        "field": "MONOCYTES",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "0.03 - 0.08",
+        "notes": ""
+      },
+      {
+        "row": 27,
+        "field": "EOSINOPHILS",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "0.01 - 0.04",
+        "notes": ""
+      },
+      {
+        "row": 28,
+        "field": "STAB",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "0 - 0.05",
+        "notes": ""
+      },
+      {
+        "row": 29,
+        "field": "E.S.R . (M)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0 - 10 mm/hr",
+        "notes": ""
+      },
+      {
+        "row": 30,
+        "field": "E.S.R . (F)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0 - 20 mm/hr",
+        "notes": ""
+      },
+      {
+        "row": 32,
+        "field": "OTHERS",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 34,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 35,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 36,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "HBA1C - Blood Chemistry": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "Result",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "NORMAL VALUE = 4.0 - 5.6 %",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      }
+    ],
+    "signatory": [
+      {
+        "row": 14,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "FECALYSIS - Clinical Microscopy": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 11,
+        "field": "MACROSCOPIC FINDING",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "MICROSCOPIC FINDING",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 21,
+        "field": "MICROSCOPIC FINDING",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "COLOR",
+        "input_type": "Predefined Selection",
+        "options_count": 13,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 13,
+        "field": "CONSISTENCY",
+        "input_type": "Predefined Selection",
+        "options_count": 7,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 14,
+        "field": "FECAL OCCULT BLOOD",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "PUS",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "RED BLOOD CELL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 18,
+        "field": "BUDDING YEAST",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 19,
+        "field": "BACTERIA",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 20,
+        "field": "FAT GLOBULES",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 22,
+        "field": "PARASITES",
+        "input_type": "Predefined Selection",
+        "options_count": 3,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 23,
+        "field": "AMOEBA",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 25,
+        "field": "OTHERS",
+        "input_type": "Predefined Selection",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 27,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 28,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 29,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "Please double check the name",
+        "notes": ""
+      }
+    ]
+  },
+  "CARDIACI - Serology": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "CK-MB",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0.0 - 4.3 ng / mL",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      },
+      {
+        "row": 13,
+        "field": "TROPONIN - I",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0.0 - 0.02 ng /mL",
+        "notes": ""
+      },
+      {
+        "row": 14,
+        "field": "BNP",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0.0 - 100 pg / mL",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 16,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 18,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "BCMALE - Blood Chemistry": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "FASTING BLOOD SUGAR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "70.27-124.32 mg/dL",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      },
+      {
+        "row": 13,
+        "field": "RANDOM BLOOD SUGAR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "60 - 140 mg/dl",
+        "notes": "note: pde po kaya na incase na magpplit po ng normal values  pde nmin sya maedit, ty"
+      },
+      {
+        "row": 14,
+        "field": "HGT",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "53 - 103 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "BLOOD UREA NITROGEN",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "7.9- 20.2 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "CREATININE",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0.5-1.3 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "BLOOD URIC ACID",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "3.5 - 7.2 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 18,
+        "field": "SODIUM",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "135 - 148 mEq/L",
+        "notes": ""
+      },
+      {
+        "row": 19,
+        "field": "POTASSIUM",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "3.5 - 5.3 mEq/L",
+        "notes": ""
+      },
+      {
+        "row": 20,
+        "field": "CHLORIDE",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "98 - 107 mEq/L",
+        "notes": ""
+      },
+      {
+        "row": 22,
+        "field": "CHOLESTEROL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0 - 200 mg/dl",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      },
+      {
+        "row": 23,
+        "field": "TRIGLYCERIDE",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0 - 150 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 24,
+        "field": "HDL CHOLESTEROL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "30 - 85 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 25,
+        "field": "LDL CHOLESTEROL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "66 - 178 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 26,
+        "field": "VLDL CHOLESTEROL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0-40 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 27,
+        "field": "SGOT(AST)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0 - 31 U/L",
+        "notes": ""
+      },
+      {
+        "row": 28,
+        "field": "SGPT(ALT)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0 - 34 U/L",
+        "notes": ""
+      },
+      {
+        "row": 29,
+        "field": "IONIZED CALCIUM",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "1.13-1.32 mEq/L",
+        "notes": ""
+      },
+      {
+        "row": 31,
+        "field": "OTHERS",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 33,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 34,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 35,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "BCFEMALE - Blood Chemistry": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "FASTING BLOOD SUGAR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "70.27-124.32 mg/dL",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      },
+      {
+        "row": 13,
+        "field": "RANDOM BLOOD SUGAR",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "60 - 140 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 14,
+        "field": "HGT",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "53 - 103 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "BLOOD UREA NITROGEN",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "7.9- 20.2 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "CREATININE",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0.4-1.2 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "BLOOD URIC ACID",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "2.6 - 6.0 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 18,
+        "field": "SODIUM",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "135 - 148 mEq/L",
+        "notes": ""
+      },
+      {
+        "row": 19,
+        "field": "POTASSIUM",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "3.5 - 5.3 mEq/l",
+        "notes": ""
+      },
+      {
+        "row": 20,
+        "field": "CHLORIDE",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "98 - 107 mEq/L",
+        "notes": ""
+      },
+      {
+        "row": 22,
+        "field": "CHOLESTEROL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0 - 200 mg/dl",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      },
+      {
+        "row": 23,
+        "field": "TRIGLYCERIDE",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0 - 150 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 24,
+        "field": "HDL CHOLESTEROL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "30 - 85 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 25,
+        "field": "LDL CHOLESTEROL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "66 - 178 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 26,
+        "field": "VLDL CHOLESTEROL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0-40 mg/dl",
+        "notes": ""
+      },
+      {
+        "row": 27,
+        "field": "SGOT(AST)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0 - 31 U/L",
+        "notes": ""
+      },
+      {
+        "row": 28,
+        "field": "SGPT(ALT)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "0 - 34 U/L",
+        "notes": ""
+      },
+      {
+        "row": 29,
+        "field": "IONIZED CALCIUM",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "1.13-1.32 mEq/L",
+        "notes": ""
+      },
+      {
+        "row": 31,
+        "field": "OTHERS",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 33,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 34,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 35,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "BBANK - Blood Bank": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 29,
+        "field": "DATE/TIME",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 19,
+        "field": "TYPE OF CROSSMATCHING",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "PATIENT\u2019S BLOOD TYPE",
+        "input_type": "Predefined Selection",
+        "options_count": 8,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 13,
+        "field": "BLOOD COMPONENT",
+        "input_type": "Predefined Selection",
+        "options_count": 5,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 14,
+        "field": "DONOR\u2019S BLOOD TYPE",
+        "input_type": "Predefined Selection",
+        "options_count": 8,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "SOURCE OF BLOOD",
+        "input_type": "Predefined Selection",
+        "options_count": 10,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "SERIAL NUMBER",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "DATE EXTRACTED",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 18,
+        "field": "DATE EXPIRY",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 20,
+        "field": "IMMEDIATE SPIN/ SALINE PHASE",
+        "input_type": "manual entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 21,
+        "field": "ALBUMIN PHASE /37 \u00b0C",
+        "input_type": "manual entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 22,
+        "field": "ANTI HUMAN GLOBILIN PHASE",
+        "input_type": "manual entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 24,
+        "field": "REMARKS",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 25,
+        "field": "VITAL SIGNS",
+        "input_type": "Predefined Selection",
+        "options_count": 4,
+        "normal_value": "dapat meron na dropdownlist sa blood pressure, pulse rate, resparatory rate, temperature then mag iinput na lang ng result",
+        "notes": ""
+      },
+      {
+        "row": 27,
+        "field": "RELEASED BY",
+        "input_type": "Manual Entry",
+        "options_count": 6,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 28,
+        "field": "RELEASED TO",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 31,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 32,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 33,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "ABG - Blood Gas Analysis": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 11,
+        "field": "Blood gas value (ABG)",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "Calculated values (OXIMETRY)",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "Calculated values (ACID BASE STATUS)",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "pH",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "7.35-7.45",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      },
+      {
+        "row": 13,
+        "field": "pO2",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "80-105 mmHg",
+        "notes": ""
+      },
+      {
+        "row": 14,
+        "field": "pCO2",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "35.0-45.0 mmHg",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "sO2",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "95-100 %",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      },
+      {
+        "row": 18,
+        "field": "HCO3",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "22-28 mmol/L",
+        "notes": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED"
+      },
+      {
+        "row": 19,
+        "field": "BE(ecf)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "-2 to +2 mmol/L",
+        "notes": ""
+      },
+      {
+        "row": 20,
+        "field": "pO2(A-a)",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "5-10 mmHg",
+        "notes": ""
+      },
+      {
+        "row": 21,
+        "field": "TCO2",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "23-29 mmol/L",
+        "notes": ""
+      },
+      {
+        "row": 23,
+        "field": "NOTE",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 25,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 26,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 27,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "HIV 1&2 TESTING - Serology": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "LOT NUMBER",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 14,
+        "field": "TEST RESULT",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 16,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 18,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "COVID 19 ANTIGEN (RAPID TEST) -": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 1,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "TEST RESULT",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 14,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  },
+  "PROTIME, APTT - Hematology": {
+    "patient": [
+      {
+        "row": 3,
+        "field": "Name",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 4,
+        "field": "Age",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 5,
+        "field": "Sex",
+        "input_type": "Predefined Selection",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 6,
+        "field": "Date",
+        "input_type": "Predefined Selection",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 7,
+        "field": "Examination",
+        "input_type": "Predefined Selection",
+        "options_count": 3,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 8,
+        "field": "Requesting Physician",
+        "input_type": "Predefined Selection",
+        "options_count": 29,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 9,
+        "field": "Room",
+        "input_type": "Predefined Selection",
+        "options_count": 21,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 10,
+        "field": "Case Number",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "sections": [
+      {
+        "row": 2,
+        "field": "PATIENT INFORMATION",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 11,
+        "field": "PRO TIME",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "NOTE: ALL RESULTS ABOVE OR BELOW NORMAL VALUE MAKE IT RED",
+        "notes": ""
+      },
+      {
+        "row": 16,
+        "field": "APTT",
+        "input_type": "",
+        "options_count": 0,
+        "normal_value": "",
+        "notes": ""
+      }
+    ],
+    "inputs": [
+      {
+        "row": 12,
+        "field": "TEST",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "10.0-13.9 seconds",
+        "notes": ""
+      },
+      {
+        "row": 13,
+        "field": "CONTROL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "SECONDS",
+        "notes": ""
+      },
+      {
+        "row": 14,
+        "field": "INR",
+        "input_type": "Manual Entry",
+        "options_count": 0,
+        "normal_value": "0.70-1.30",
+        "notes": ""
+      },
+      {
+        "row": 15,
+        "field": "% ACTIVITY",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "% ACTIVITY",
+        "notes": ""
+      },
+      {
+        "row": 17,
+        "field": "TEST",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "22.2-37.9 seconds",
+        "notes": ""
+      },
+      {
+        "row": 18,
+        "field": "CONTROL",
+        "input_type": "Manual Entry",
+        "options_count": 1,
+        "normal_value": "SECONDS",
+        "notes": ""
+      }
+    ],
+    "signatory": [
+      {
+        "row": 20,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 21,
+        "field": "Medical Technologist",
+        "input_type": "Predefined Selection",
+        "options_count": 12,
+        "normal_value": "",
+        "notes": ""
+      },
+      {
+        "row": 22,
+        "field": "Pathologist",
+        "input_type": "Fixed including the signature",
+        "options_count": 2,
+        "normal_value": "",
+        "notes": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,949 @@
+{
+  "ABG": {
+    "R1": {
+      "label": "PH",
+      "all_candidates": [
+        "PH"
+      ]
+    },
+    "R2": {
+      "label": "PO2",
+      "all_candidates": [
+        "PO2"
+      ]
+    },
+    "R3": {
+      "label": "PCO2",
+      "all_candidates": [
+        "PCO2"
+      ]
+    },
+    "R4": {
+      "label": "SO2",
+      "all_candidates": [
+        "SO2"
+      ]
+    },
+    "R5": {
+      "label": "HCO3",
+      "all_candidates": [
+        "HCO3"
+      ]
+    },
+    "R6": {
+      "label": "BE ECF",
+      "all_candidates": [
+        "BE ECF"
+      ]
+    },
+    "R7": {
+      "label": "PO2 A A",
+      "all_candidates": [
+        "PO2 A A"
+      ]
+    },
+    "R8": {
+      "label": "TCO2",
+      "all_candidates": [
+        "TCO2"
+      ]
+    }
+  },
+  "BBANK": {
+    "R1": {
+      "label": "PATIENT S BLOOD TYPE",
+      "all_candidates": [
+        "PATIENT S BLOOD TYPE"
+      ]
+    },
+    "R2": {
+      "label": "BLOOD COMPONENT",
+      "all_candidates": [
+        "BLOOD COMPONENT"
+      ]
+    },
+    "R3": {
+      "label": "DONOR S BLOOD TYPE",
+      "all_candidates": [
+        "DONOR S BLOOD TYPE"
+      ]
+    },
+    "R4": {
+      "label": "SOURCE OF BLOOD",
+      "all_candidates": [
+        "SOURCE OF BLOOD"
+      ]
+    },
+    "R5": {
+      "label": "SERIAL NUMBER",
+      "all_candidates": [
+        "SERIAL NUMBER"
+      ]
+    },
+    "R6": {
+      "label": "DATE EXTRACTED",
+      "all_candidates": [
+        "DATE EXTRACTED"
+      ]
+    },
+    "R7": {
+      "label": "DATE EXPIRY",
+      "all_candidates": [
+        "DATE EXPIRY"
+      ]
+    },
+    "R8": {
+      "label": "IMMEDIATE SPIN SALINE PHASE",
+      "all_candidates": [
+        "IMMEDIATE SPIN SALINE PHASE"
+      ]
+    },
+    "R9": {
+      "label": "ALBUMIN PHASE 37 C",
+      "all_candidates": [
+        "ALBUMIN PHASE 37 C"
+      ]
+    },
+    "R10": {
+      "label": "ANTI HUMAN GLOBILIN PHASE",
+      "all_candidates": [
+        "ANTI HUMAN GLOBILIN PHASE"
+      ]
+    },
+    "R11": {
+      "label": "REMARKS",
+      "all_candidates": [
+        "REMARKS"
+      ]
+    },
+    "R12": {
+      "label": "VITAL SIGNS",
+      "all_candidates": [
+        "VITAL SIGNS"
+      ]
+    },
+    "R13": {
+      "label": "RELEASED BY",
+      "all_candidates": [
+        "RELEASED BY"
+      ]
+    },
+    "R14": {
+      "label": "RELEASED TO",
+      "all_candidates": [
+        "RELEASED TO"
+      ]
+    },
+    "R15": {
+      "label": "DATE TIME",
+      "all_candidates": [
+        "DATE TIME"
+      ]
+    }
+  },
+  "BCFEMALE": {
+    "R1": {
+      "label": "FASTING BLOOD SUGAR",
+      "all_candidates": [
+        "FASTING BLOOD SUGAR"
+      ]
+    },
+    "R2": {
+      "label": "RANDOM BLOOD SUGAR",
+      "all_candidates": [
+        "RANDOM BLOOD SUGAR"
+      ]
+    },
+    "R3": {
+      "label": "HGT",
+      "all_candidates": [
+        "HGT"
+      ]
+    },
+    "R4": {
+      "label": "BLOOD UREA NITROGEN",
+      "all_candidates": [
+        "BLOOD UREA NITROGEN"
+      ]
+    },
+    "R5": {
+      "label": "CREATININE",
+      "all_candidates": [
+        "CREATININE"
+      ]
+    },
+    "R6": {
+      "label": "BLOOD URIC ACID",
+      "all_candidates": [
+        "BLOOD URIC ACID"
+      ]
+    },
+    "R7": {
+      "label": "SODIUM",
+      "all_candidates": [
+        "SODIUM"
+      ]
+    },
+    "R8": {
+      "label": "POTASSIUM",
+      "all_candidates": [
+        "POTASSIUM"
+      ]
+    },
+    "R9": {
+      "label": "CHLORIDE",
+      "all_candidates": [
+        "CHLORIDE"
+      ]
+    },
+    "R10": {
+      "label": "CHOLESTEROL",
+      "all_candidates": [
+        "CHOLESTEROL"
+      ]
+    },
+    "R11": {
+      "label": "TRIGLYCERIDE",
+      "all_candidates": [
+        "TRIGLYCERIDE"
+      ]
+    },
+    "R12": {
+      "label": "HDL CHOLESTEROL",
+      "all_candidates": [
+        "HDL CHOLESTEROL"
+      ]
+    },
+    "R13": {
+      "label": "LDL CHOLESTEROL",
+      "all_candidates": [
+        "LDL CHOLESTEROL"
+      ]
+    },
+    "R14": {
+      "label": "VLDL CHOLESTEROL",
+      "all_candidates": [
+        "VLDL CHOLESTEROL"
+      ]
+    },
+    "R15": {
+      "label": "SGOT AST",
+      "all_candidates": [
+        "SGOT AST"
+      ]
+    },
+    "R16": {
+      "label": "SGPT ALT",
+      "all_candidates": [
+        "SGPT ALT"
+      ]
+    },
+    "R17": {
+      "label": "IONIZED CALCIUM",
+      "all_candidates": [
+        "IONIZED CALCIUM"
+      ]
+    }
+  },
+  "BCMALE": {
+    "R1": {
+      "label": "FASTING BLOOD SUGAR",
+      "all_candidates": [
+        "FASTING BLOOD SUGAR"
+      ]
+    },
+    "R2": {
+      "label": "RANDOM BLOOD SUGAR",
+      "all_candidates": [
+        "RANDOM BLOOD SUGAR"
+      ]
+    },
+    "R3": {
+      "label": "HGT",
+      "all_candidates": [
+        "HGT"
+      ]
+    },
+    "R4": {
+      "label": "BLOOD UREA NITROGEN",
+      "all_candidates": [
+        "BLOOD UREA NITROGEN"
+      ]
+    },
+    "R5": {
+      "label": "CREATININE",
+      "all_candidates": [
+        "CREATININE"
+      ]
+    },
+    "R6": {
+      "label": "BLOOD URIC ACID",
+      "all_candidates": [
+        "BLOOD URIC ACID"
+      ]
+    },
+    "R7": {
+      "label": "SODIUM",
+      "all_candidates": [
+        "SODIUM"
+      ]
+    },
+    "R8": {
+      "label": "POTASSIUM",
+      "all_candidates": [
+        "POTASSIUM"
+      ]
+    },
+    "R9": {
+      "label": "CHLORIDE",
+      "all_candidates": [
+        "CHLORIDE"
+      ]
+    },
+    "R10": {
+      "label": "CHOLESTEROL",
+      "all_candidates": [
+        "CHOLESTEROL"
+      ]
+    },
+    "R11": {
+      "label": "TRIGLYCERIDE",
+      "all_candidates": [
+        "TRIGLYCERIDE"
+      ]
+    },
+    "R12": {
+      "label": "HDL CHOLESTEROL",
+      "all_candidates": [
+        "HDL CHOLESTEROL"
+      ]
+    },
+    "R13": {
+      "label": "LDL CHOLESTEROL",
+      "all_candidates": [
+        "LDL CHOLESTEROL"
+      ]
+    },
+    "R14": {
+      "label": "VLDL CHOLESTEROL",
+      "all_candidates": [
+        "VLDL CHOLESTEROL"
+      ]
+    },
+    "R15": {
+      "label": "SGOT AST",
+      "all_candidates": [
+        "SGOT AST"
+      ]
+    },
+    "R16": {
+      "label": "SGPT ALT",
+      "all_candidates": [
+        "SGPT ALT"
+      ]
+    },
+    "R17": {
+      "label": "IONIZED CALCIUM",
+      "all_candidates": [
+        "IONIZED CALCIUM"
+      ]
+    }
+  },
+  "CARDIAC": {
+    "R1": {
+      "label": "TROPONIN I",
+      "all_candidates": [
+        "TROPONIN I"
+      ]
+    },
+    "R2": {
+      "label": "CK MB",
+      "all_candidates": [
+        "CK MB"
+      ]
+    },
+    "R3": {
+      "label": "MYOGLOBULIN",
+      "all_candidates": [
+        "MYOGLOBULIN"
+      ]
+    }
+  },
+  "CARDIACI": {
+    "R1": {
+      "label": "CK MB",
+      "all_candidates": [
+        "CK MB"
+      ]
+    },
+    "R3": {
+      "label": "TROPONIN I",
+      "all_candidates": [
+        "TROPONIN I"
+      ]
+    },
+    "R4": {
+      "label": "BNP",
+      "all_candidates": [
+        "BNP"
+      ]
+    }
+  },
+  "COAG": {
+    "R1": {
+      "label": "TEST",
+      "all_candidates": [
+        "TEST"
+      ]
+    },
+    "R2": {
+      "label": "INR",
+      "all_candidates": [
+        "INR"
+      ]
+    },
+    "R3": {
+      "label": "ACTIVITY",
+      "all_candidates": [
+        "ACTIVITY"
+      ]
+    },
+    "R4": {
+      "label": "TEST",
+      "all_candidates": [
+        "TEST"
+      ]
+    }
+  },
+  "FECALYSIS": {
+    "R1": {
+      "label": "COLOR",
+      "all_candidates": [
+        "COLOR"
+      ]
+    },
+    "R2": {
+      "label": "CONSISTENCY",
+      "all_candidates": [
+        "CONSISTENCY"
+      ]
+    },
+    "R3": {
+      "label": "FECAL OCCULT BLOOD",
+      "all_candidates": [
+        "FECAL OCCULT BLOOD"
+      ]
+    },
+    "R4": {
+      "label": "PUS",
+      "all_candidates": [
+        "PUS"
+      ]
+    },
+    "R5": {
+      "label": "RED BLOOD CELL",
+      "all_candidates": [
+        "RED BLOOD CELL"
+      ]
+    },
+    "R6": {
+      "label": "BUDDING YEAST",
+      "all_candidates": [
+        "BUDDING YEAST"
+      ]
+    },
+    "R7": {
+      "label": "BACTERIA",
+      "all_candidates": [
+        "BACTERIA"
+      ]
+    },
+    "R8": {
+      "label": "FAT GLOBULES",
+      "all_candidates": [
+        "FAT GLOBULES"
+      ]
+    },
+    "R9": {
+      "label": "PARASITES",
+      "all_candidates": [
+        "PARASITES"
+      ]
+    },
+    "R10": {
+      "label": "AMOEBA",
+      "all_candidates": [
+        "AMOEBA"
+      ]
+    }
+  },
+  "HBA1C": {
+    "R1": {
+      "label": "RESULT",
+      "all_candidates": [
+        "RESULT"
+      ]
+    }
+  },
+  "HBA1CI": {
+    "R1": {
+      "label": "RESULT",
+      "all_candidates": [
+        "RESULT"
+      ]
+    }
+  },
+  "HEMATOLOGY": {
+    "R1": {
+      "label": "RBC COUNT M",
+      "all_candidates": [
+        "RBC COUNT M"
+      ]
+    },
+    "R2": {
+      "label": "F",
+      "all_candidates": [
+        "F"
+      ]
+    },
+    "R3": {
+      "label": "WBC COUNT",
+      "all_candidates": [
+        "WBC COUNT"
+      ]
+    },
+    "R4": {
+      "label": "HEMOGLOBIN M",
+      "all_candidates": [
+        "HEMOGLOBIN M"
+      ]
+    },
+    "R5": {
+      "label": "F",
+      "all_candidates": [
+        "F"
+      ]
+    },
+    "R6": {
+      "label": "HEMATOCRIT M",
+      "all_candidates": [
+        "HEMATOCRIT M"
+      ]
+    },
+    "R7": {
+      "label": "F",
+      "all_candidates": [
+        "F"
+      ]
+    },
+    "R8": {
+      "label": "PLATELET COUNT",
+      "all_candidates": [
+        "PLATELET COUNT"
+      ]
+    },
+    "R9": {
+      "label": "CLOTTING TIME",
+      "all_candidates": [
+        "CLOTTING TIME"
+      ]
+    },
+    "R10": {
+      "label": "BLEEDING TIME",
+      "all_candidates": [
+        "BLEEDING TIME"
+      ]
+    },
+    "R11": {
+      "label": "BLOOD TYPING",
+      "all_candidates": [
+        "BLOOD TYPING"
+      ]
+    },
+    "R12": {
+      "label": "SEGMENTERS",
+      "all_candidates": [
+        "SEGMENTERS"
+      ]
+    },
+    "R13": {
+      "label": "LYMPHOCYTES",
+      "all_candidates": [
+        "LYMPHOCYTES"
+      ]
+    },
+    "R14": {
+      "label": "MONOCYTES",
+      "all_candidates": [
+        "MONOCYTES"
+      ]
+    },
+    "R15": {
+      "label": "EOSINOPHILS",
+      "all_candidates": [
+        "EOSINOPHILS"
+      ]
+    },
+    "R16": {
+      "label": "STAB",
+      "all_candidates": [
+        "STAB"
+      ]
+    },
+    "R17": {
+      "label": "E S R M",
+      "all_candidates": [
+        "E S R M"
+      ]
+    },
+    "R18": {
+      "label": "F",
+      "all_candidates": [
+        "F"
+      ]
+    }
+  },
+  "HSCRP": {
+    "R1": {
+      "label": "MG L",
+      "all_candidates": [
+        "MG L"
+      ]
+    }
+  },
+  "MICROBIOLOGY": {},
+  "OGTT": {
+    "R1": {
+      "label": "1ST HOUR",
+      "all_candidates": [
+        "1ST HOUR"
+      ]
+    },
+    "R2": {
+      "label": "2ND HOUR",
+      "all_candidates": [
+        "2ND HOUR"
+      ]
+    },
+    "R3": {
+      "label": "FASTING BLOOD SUGAR",
+      "all_candidates": [
+        "FASTING BLOOD SUGAR"
+      ]
+    },
+    "R4": {
+      "label": "1ST HOUR",
+      "all_candidates": [
+        "1ST HOUR"
+      ]
+    },
+    "R5": {
+      "label": "2ND HOUR",
+      "all_candidates": [
+        "2ND HOUR"
+      ]
+    },
+    "R6": {
+      "label": "FASTING BLOOD SUGAR",
+      "all_candidates": [
+        "FASTING BLOOD SUGAR"
+      ]
+    },
+    "R7": {
+      "label": "1ST HOUR",
+      "all_candidates": [
+        "1ST HOUR"
+      ]
+    },
+    "R8": {
+      "label": "2ND HOUR",
+      "all_candidates": [
+        "2ND HOUR"
+      ]
+    },
+    "R9": {
+      "label": "3RD HOUR",
+      "all_candidates": [
+        "3RD HOUR"
+      ]
+    },
+    "R10": {
+      "label": "2 HOURS POST PRANDIAL",
+      "all_candidates": [
+        "2 HOURS POST PRANDIAL"
+      ]
+    },
+    "R11": {
+      "label": "50 G ORAL GLUCOSE CHALLENGE",
+      "all_candidates": [
+        "50 G ORAL GLUCOSE CHALLENGE"
+      ]
+    }
+  },
+  "SEMEN": {
+    "R1": {
+      "label": "TIME COLLECTED",
+      "all_candidates": [
+        "TIME COLLECTED"
+      ]
+    },
+    "R2": {
+      "label": "TIME RECEIVED",
+      "all_candidates": [
+        "TIME RECEIVED"
+      ]
+    },
+    "R3": {
+      "label": "TOTAL VOLUME",
+      "all_candidates": [
+        "TOTAL VOLUME"
+      ]
+    },
+    "R4": {
+      "label": "LIQUEFACTION TIME",
+      "all_candidates": [
+        "LIQUEFACTION TIME"
+      ]
+    },
+    "R5": {
+      "label": "MOTILE",
+      "all_candidates": [
+        "MOTILE"
+      ]
+    },
+    "R6": {
+      "label": "NON MOTILE",
+      "all_candidates": [
+        "NON MOTILE"
+      ]
+    },
+    "R7": {
+      "label": "NORMAL",
+      "all_candidates": [
+        "NORMAL"
+      ]
+    },
+    "R8": {
+      "label": "ABNORMAL",
+      "all_candidates": [
+        "ABNORMAL"
+      ]
+    },
+    "R9": {
+      "label": "RESULT",
+      "all_candidates": [
+        "RESULT"
+      ]
+    },
+    "R10": {
+      "label": "OTHERS",
+      "all_candidates": [
+        "OTHERS"
+      ]
+    },
+    "R11": {
+      "label": "MOTILE",
+      "all_candidates": [
+        "MOTILE"
+      ]
+    },
+    "R12": {
+      "label": "EPITHELIAL CELL",
+      "all_candidates": [
+        "EPITHELIAL CELL"
+      ]
+    }
+  },
+  "SEROLOGY": {
+    "R1": {
+      "label": "IGM",
+      "all_candidates": [
+        "IGM"
+      ]
+    },
+    "R2": {
+      "label": "IGG",
+      "all_candidates": [
+        "IGG"
+      ]
+    },
+    "R3": {
+      "label": "NS1AG",
+      "all_candidates": [
+        "NS1AG"
+      ]
+    },
+    "R4": {
+      "label": "IGM",
+      "all_candidates": [
+        "IGM"
+      ]
+    },
+    "R5": {
+      "label": "IGG",
+      "all_candidates": [
+        "IGG"
+      ]
+    },
+    "R6": {
+      "label": "ANTI PLASMODIUM FALCIFARUM",
+      "all_candidates": [
+        "ANTI PLASMODIUM FALCIFARUM"
+      ]
+    },
+    "R7": {
+      "label": "ANTI PLASMODIUM VIVAX",
+      "all_candidates": [
+        "ANTI PLASMODIUM VIVAX"
+      ]
+    },
+    "R8": {
+      "label": "VDRL",
+      "all_candidates": [
+        "VDRL"
+      ]
+    },
+    "R9": {
+      "label": "HBSAG SCREENING",
+      "all_candidates": [
+        "HBSAG SCREENING"
+      ]
+    },
+    "R10": {
+      "label": "TROPONIN I",
+      "all_candidates": [
+        "TROPONIN I"
+      ]
+    },
+    "R11": {
+      "label": "ASO TITER",
+      "all_candidates": [
+        "ASO TITER"
+      ]
+    }
+  },
+  "SEROLOGYI": {
+    "R1": {
+      "label": "ASO TITER 5YEARS OLD ABOVE",
+      "all_candidates": [
+        "ASO TITER 5YEARS OLD ABOVE"
+      ]
+    },
+    "R2": {
+      "label": "ASO TITER LESS THAN 5 YEARS OLD",
+      "all_candidates": [
+        "ASO TITER LESS THAN 5 YEARS OLD"
+      ]
+    },
+    "R3": {
+      "label": "RHEUMATOID FACTOR",
+      "all_candidates": [
+        "RHEUMATOID FACTOR"
+      ]
+    },
+    "R4": {
+      "label": "C3",
+      "all_candidates": [
+        "C3"
+      ]
+    }
+  },
+  "URINE": {
+    "R1": {
+      "label": "COLOR",
+      "all_candidates": [
+        "COLOR"
+      ]
+    },
+    "R2": {
+      "label": "TRANSPARENCY",
+      "all_candidates": [
+        "TRANSPARENCY"
+      ]
+    },
+    "R3": {
+      "label": "REACTION",
+      "all_candidates": [
+        "REACTION"
+      ]
+    },
+    "R4": {
+      "label": "SPECIFIC GRAVITY",
+      "all_candidates": [
+        "SPECIFIC GRAVITY"
+      ]
+    },
+    "R5": {
+      "label": "SUGAR",
+      "all_candidates": [
+        "SUGAR"
+      ]
+    },
+    "R6": {
+      "label": "PROTEIN",
+      "all_candidates": [
+        "PROTEIN"
+      ]
+    },
+    "R7": {
+      "label": "PREGNANCY TEST",
+      "all_candidates": [
+        "PREGNANCY TEST"
+      ]
+    },
+    "R8": {
+      "label": "RED BLOOD CELL",
+      "all_candidates": [
+        "RED BLOOD CELL"
+      ]
+    },
+    "R9": {
+      "label": "WHITE BLOOD CELL",
+      "all_candidates": [
+        "WHITE BLOOD CELL"
+      ]
+    },
+    "R10": {
+      "label": "EPITHELIAL CELL",
+      "all_candidates": [
+        "EPITHELIAL CELL"
+      ]
+    },
+    "R11": {
+      "label": "AMORPHOUS URATES",
+      "all_candidates": [
+        "AMORPHOUS URATES"
+      ]
+    },
+    "R12": {
+      "label": "AMORPHOUS PHOSPHATE",
+      "all_candidates": [
+        "AMORPHOUS PHOSPHATE"
+      ]
+    },
+    "R13": {
+      "label": "CALCIUM OXALATE",
+      "all_candidates": [
+        "CALCIUM OXALATE"
+      ]
+    },
+    "R14": {
+      "label": "URIC ACID CRYSTAL",
+      "all_candidates": [
+        "URIC ACID CRYSTAL"
+      ]
+    },
+    "R15": {
+      "label": "MUCUS THREAD",
+      "all_candidates": [
+        "MUCUS THREAD"
+      ]
+    },
+    "R16": {
+      "label": "BACTERIA",
+      "all_candidates": [
+        "BACTERIA"
+      ]
+    }
+  }
+}
