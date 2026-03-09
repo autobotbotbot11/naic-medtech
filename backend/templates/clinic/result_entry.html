@@ -1,0 +1,112 @@
+{% extends "clinic/base.html" %}
+{% load form_extras %}
+
+{% block title %}Encode Results | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Result Entry</div>
+        <h2>{{ request_item.exam_definition.exam_name }}</h2>
+        <p>{{ request_item.lab_request.request_no }}{% if request_item.exam_option %} | {{ request_item.exam_option.option_label }}{% endif %} | Version {{ request_item.exam_definition_version.version_no }}</p>
+    </div>
+    <a class="button button-secondary" href="{% url 'request_detail' request_item.lab_request.pk %}">Back to Request</a>
+</section>
+
+<section class="panel panel-split">
+    <article>
+        <h3>Patient Snapshot</h3>
+        <dl class="detail-grid">
+            <div><dt>Patient</dt><dd>{{ request_item.lab_request.patient_name_snapshot }}</dd></div>
+            <div><dt>Age</dt><dd>{{ request_item.lab_request.age_snapshot_text|default:"-" }}</dd></div>
+            <div><dt>Sex</dt><dd>{{ request_item.lab_request.get_sex_snapshot_display|default:"-" }}</dd></div>
+            <div><dt>Date/Time</dt><dd>{{ request_item.lab_request.request_datetime|date:"M d, Y h:i A" }}</dd></div>
+        </dl>
+    </article>
+    <article>
+        <h3>Request Context</h3>
+        <dl class="detail-grid">
+            <div><dt>Case Number</dt><dd>{{ request_item.lab_request.case_number|default:"-" }}</dd></div>
+            <div><dt>Physician</dt><dd>{{ request_item.lab_request.physician_name_snapshot|default:"-" }}</dd></div>
+            <div><dt>Room</dt><dd>{{ request_item.lab_request.room_name_snapshot|default:"-" }}</dd></div>
+            <div><dt>Item Status</dt><dd><span class="status status-{{ request_item.item_status }}">{{ request_item.get_item_status_display }}</span></dd></div>
+        </dl>
+    </article>
+</section>
+
+<form method="post" enctype="multipart/form-data" class="panel form-panel">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <div class="form-errors">
+            {% for error in form.non_field_errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% for group in groups %}
+        <section class="result-group">
+            {% if group.title %}
+                <div class="group-title">{{ group.title }}</div>
+            {% endif %}
+            <div class="form-grid">
+                {% for entry in group.entries %}
+                    {% if entry.kind == "note" %}
+                        <div class="note-card">
+                            <strong>{{ entry.field.field_label }}</strong>
+                            <p>{{ entry.text }}</p>
+                        </div>
+                    {% elif entry.kind == "grouped" %}
+                        <div class="grouped-card form-row-wide">
+                            <div class="grouped-head">
+                                <h4>{{ entry.field.field_label }}</h4>
+                                {% if entry.reference_text %}<span>{{ entry.reference_text }}</span>{% endif %}
+                            </div>
+                                {% if entry.help_text %}<p class="helper-text">{{ entry.help_text }}</p>{% endif %}
+                            <div class="subfield-grid">
+                                {% for subfield in entry.subfields %}
+                                    {% with input_field=form|bound_field:subfield.name %}
+                                        <div class="form-row">
+                                            <label for="{{ input_field.id_for_label }}">
+                                                {{ subfield.label }}{% if subfield.unit %} ({{ subfield.unit }}){% endif %}
+                                            </label>
+                                            {{ input_field }}
+                                            {% for error in input_field.errors %}
+                                                <p class="field-error">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    {% endwith %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        {% with input_field=form|bound_field:entry.name %}
+                            <div class="form-row {% if entry.field.input_type == 'attachment' or entry.field.input_type == 'textarea' %}form-row-wide{% endif %}">
+                                <label for="{{ input_field.id_for_label }}">{{ input_field.label }}</label>
+                                {{ input_field }}
+                                {% if entry.reference_text %}
+                                    <small>Reference: {{ entry.reference_text }}</small>
+                                {% endif %}
+                                {% if entry.help_text %}
+                                    <small>{{ entry.help_text }}</small>
+                                {% endif %}
+                                {% if entry.existing_attachment %}
+                                    <small>Current file: <a href="{{ entry.existing_attachment.file.url }}" target="_blank" rel="noreferrer">{{ entry.existing_attachment.original_name }}</a></small>
+                                {% endif %}
+                                {% for error in input_field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endwith %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+    {% endfor %}
+
+    <div class="form-actions">
+        <button class="button button-primary" type="submit">Save Results</button>
+        <a class="button button-secondary" href="{% url 'request_detail' request_item.lab_request.pk %}">Back to Request</a>
+    </div>
+</form>
+{% endblock %}

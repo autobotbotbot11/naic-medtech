@@ -1,0 +1,72 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}{{ lab_request.request_no }} | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Lab Request</div>
+        <h2>{{ lab_request.request_no }}</h2>
+        <p>{{ lab_request.patient_name_snapshot }}{% if lab_request.age_snapshot_text %} | {{ lab_request.age_snapshot_text }}{% endif %}{% if lab_request.get_sex_snapshot_display %} | {{ lab_request.get_sex_snapshot_display }}{% endif %}</p>
+    </div>
+    <a class="button button-primary" href="{% url 'request_add_item' lab_request.pk %}">Add Exam Item</a>
+</section>
+
+<section class="panel panel-split">
+    <article>
+        <h3>Request Snapshot</h3>
+        <dl class="detail-grid">
+            <div><dt>Case Number</dt><dd>{{ lab_request.case_number|default:"-" }}</dd></div>
+            <div><dt>Date/Time</dt><dd>{{ lab_request.request_datetime|date:"M d, Y h:i A" }}</dd></div>
+            <div><dt>Physician</dt><dd>{{ lab_request.physician_name_snapshot|default:"-" }}</dd></div>
+            <div><dt>Room</dt><dd>{{ lab_request.room_name_snapshot|default:"-" }}</dd></div>
+            <div><dt>Status</dt><dd><span class="status status-{{ lab_request.status }}">{{ lab_request.get_status_display }}</span></dd></div>
+            <div><dt>Notes</dt><dd>{{ lab_request.notes|default:"-" }}</dd></div>
+        </dl>
+    </article>
+    <article>
+        <h3>Quick Exam Links</h3>
+        <div class="chip-grid">
+            {% for exam in exam_definitions %}
+                <a class="chip" href="{% url 'request_add_item' lab_request.pk %}?exam={{ exam.pk }}">{{ exam.exam_name }}</a>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Exam Items</h3>
+    </div>
+    {% if lab_request.items.all %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Exam</th>
+                        <th>Option</th>
+                        <th>Status</th>
+                        <th>Version</th>
+                        <th>Saved Values</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in lab_request.items.all %}
+                        <tr>
+                            <td>{{ item.exam_definition.exam_name }}</td>
+                            <td>{{ item.exam_option.option_label|default:"-" }}</td>
+                            <td><span class="status status-{{ item.item_status }}">{{ item.get_item_status_display }}</span></td>
+                            <td>v{{ item.exam_definition_version.version_no }}</td>
+                            <td>{{ item.result_values.count }}</td>
+                            <td><a class="text-link" href="{% url 'item_result_entry' item.pk %}">Encode</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No exam items yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

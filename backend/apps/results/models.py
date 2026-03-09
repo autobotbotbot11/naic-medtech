@@ -106,6 +106,12 @@ class LabResultValue(TimeStampedModel):
 
     class Meta:
         ordering = ["sort_order_snapshot", "id"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["lab_request_item", "field"],
+                name="uq_lab_result_value_item_field",
+            ),
+        ]
         indexes = [
             models.Index(fields=["field_key_snapshot"]),
             models.Index(fields=["abnormal_flag"]),
@@ -119,6 +125,13 @@ class Attachment(TimeStampedModel):
     lab_request_item = models.ForeignKey(
         "results.LabRequestItem",
         on_delete=models.CASCADE,
+        related_name="attachments",
+    )
+    field = models.ForeignKey(
+        "exams.ExamField",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
         related_name="attachments",
     )
     attachment_type = models.CharField(max_length=64)

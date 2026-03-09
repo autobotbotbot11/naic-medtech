@@ -1,0 +1,42 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}New Request | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Request Intake</div>
+        <h2>Create Lab Request</h2>
+        <p>Capture the patient snapshot first. Exam items are added after the request is created.</p>
+    </div>
+</section>
+
+<form method="post" class="panel form-panel">
+    {% csrf_token %}
+    <div class="form-grid">
+        {% for field in form %}
+            <div class="form-row {% if field.name == 'notes' %}form-row-wide{% endif %}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    {% if form.non_field_errors %}
+        <div class="form-errors">
+            {% for error in form.non_field_errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="form-actions">
+        <button class="button button-primary" type="submit">Create Request</button>
+        <a class="button button-secondary" href="{% url 'dashboard' %}">Cancel</a>
+    </div>
+</form>
+{% endblock %}

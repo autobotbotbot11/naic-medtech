@@ -1,0 +1,63 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}Dashboard | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Operations</div>
+        <h2>Recent Lab Requests</h2>
+        <p>Start a request, add exam items, and encode results from the imported workbook definitions.</p>
+    </div>
+    <a class="button button-primary" href="{% url 'request_create' %}">Create Request</a>
+</section>
+
+<section class="stat-grid">
+    <article class="stat-card">
+        <span>Lab Requests</span>
+        <strong>{{ request_count }}</strong>
+    </article>
+    <article class="stat-card">
+        <span>Patients</span>
+        <strong>{{ patient_count }}</strong>
+    </article>
+    <article class="stat-card">
+        <span>Request Items</span>
+        <strong>{{ item_count }}</strong>
+    </article>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Latest Activity</h3>
+    </div>
+    {% if recent_requests %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Request No</th>
+                        <th>Patient</th>
+                        <th>Date/Time</th>
+                        <th>Status</th>
+                        <th>Items</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lab_request in recent_requests %}
+                        <tr>
+                            <td><a href="{% url 'request_detail' lab_request.pk %}">{{ lab_request.request_no }}</a></td>
+                            <td>{{ lab_request.patient_name_snapshot }}</td>
+                            <td>{{ lab_request.request_datetime|date:"M d, Y h:i A" }}</td>
+                            <td><span class="status status-{{ lab_request.status }}">{{ lab_request.get_status_display }}</span></td>
+                            <td>{{ lab_request.items.count }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No lab requests yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

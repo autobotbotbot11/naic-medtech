@@ -137,6 +137,7 @@ class ExamField(TimeStampedModel):
     help_text = models.TextField(blank=True)
     placeholder_text = models.CharField(max_length=255, blank=True)
     reference_text = models.CharField(max_length=255, blank=True)
+    config_json = models.JSONField(default=dict, blank=True)
     supports_attachment = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
 

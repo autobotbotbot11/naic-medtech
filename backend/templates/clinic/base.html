@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Clinic Lab System{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+    <div class="shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-kicker">NAIC Medtech</div>
+                <h1>Clinic Lab System</h1>
+                <p>Workbook-driven lab request and result entry.</p>
+            </div>
+            <nav class="nav">
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'request_create' %}">New Request</a>
+                <a href="/admin/">Admin</a>
+            </nav>
+        </aside>
+        <main class="main">
+            {% if messages %}
+                <div class="flash-stack">
+                    {% for message in messages %}
+                        <div class="flash {{ message.tags|default:'info' }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>
