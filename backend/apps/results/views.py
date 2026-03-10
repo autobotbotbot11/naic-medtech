@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.results.models import LabRequestItem
+from apps.results.rendering import build_result_print_context
 from apps.results.services import build_result_entry, persist_result_entry
 
 
@@ -45,3 +46,28 @@ def item_result_entry(request, pk):
         "groups": groups,
     }
     return render(request, "clinic/result_entry.html", context)
+
+
+def item_result_print(request, pk):
+    request_item = get_object_or_404(
+        LabRequestItem.objects.select_related(
+            "lab_request",
+            "exam_definition",
+            "exam_definition_version",
+            "exam_definition_version__render_profile",
+            "exam_option",
+            "medtech_signatory",
+            "pathologist_signatory",
+        ).prefetch_related(
+            "result_values__field",
+            "attachments__field",
+            "exam_definition_version__fields__section",
+            "exam_definition_version__fields__select_options",
+            "exam_definition_version__fields__reference_ranges",
+            "exam_definition_version__rules",
+        ),
+        pk=pk,
+    )
+
+    context = build_result_print_context(request_item)
+    return render(request, "clinic/result_print.html", context)

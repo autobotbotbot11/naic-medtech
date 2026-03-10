@@ -17,6 +17,7 @@ from apps.exams.models import (
     ExamDefinitionVersion,
     ExamField,
     ExamFieldReferenceRange,
+    ExamRenderProfile,
     ExamFieldSelectOption,
     ExamOption,
 )
@@ -132,6 +133,12 @@ class ResultEntryFlowTests(TestCase):
             active=True,
             config_json={},
         )
+        ExamRenderProfile.objects.create(
+            exam_version=self.version,
+            layout_type="result_table",
+            config_json={"show_reference_ranges": True, "show_units": True},
+            active=True,
+        )
 
     def tearDown(self):
         self.settings_override.disable()
@@ -203,3 +210,84 @@ class ResultEntryFlowTests(TestCase):
         self.assertEqual(grouped_value.value_json["temperature"], "37.1")
         self.assertEqual(attachment.original_name, "result.jpg")
         self.assertEqual(attachment_value.value_json["attachment_id"], attachment.id)
+
+    def test_print_view_renders_saved_results(self):
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=self.exam_definition,
+            exam_definition_version=self.version,
+            exam_option=self.option,
+        )
+        numeric_value = LabResultValue.objects.create(
+            lab_request_item=item,
+            field=self.numeric_field,
+            field_key_snapshot=self.numeric_field.field_key,
+            field_label_snapshot=self.numeric_field.field_label,
+            section_key_snapshot="",
+            input_type_snapshot=self.numeric_field.input_type,
+            unit_snapshot=self.numeric_field.unit,
+            value_number="6.2",
+            reference_text_snapshot="3 - 5",
+            abnormal_flag=True,
+            abnormal_reason="Above normal range (3 - 5)",
+            sort_order_snapshot=self.numeric_field.sort_order,
+        )
+        select_value = LabResultValue.objects.create(
+            lab_request_item=item,
+            field=self.select_field,
+            field_key_snapshot=self.select_field.field_key,
+            field_label_snapshot=self.select_field.field_label,
+            section_key_snapshot="",
+            input_type_snapshot=self.select_field.input_type,
+            unit_snapshot="",
+            value_text="Positive",
+            selected_option_value="positive",
+            selected_option_label_snapshot="Positive",
+            sort_order_snapshot=self.select_field.sort_order,
+        )
+        grouped_value = LabResultValue.objects.create(
+            lab_request_item=item,
+            field=self.grouped_field,
+            field_key_snapshot=self.grouped_field.field_key,
+            field_label_snapshot=self.grouped_field.field_label,
+            section_key_snapshot="",
+            input_type_snapshot=self.grouped_field.input_type,
+            unit_snapshot="",
+            value_json={"blood_pressure": "120/80", "temperature": "37.1"},
+            sort_order_snapshot=self.grouped_field.sort_order,
+        )
+        attachment = Attachment.objects.create(
+            lab_request_item=item,
+            field=self.attachment_field,
+            attachment_type=self.attachment_field.field_key,
+            file=SimpleUploadedFile("result.jpg", b"image-bytes", content_type="image/jpeg"),
+            original_name="result.jpg",
+            mime_type="image/jpeg",
+        )
+        attachment_value = LabResultValue.objects.create(
+            lab_request_item=item,
+            field=self.attachment_field,
+            field_key_snapshot=self.attachment_field.field_key,
+            field_label_snapshot=self.attachment_field.field_label,
+            section_key_snapshot="",
+            input_type_snapshot=self.attachment_field.input_type,
+            unit_snapshot="",
+            value_text="result.jpg",
+            value_json={"attachment_id": attachment.id, "file_name": "result.jpg"},
+            sort_order_snapshot=self.attachment_field.sort_order,
+        )
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Demo Exam")
+        self.assertContains(response, "Maria Santos")
+        self.assertContains(response, "Hemoglobin")
+        self.assertContains(response, "6.2")
+        self.assertContains(response, "Above normal range (3 - 5)")
+        self.assertContains(response, "Qualitative Status")
+        self.assertContains(response, "Positive")
+        self.assertContains(response, "Vital Signs")
+        self.assertContains(response, "120/80")
+        self.assertContains(response, "37.1")
+        self.assertContains(response, "result.jpg")

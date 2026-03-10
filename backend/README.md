@@ -1,6 +1,10 @@
 # Backend Setup
 
 Read [PROJECT_CONTEXT.md](C:\Users\acer\Desktop\naic-app\PROJECT_CONTEXT.md) first if the original chat history is unavailable.
+Then read:
+- [AGENTS.md](C:\Users\acer\Desktop\naic-app\AGENTS.md)
+- [DECISIONS.md](C:\Users\acer\Desktop\naic-app\DECISIONS.md)
+- [NEXT_STEPS.md](C:\Users\acer\Desktop\naic-app\NEXT_STEPS.md)
 
 ## Stack
 - Django 5.2
@@ -61,9 +65,10 @@ Implemented:
 - basic request intake UI
 - request-item creation flow
 - dynamic result entry UI based on imported exam metadata
+- initial HTML print preview for saved results
 
 Not yet implemented:
 - custom admin exam builder UI
-- rendering/print engine
+- advanced print fidelity / export flow
 - reports/dashboard
 - master-data importer for physicians, rooms, and signatories

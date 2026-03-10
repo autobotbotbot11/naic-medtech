@@ -59,7 +59,11 @@
                             <td><span class="status status-{{ item.item_status }}">{{ item.get_item_status_display }}</span></td>
                             <td>v{{ item.exam_definition_version.version_no }}</td>
                             <td>{{ item.result_values.count }}</td>
-                            <td><a class="text-link" href="{% url 'item_result_entry' item.pk %}">Encode</a></td>
+                            <td>
+                                <a class="text-link" href="{% url 'item_result_entry' item.pk %}">Encode</a>
+                                |
+                                <a class="text-link" href="{% url 'item_result_print' item.pk %}" target="_blank" rel="noreferrer">Print</a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

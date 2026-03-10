@@ -102,6 +102,12 @@ small {
     margin-bottom: 24px;
 }
 
+.action-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 .button {
     display: inline-flex;
     align-items: center;

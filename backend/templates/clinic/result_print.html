@@ -1,0 +1,186 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ header.exam_name }} | Print Preview</title>
+    <link rel="stylesheet" href="{% static 'css/print.css' %}">
+</head>
+<body>
+    <div class="print-shell">
+        <header class="print-actions">
+            <a class="print-button" href="{% url 'item_result_entry' request_item.pk %}">Back to Encoder</a>
+            <button class="print-button print-button-primary" type="button" onclick="window.print()">Print</button>
+        </header>
+
+        <main class="report-sheet">
+            <section class="report-head">
+                <div>
+                    <div class="report-kicker">Laboratory Result</div>
+                    <h1>{{ header.exam_name }}</h1>
+                    <p>
+                        {{ header.request_no }}
+                        {% if header.exam_option %} | {{ header.exam_option }}{% endif %}
+                        | {{ header.version_text }}
+                    </p>
+                </div>
+                <div class="report-meta">
+                    <div><span>Date/Time</span><strong>{{ header.request_datetime_text|default:"-" }}</strong></div>
+                    <div><span>Case No.</span><strong>{{ header.case_number|default:"-" }}</strong></div>
+                </div>
+            </section>
+
+            <section class="summary-grid">
+                <article class="summary-card">
+                    <h2>Patient</h2>
+                    <dl>
+                        <div><dt>Name</dt><dd>{{ header.patient_name|default:"-" }}</dd></div>
+                        <div><dt>Age</dt><dd>{{ header.age_text|default:"-" }}</dd></div>
+                        <div><dt>Sex</dt><dd>{{ header.sex_text|default:"-" }}</dd></div>
+                    </dl>
+                </article>
+                <article class="summary-card">
+                    <h2>Request</h2>
+                    <dl>
+                        <div><dt>Physician</dt><dd>{{ header.physician_name|default:"-" }}</dd></div>
+                        <div><dt>Room</dt><dd>{{ header.room_name|default:"-" }}</dd></div>
+                        <div><dt>Status</dt><dd>{{ request_item.get_item_status_display }}</dd></div>
+                    </dl>
+                </article>
+            </section>
+
+            {% for group in groups %}
+                <section class="report-group">
+                    {% if group.title %}
+                        <h2 class="group-heading">{{ group.title }}</h2>
+                    {% endif %}
+
+                    {% if layout_type == "label_value_list" or layout_type == "grouped_measurements" %}
+                        <div class="value-list">
+                            {% for entry in group.entries %}
+                                {% if entry.kind == "note" %}
+                                    <div class="print-note">
+                                        <strong>{{ entry.label }}</strong>
+                                        <p>{{ entry.text }}</p>
+                                    </div>
+                                {% elif entry.kind == "grouped" %}
+                                    <div class="grouped-block">
+                                        <div class="grouped-block-head">
+                                            <strong>{{ entry.label }}</strong>
+                                            {% if summary.show_reference_ranges and entry.reference_text %}<span>{{ entry.reference_text }}</span>{% endif %}
+                                        </div>
+                                        <div class="grouped-list">
+                                            {% for row in entry.subrows %}
+                                                <div class="grouped-row">
+                                                    <span>{{ row.label }}{% if summary.show_units and row.unit %} ({{ row.unit }}){% endif %}</span>
+                                                    <strong>{{ row.value_display }}</strong>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="value-row {% if entry.abnormal_flag %}abnormal{% endif %}">
+                                        <div>
+                                            <span class="value-label">{{ entry.label }}{% if summary.show_units and entry.unit %} ({{ entry.unit }}){% endif %}</span>
+                                            {% if summary.show_reference_ranges and entry.reference_text %}
+                                                <span class="value-reference">{{ entry.reference_text }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="value-output">
+                                            <strong>{{ entry.value_display }}</strong>
+                                            {% if entry.abnormal_reason %}<span class="flag">{{ entry.abnormal_reason }}</span>{% endif %}
+                                        </div>
+                                        {% if entry.attachment %}
+                                            <div class="attachment-block">
+                                                <a href="{{ entry.attachment.url }}" target="_blank" rel="noreferrer">{{ entry.attachment.name }}</a>
+                                                {% if entry.attachment.is_image %}
+                                                    <img src="{{ entry.attachment.url }}" alt="{{ entry.attachment.name }}">
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {% with field_entries=group.entries %}
+                            <table class="result-table">
+                                <thead>
+                                    <tr>
+                                        <th>Test</th>
+                                        <th>Result</th>
+                                        {% if summary.show_units %}<th>Unit</th>{% endif %}
+                                        {% if summary.show_reference_ranges %}<th>Reference</th>{% endif %}
+                                        <th>Flag</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for entry in field_entries %}
+                                        {% if entry.kind == "field" %}
+                                            <tr class="{% if entry.abnormal_flag %}abnormal{% endif %}">
+                                                <td>{{ entry.label }}</td>
+                                                <td>
+                                                    <strong>{{ entry.value_display }}</strong>
+                                                    {% if entry.attachment %}
+                                                        <div class="attachment-block">
+                                                            <a href="{{ entry.attachment.url }}" target="_blank" rel="noreferrer">{{ entry.attachment.name }}</a>
+                                                            {% if entry.attachment.is_image %}
+                                                                <img src="{{ entry.attachment.url }}" alt="{{ entry.attachment.name }}">
+                                                            {% endif %}
+                                                        </div>
+                                                    {% endif %}
+                                                </td>
+                                                {% if summary.show_units %}<td>{{ entry.unit|default:"-" }}</td>{% endif %}
+                                                {% if summary.show_reference_ranges %}<td>{{ entry.reference_text|default:"-" }}</td>{% endif %}
+                                                <td>{{ entry.abnormal_reason|default:"-" }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            {% for entry in field_entries %}
+                                {% if entry.kind == "grouped" %}
+                                    <div class="grouped-block">
+                                        <div class="grouped-block-head">
+                                            <strong>{{ entry.label }}</strong>
+                                            {% if summary.show_reference_ranges and entry.reference_text %}<span>{{ entry.reference_text }}</span>{% endif %}
+                                        </div>
+                                        <div class="grouped-list">
+                                            {% for row in entry.subrows %}
+                                                <div class="grouped-row">
+                                                    <span>{{ row.label }}{% if summary.show_units and row.unit %} ({{ row.unit }}){% endif %}</span>
+                                                    <strong>{{ row.value_display }}</strong>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% elif entry.kind == "note" %}
+                                    <div class="print-note">
+                                        <strong>{{ entry.label }}</strong>
+                                        <p>{{ entry.text }}</p>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                    {% endif %}
+                </section>
+            {% endfor %}
+
+            <section class="signature-grid">
+                <article>
+                    <div class="signature-line"></div>
+                    <strong>{{ header.medtech_name|default:"Medical Technologist" }}</strong>
+                    <span>Medical Technologist</span>
+                </article>
+                <article>
+                    <div class="signature-line"></div>
+                    <strong>{{ header.pathologist_name|default:"Pathologist" }}</strong>
+                    <span>Pathologist</span>
+                </article>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

@@ -10,7 +10,10 @@
         <h2>{{ request_item.exam_definition.exam_name }}</h2>
         <p>{{ request_item.lab_request.request_no }}{% if request_item.exam_option %} | {{ request_item.exam_option.option_label }}{% endif %} | Version {{ request_item.exam_definition_version.version_no }}</p>
     </div>
-    <a class="button button-secondary" href="{% url 'request_detail' request_item.lab_request.pk %}">Back to Request</a>
+    <div class="action-row">
+        <a class="button button-secondary" href="{% url 'item_result_print' request_item.pk %}" target="_blank" rel="noreferrer">Print Preview</a>
+        <a class="button button-secondary" href="{% url 'request_detail' request_item.lab_request.pk %}">Back to Request</a>
+    </div>
 </section>
 
 <section class="panel panel-split">

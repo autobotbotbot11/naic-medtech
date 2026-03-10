@@ -4,6 +4,11 @@ Read this file first if you are a new agent or if the original chat history is u
 
 This document is intended to be a self-contained handoff for the clinic/laboratory app in this repository. A new agent should be able to continue the project from this file plus the codebase, without needing the old conversation.
 
+Companion continuity files:
+- [AGENTS.md](C:\Users\acer\Desktop\naic-app\AGENTS.md)
+- [DECISIONS.md](C:\Users\acer\Desktop\naic-app\DECISIONS.md)
+- [NEXT_STEPS.md](C:\Users\acer\Desktop\naic-app\NEXT_STEPS.md)
+
 ## 1. What This App Is
 
 This project is a small-clinic laboratory information system, not just a generic patient record app.
@@ -151,9 +156,10 @@ Current implementation status:
 - basic request intake UI exists
 - request-item creation flow exists
 - dynamic result-entry UI exists
+- initial print preview/render layer exists
 
 Not yet implemented:
-- print/render engine
+- advanced print layout parity and export flow
 - configurable admin exam-builder UI
 - master-data importer for physicians/rooms/signatories
 - release/approval workflow beyond basic statuses
@@ -275,6 +281,11 @@ Minimal working flow:
 - service: [results/services.py](C:\Users\acer\Desktop\naic-app\backend\apps\results\services.py)
 - template: [result_entry.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\result_entry.html)
 
+5. preview printable result output
+- view: [item_result_print](C:\Users\acer\Desktop\naic-app\backend\apps\results\views.py)
+- service: [rendering.py](C:\Users\acer\Desktop\naic-app\backend\apps\results\rendering.py)
+- template: [result_print.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\result_print.html)
+
 Supported saved input types in the MVP:
 - text
 - textarea
@@ -346,9 +357,11 @@ python backend\manage.py createsuperuser
 
 Recommended next implementation order:
 
-1. print/render engine
-- use `ExamRenderProfile` as the basis
-- support sectioned reports, label-value lists, result tables, grouped measurements
+1. print/render engine refinement
+- initial HTML print preview is already implemented
+- continue from `ExamRenderProfile`
+- improve layout fidelity for real clinic output
+- decide whether PDF generation is needed or browser-print is enough
 
 2. master-data import
 - physicians
