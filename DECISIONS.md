@@ -103,6 +103,19 @@ Reason:
 Implication:
 - future PDF/export work should build on the same render context, not replace the current data flow
 
+### 2026-03-10: Real Exam Print Refinement Starts With ABG and BBANK
+
+Decision:
+- the first exam-specific print refinements are `ABG` and `BBANK`
+
+Reason:
+- they represent two materially different real-world layouts
+- `ABG` exercises compact numeric result presentation with abnormal highlighting
+- `BBANK` exercises form-style general data plus grouped crossmatch/vital-sign content
+
+Implication:
+- future print refinement should continue by adding exam-specific variants only when generic rendering is clearly insufficient
+
 ### 2026-03-10: Importer Uses Signature-Based Versioning
 
 Decision:

@@ -72,6 +72,8 @@ Already implemented:
 - request-item creation flow
 - dynamic result-entry flow
 - initial print-preview flow
+- ABG compact print variant
+- BBANK crossmatch print variant
 
 Not yet implemented:
 - advanced print fidelity / export flow

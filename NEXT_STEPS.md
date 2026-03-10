@@ -12,6 +12,8 @@ Goal:
 Why this is next:
 - an initial HTML print-preview layer now exists
 - the next work is improving fidelity and coverage for real clinic use
+- `ABG` and `BBANK` custom variants are already implemented
+- the next refinement targets should extend that pattern only where needed
 
 Starting points:
 - [backend/apps/exams/models.py](C:\Users\acer\Desktop\naic-app\backend\apps\exams\models.py)
@@ -34,6 +36,10 @@ Implementation targets:
 - abnormal highlighting
 - attachment-aware handling where needed
 - improve clinic-specific print fidelity for real imported exams
+- next likely candidates:
+- `SEROLOGY`
+- `OGTT`
+- `HEMATOLOGY`
 - decide whether browser print is sufficient or PDF export is required
 
 Acceptance criteria:

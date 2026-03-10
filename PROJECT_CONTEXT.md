@@ -224,38 +224,40 @@ Important importer behavior:
 - this allows re-importing a new published version when importer logic changes
 
 Current importer signature:
-- `IMPORTER_SIGNATURE_VERSION = 4`
+- `IMPORTER_SIGNATURE_VERSION = 5`
 
 Special handling already implemented:
 - `SEROLOGY` and `OGTT` unscoped fields are fixed
 - `COVID` gets an attachment field for result image
 - `BBANK` grouped `VITAL SIGNS` preserves subfield config in `ExamField.config_json`
 - `ABG` note fields are imported as display-only notes
+- `ABG` gets a dedicated compact print variant
+- `BBANK` gets a dedicated crossmatch print variant
 
 ## 10. Current Local Data State
 
 As of the last verified state in this repository:
 - `16` exam definitions exist
 - `16` published exam versions exist
-- the current published versions in the local database are `v4` for all imported exams
+- the current published versions in the local database are `v5` for all imported exams
 
 Published exam codes in local DB:
-- `abg:v4`
-- `bbank:v4`
-- `bcfemale:v4`
-- `bcmale:v4`
-- `cardiaci:v4`
-- `covid-19-antigen-rapid-test:v4`
-- `fecalysis:v4`
-- `hba1c:v4`
-- `hematology:v4`
-- `hiv-1-2-testing:v4`
-- `microbiology:v4`
-- `ogtt:v4`
-- `protime-aptt:v4`
-- `semen:v4`
-- `serology:v4`
-- `urine:v4`
+- `abg:v5`
+- `bbank:v5`
+- `bcfemale:v5`
+- `bcmale:v5`
+- `cardiaci:v5`
+- `covid-19-antigen-rapid-test:v5`
+- `fecalysis:v5`
+- `hba1c:v5`
+- `hematology:v5`
+- `hiv-1-2-testing:v5`
+- `microbiology:v5`
+- `ogtt:v5`
+- `protime-aptt:v5`
+- `semen:v5`
+- `serology:v5`
+- `urine:v5`
 
 Important note:
 - these version numbers reflect repeated local imports during development
