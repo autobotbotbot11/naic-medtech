@@ -15,10 +15,34 @@
         </header>
 
         <main class="report-sheet">
+            {% if header.organization_name or header.facility_name or header.branding_image_url %}
+                <section class="report-brand">
+                    {% if header.branding_image_url %}
+                        <div class="report-brand-image">
+                            <img src="{{ header.branding_image_url }}" alt="{{ header.organization_name|default:header.facility_name }}">
+                        </div>
+                    {% endif %}
+                    <div class="report-brand-copy">
+                        {% if header.organization_name %}
+                            <h1>{{ header.organization_name }}</h1>
+                        {% endif %}
+                        {% if header.facility_name and header.facility_name != header.organization_name %}
+                            <p class="brand-subtitle">{{ header.facility_name }}</p>
+                        {% endif %}
+                        {% if header.facility_address %}
+                            <p>{{ header.facility_address }}</p>
+                        {% endif %}
+                        {% if header.facility_contact_numbers %}
+                            <p>Tel nos: {{ header.facility_contact_numbers }}</p>
+                        {% endif %}
+                    </div>
+                </section>
+            {% endif %}
+
             <section class="report-head">
                 <div>
                     <div class="report-kicker">Laboratory Result</div>
-                    <h1>{{ header.exam_name }}</h1>
+                    <h2 class="report-title">{{ header.exam_name }}</h2>
                     <p>
                         {{ header.request_no }}
                         {% if header.exam_option %} | {{ header.exam_option }}{% endif %}

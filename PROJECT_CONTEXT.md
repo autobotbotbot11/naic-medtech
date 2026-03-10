@@ -55,6 +55,8 @@ This means:
 Fixed data:
 - patients
 - lab requests
+- organizations
+- facilities/branches
 - request items
 - users
 - roles
@@ -170,6 +172,8 @@ Not yet implemented:
 The main model structure is already implemented in Django.
 
 Core models:
+- [Organization](C:\Users\acer\Desktop\naic-app\backend\apps\core\models.py)
+- [Facility](C:\Users\acer\Desktop\naic-app\backend\apps\core\models.py)
 - [Patient](C:\Users\acer\Desktop\naic-app\backend\apps\core\models.py)
 - [Physician](C:\Users\acer\Desktop\naic-app\backend\apps\core\models.py)
 - [Room](C:\Users\acer\Desktop\naic-app\backend\apps\core\models.py)
@@ -224,13 +228,14 @@ Important importer behavior:
 - this allows re-importing a new published version when importer logic changes
 
 Current importer signature:
-- `IMPORTER_SIGNATURE_VERSION = 5`
+- `IMPORTER_SIGNATURE_VERSION = 6`
 
 Special handling already implemented:
 - `SEROLOGY` and `OGTT` unscoped fields are fixed
 - `COVID` gets an attachment field for result image
 - `BBANK` grouped `VITAL SIGNS` preserves subfield config in `ExamField.config_json`
-- `ABG` note fields are imported as display-only notes
+- workbook `Notes` values are treated as internal/developer instructions and are not rendered as patient-facing help text
+- workbook rows labeled `NOTE` are skipped during import and are not rendered as encoder or print fields
 - `ABG` gets a dedicated compact print variant
 - `BBANK` gets a dedicated crossmatch print variant
 
@@ -239,25 +244,25 @@ Special handling already implemented:
 As of the last verified state in this repository:
 - `16` exam definitions exist
 - `16` published exam versions exist
-- the current published versions in the local database are `v5` for all imported exams
+- the current published versions in the local database are `v6` for all imported exams
 
 Published exam codes in local DB:
-- `abg:v5`
-- `bbank:v5`
-- `bcfemale:v5`
-- `bcmale:v5`
-- `cardiaci:v5`
-- `covid-19-antigen-rapid-test:v5`
-- `fecalysis:v5`
-- `hba1c:v5`
-- `hematology:v5`
-- `hiv-1-2-testing:v5`
-- `microbiology:v5`
-- `ogtt:v5`
-- `protime-aptt:v5`
-- `semen:v5`
-- `serology:v5`
-- `urine:v5`
+- `abg:v6`
+- `bbank:v6`
+- `bcfemale:v6`
+- `bcmale:v6`
+- `cardiaci:v6`
+- `covid-19-antigen-rapid-test:v6`
+- `fecalysis:v6`
+- `hba1c:v6`
+- `hematology:v6`
+- `hiv-1-2-testing:v6`
+- `microbiology:v6`
+- `ogtt:v6`
+- `protime-aptt:v6`
+- `semen:v6`
+- `serology:v6`
+- `urine:v6`
 
 Important note:
 - these version numbers reflect repeated local imports during development
@@ -270,6 +275,7 @@ Minimal working flow:
 1. create lab request
 - view: [request_create](C:\Users\acer\Desktop\naic-app\backend\apps\core\views.py)
 - template: [request_form.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\request_form.html)
+- request now captures an `Organization + Facility` snapshot and copies facility branding for historical print output
 
 2. open request detail
 - view: [request_detail](C:\Users\acer\Desktop\naic-app\backend\apps\core\views.py)
@@ -277,16 +283,19 @@ Minimal working flow:
 
 3. add exam item
 - form: [LabRequestItemCreateForm](C:\Users\acer\Desktop\naic-app\backend\apps\results\forms.py)
+- exam option loading now has a lightweight JSON endpoint + vanilla JS so package options appear immediately after exam selection
 
 4. encode results dynamically
 - view: [item_result_entry](C:\Users\acer\Desktop\naic-app\backend\apps\results\views.py)
 - service: [results/services.py](C:\Users\acer\Desktop\naic-app\backend\apps\results\services.py)
 - template: [result_entry.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\result_entry.html)
+- report-level medtech and pathologist selection is now part of the encode flow
 
 5. preview printable result output
 - view: [item_result_print](C:\Users\acer\Desktop\naic-app\backend\apps\results\views.py)
 - service: [rendering.py](C:\Users\acer\Desktop\naic-app\backend\apps\results\rendering.py)
 - template: [result_print.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\result_print.html)
+- print headers now consume facility branding and organization/facility snapshot data
 
 Supported saved input types in the MVP:
 - text
@@ -369,6 +378,7 @@ Recommended next implementation order:
 - physicians
 - rooms
 - signatories
+- organization/facility branding is already admin-manageable, but the workbook-based importers for other master data do not exist yet
 
 3. admin exam-builder UI
 - create draft exam versions

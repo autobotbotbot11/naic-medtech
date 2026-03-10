@@ -1,8 +1,14 @@
 from django import forms
 from django.utils import timezone
 
-from apps.core.models import LabRequest, Physician, Room
-from apps.core.services import derive_age_snapshot_text, generate_request_no, resolve_patient
+from apps.core.models import Facility, LabRequest, Physician, Room
+from apps.core.services import (
+    capture_facility_branding_snapshot,
+    derive_age_snapshot_text,
+    facility_snapshot_defaults,
+    generate_request_no,
+    resolve_patient,
+)
 
 
 class LabRequestCreateForm(forms.Form):
@@ -24,12 +30,18 @@ class LabRequestCreateForm(forms.Form):
         widget=forms.DateTimeInput(attrs={"type": "datetime-local"}),
     )
     case_number = forms.CharField(max_length=64, required=False)
+    facility = forms.ModelChoiceField(queryset=Facility.objects.none(), required=False)
     physician = forms.ModelChoiceField(queryset=Physician.objects.none(), required=False)
     room = forms.ModelChoiceField(queryset=Room.objects.none(), required=False)
     notes = forms.CharField(required=False, widget=forms.Textarea(attrs={"rows": 4}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        active_facilities = Facility.objects.filter(active=True).select_related("organization").order_by(
+            "organization__legal_name",
+            "display_name",
+        )
+        self.fields["facility"].queryset = active_facilities
         self.fields["physician"].queryset = Physician.objects.filter(active=True).order_by("display_name")
         self.fields["room"].queryset = Room.objects.filter(active=True).order_by("display_name")
         if not self.is_bound:
@@ -37,6 +49,14 @@ class LabRequestCreateForm(forms.Form):
                 "request_datetime",
                 timezone.localtime(timezone.now()).strftime("%Y-%m-%dT%H:%M"),
             )
+            if active_facilities.count() == 1:
+                self.initial.setdefault("facility", active_facilities.first())
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if self.fields["facility"].queryset.exists() and not cleaned_data.get("facility"):
+            self.add_error("facility", "Choose the facility/branch that owns this lab request.")
+        return cleaned_data
 
     def save(self, user=None):
         cleaned_data = self.cleaned_data
@@ -53,10 +73,12 @@ class LabRequestCreateForm(forms.Form):
             cleaned_data["patient_birth_date"],
             request_datetime,
         )
+        facility = cleaned_data["facility"]
         physician = cleaned_data["physician"]
         room = cleaned_data["room"]
+        snapshot_defaults = facility_snapshot_defaults(facility)
 
-        return LabRequest.objects.create(
+        lab_request = LabRequest.objects.create(
             request_no=generate_request_no(request_datetime),
             case_number=cleaned_data["case_number"],
             patient=patient,
@@ -64,6 +86,7 @@ class LabRequestCreateForm(forms.Form):
             age_snapshot_text=age_snapshot_text,
             sex_snapshot=cleaned_data["patient_sex"],
             request_datetime=request_datetime,
+            **snapshot_defaults,
             physician=physician,
             physician_name_snapshot=physician.display_name if physician else "",
             room=room,
@@ -71,3 +94,7 @@ class LabRequestCreateForm(forms.Form):
             created_by=user if getattr(user, "is_authenticated", False) else None,
             notes=cleaned_data["notes"],
         )
+        capture_facility_branding_snapshot(lab_request, facility)
+        if lab_request.facility_header_image_snapshot:
+            lab_request.save(update_fields=["facility_header_image_snapshot", "updated_at"])
+        return lab_request

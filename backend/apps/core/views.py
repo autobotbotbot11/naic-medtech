@@ -1,6 +1,8 @@
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from apps.common.choices import ExamVersionStatusChoices
 from apps.core.forms import LabRequestCreateForm
 from apps.core.models import LabRequest, Patient
 from apps.exams.models import ExamDefinition
@@ -9,7 +11,13 @@ from apps.results.models import LabRequestItem
 
 
 def dashboard(request):
-    recent_requests = LabRequest.objects.select_related("patient", "physician", "room").prefetch_related(
+    recent_requests = LabRequest.objects.select_related(
+        "patient",
+        "facility",
+        "facility__organization",
+        "physician",
+        "room",
+    ).prefetch_related(
         "items__exam_definition",
     ).order_by("-request_datetime", "-id")[:12]
     context = {
@@ -36,7 +44,13 @@ def request_create(request):
 
 def request_detail(request, pk):
     lab_request = get_object_or_404(
-        LabRequest.objects.select_related("patient", "physician", "room").prefetch_related(
+        LabRequest.objects.select_related(
+            "patient",
+            "facility",
+            "facility__organization",
+            "physician",
+            "room",
+        ).prefetch_related(
             "items__exam_definition",
             "items__exam_definition_version",
             "items__exam_option",
@@ -75,4 +89,30 @@ def request_add_item(request, pk):
             "lab_request": lab_request,
             "form": form,
         },
+    )
+
+
+def exam_definition_options(request, pk):
+    exam_definition = get_object_or_404(ExamDefinition.objects.filter(active=True), pk=pk)
+    version = exam_definition.versions.filter(
+        version_status=ExamVersionStatusChoices.PUBLISHED,
+    ).order_by("-version_no").first()
+
+    options = []
+    if version:
+        options = [
+            {
+                "id": option.id,
+                "label": option.option_label,
+            }
+            for option in version.options.filter(active=True).order_by("sort_order", "id")
+        ]
+
+    return JsonResponse(
+        {
+            "exam_definition_id": exam_definition.id,
+            "requires_option": bool(options),
+            "empty_label": "Choose an exam option" if options else "No specific option",
+            "options": options,
+        }
     )

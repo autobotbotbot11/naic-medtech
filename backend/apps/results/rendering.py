@@ -72,6 +72,16 @@ def attachment_preview(attachment):
     }
 
 
+def safe_media_url(file_field):
+    if not file_field:
+        return ""
+
+    try:
+        return file_field.url
+    except ValueError:
+        return ""
+
+
 def build_render_groups(item):
     context = build_rule_context(item)
     visibility_rules, _requirement_rules = build_visibility_maps(item)
@@ -283,6 +293,27 @@ def build_result_print_context(item):
     groups = build_render_groups(item)
     render_variant = render_config.get("render_variant", "generic")
     variant_context = build_variant_context(render_variant, groups, render_config)
+    lab_request = item.lab_request
+    facility = lab_request.facility
+    organization_name = lab_request.organization_name_snapshot
+    if not organization_name and facility:
+        organization_name = facility.organization.display_name or facility.organization.legal_name
+
+    facility_name = lab_request.facility_name_snapshot
+    if not facility_name and facility:
+        facility_name = facility.display_name
+
+    facility_address = lab_request.facility_address_snapshot
+    if not facility_address and facility:
+        facility_address = facility.address
+
+    facility_contact_numbers = lab_request.facility_contact_numbers_snapshot
+    if not facility_contact_numbers and facility:
+        facility_contact_numbers = facility.contact_numbers
+
+    branding_image_url = safe_media_url(lab_request.facility_header_image_snapshot)
+    if not branding_image_url and facility:
+        branding_image_url = safe_media_url(facility.report_header_image)
 
     return {
         "request_item": item,
@@ -301,6 +332,11 @@ def build_result_print_context(item):
             "age_text": item.lab_request.age_snapshot_text,
             "sex_text": item.lab_request.get_sex_snapshot_display(),
             "request_datetime_text": format_datetime(item.lab_request.request_datetime),
+            "organization_name": organization_name,
+            "facility_name": facility_name,
+            "facility_address": facility_address,
+            "facility_contact_numbers": facility_contact_numbers,
+            "branding_image_url": branding_image_url,
             "physician_name": item.lab_request.physician_name_snapshot,
             "room_name": item.lab_request.room_name_snapshot,
             "version_text": f"v{item.exam_definition_version.version_no}",

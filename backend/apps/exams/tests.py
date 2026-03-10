@@ -10,6 +10,7 @@ from apps.exams.services.workbook_import import (
     default_render_profile,
     infer_field_types,
     import_workbook,
+    is_internal_note_row,
     make_field_key,
     parse_reference_range,
 )
@@ -46,16 +47,8 @@ class WorkbookImportHelpersTests(SimpleTestCase):
         self.assertEqual(input_type, ExamFieldInputTypeChoices.GROUPED_MEASUREMENT)
         self.assertEqual(data_type, ExamFieldDataTypeChoices.JSON)
 
-    def test_infer_display_note_field(self):
-        input_type, data_type = infer_field_types(
-            "ABG - Blood Gas Analysis",
-            "NOTE",
-            "Manual Entry",
-            "",
-            "",
-        )
-        self.assertEqual(input_type, ExamFieldInputTypeChoices.DISPLAY_NOTE)
-        self.assertEqual(data_type, ExamFieldDataTypeChoices.STRING)
+    def test_note_rows_are_treated_as_internal_only(self):
+        self.assertTrue(is_internal_note_row("NOTE"))
 
     def test_default_render_profile_sets_abg_variant(self):
         layout_type, config = default_render_profile(
@@ -217,3 +210,26 @@ class WorkbookImportIntegrationTests(TestCase):
                 },
             ],
         )
+
+    def test_note_rows_are_not_imported_and_notes_column_stays_internal(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workbook_path = Path(temp_dir) / "abg.xlsx"
+            self.write_workbook(
+                workbook_path,
+                "ABG - Blood Gas Analysis",
+                [
+                    ("Blood gas value (ABG)", "", "", "", ""),
+                    ("pH", "Manual Entry", "", "7.35 - 7.45", "Do not show to users"),
+                    ("NOTE", "Manual Entry", "", "", "All abnormal values print red"),
+                ],
+            )
+
+            import_workbook(workbook_path)
+
+        exam = ExamDefinition.objects.get(exam_code="abg")
+        version = exam.versions.get(version_no=1)
+        field = version.fields.get(field_key="blood_gas_value_abg_ph")
+
+        self.assertEqual(version.fields.count(), 1)
+        self.assertEqual(field.help_text, "")
+        self.assertEqual(field.config_json["internal_note"], "Do not show to users")

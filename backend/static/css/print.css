@@ -70,6 +70,39 @@ body {
     padding-bottom: 20px;
 }
 
+.report-brand {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 18px;
+    align-items: center;
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+}
+
+.report-brand-image img {
+    display: block;
+    width: 110px;
+    max-height: 110px;
+    object-fit: contain;
+}
+
+.report-brand-copy h1 {
+    margin: 0;
+    font-size: 1.55rem;
+    font-family: var(--font-display);
+}
+
+.report-brand-copy p {
+    margin: 6px 0 0;
+    color: var(--muted);
+}
+
+.brand-subtitle {
+    font-weight: 600;
+    color: var(--ink);
+}
+
 .report-kicker {
     text-transform: uppercase;
     letter-spacing: 0.2em;
@@ -78,12 +111,15 @@ body {
 }
 
 .report-head h1,
+.report-head h2,
+.report-brand-copy h1,
 .summary-card h2,
 .group-heading {
     font-family: var(--font-display);
 }
 
-.report-head h1 {
+.report-head h1,
+.report-title {
     margin: 10px 0 8px;
     font-size: 2rem;
 }
@@ -428,14 +464,65 @@ body {
         box-shadow: none;
         padding: 0;
     }
+
+    .report-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+    }
+
+    .summary-grid,
+    .signature-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .report-brand {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .abg-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    }
+
+    .abg-side {
+        display: grid;
+        gap: 18px;
+    }
+
+    .bbank-crossmatch {
+        grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    }
+
+    .bbank-summary-row:first-child {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .bbank-summary-row:not(:first-child),
+    .release-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .value-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    }
+
+    .grouped-block-head,
+    .grouped-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
 }
 
-@media (max-width: 800px) {
+@media screen and (max-width: 800px) {
     .print-shell {
         padding: 16px;
     }
 
     .report-head,
+    .report-brand,
     .summary-grid,
     .signature-grid,
     .value-row,

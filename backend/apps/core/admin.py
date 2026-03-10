@@ -1,5 +1,20 @@
 from django.contrib import admin
-from .models import LabRequest, Patient, Physician, Room, Signatory
+from .models import Facility, LabRequest, Organization, Patient, Physician, Room, Signatory
+
+
+@admin.register(Organization)
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ("legal_name", "display_name", "active")
+    list_filter = ("active",)
+    search_fields = ("legal_name", "display_name", "organization_code")
+
+
+@admin.register(Facility)
+class FacilityAdmin(admin.ModelAdmin):
+    list_display = ("display_name", "organization", "contact_numbers", "active")
+    list_filter = ("active", "organization")
+    search_fields = ("display_name", "facility_code", "organization__legal_name")
+    autocomplete_fields = ("organization",)
 
 
 @admin.register(Patient)
@@ -31,7 +46,20 @@ class SignatoryAdmin(admin.ModelAdmin):
 
 @admin.register(LabRequest)
 class LabRequestAdmin(admin.ModelAdmin):
-    list_display = ("request_no", "case_number", "patient_name_snapshot", "status", "request_datetime")
-    list_filter = ("status", "sex_snapshot")
-    search_fields = ("request_no", "case_number", "patient_name_snapshot")
-    autocomplete_fields = ("patient", "physician", "room", "created_by")
+    list_display = (
+        "request_no",
+        "case_number",
+        "patient_name_snapshot",
+        "facility_name_snapshot",
+        "status",
+        "request_datetime",
+    )
+    list_filter = ("status", "sex_snapshot", "facility")
+    search_fields = (
+        "request_no",
+        "case_number",
+        "patient_name_snapshot",
+        "organization_name_snapshot",
+        "facility_name_snapshot",
+    )
+    autocomplete_fields = ("patient", "facility", "physician", "room", "created_by")

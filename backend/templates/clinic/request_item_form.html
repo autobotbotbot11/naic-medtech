@@ -16,9 +16,12 @@
     {% csrf_token %}
     <div class="form-grid">
         {% for field in form %}
-            <div class="form-row {% if field.name == 'notes' %}form-row-wide{% endif %}">
+            <div class="form-row {% if field.name == 'notes' %}form-row-wide{% endif %}" {% if field.name == 'exam_option' %}id="exam-option-row"{% endif %}>
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                 {{ field }}
+                {% if field.name == "exam_option" %}
+                    <small id="exam-option-helper">If this exam has packages/options, choose the exact one before continuing.</small>
+                {% endif %}
                 {% for error in field.errors %}
                     <p class="field-error">{{ error }}</p>
                 {% endfor %}
@@ -32,10 +35,94 @@
             {% endfor %}
         </div>
     {% endif %}
-    <p class="helper-text">If the selected exam has packaged options, choose the exact one before continuing.</p>
     <div class="form-actions">
         <button class="button button-primary" type="submit">Add Item</button>
         <a class="button button-secondary" href="{% url 'request_detail' lab_request.pk %}">Cancel</a>
     </div>
 </form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const examSelect = document.getElementById("id_exam_definition");
+    const optionSelect = document.getElementById("id_exam_option");
+    const helper = document.getElementById("exam-option-helper");
+
+    if (!examSelect || !optionSelect) {
+        return;
+    }
+
+    const endpointTemplate = "{% url 'exam_definition_options' 0 %}";
+
+    function buildEndpoint(examId) {
+        return endpointTemplate.replace("/0/options/", "/" + examId + "/options/");
+    }
+
+    function setEmptyState(message, disableSelect) {
+        optionSelect.innerHTML = "";
+        optionSelect.appendChild(new Option(message, ""));
+        optionSelect.disabled = disableSelect;
+        if (helper) {
+            helper.textContent = disableSelect
+                ? "This exam has no specific option/package."
+                : "Choose the exact option/package for this request item.";
+        }
+    }
+
+    function populateOptions(payload, selectedValue) {
+        optionSelect.innerHTML = "";
+        optionSelect.appendChild(new Option(payload.empty_label || "No specific option", ""));
+
+        (payload.options || []).forEach(function (option) {
+            const optionNode = new Option(option.label, option.id);
+            if (String(option.id) === String(selectedValue)) {
+                optionNode.selected = true;
+            }
+            optionSelect.appendChild(optionNode);
+        });
+
+        optionSelect.disabled = !(payload.options || []).length;
+        if (helper) {
+            helper.textContent = payload.requires_option
+                ? "Choose the exact option/package for this request item."
+                : "This exam has no specific option/package.";
+        }
+    }
+
+    function loadOptions(selectedValue) {
+        const examId = examSelect.value;
+        if (!examId) {
+            setEmptyState("Select an exam first", true);
+            return;
+        }
+
+        fetch(buildEndpoint(examId), {
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error("Failed to load exam options.");
+                }
+                return response.json();
+            })
+            .then(function (payload) {
+                populateOptions(payload, selectedValue);
+            })
+            .catch(function () {
+                setEmptyState("Unable to load options right now", true);
+            });
+    }
+
+    examSelect.addEventListener("change", function () {
+        loadOptions("");
+    });
+
+    if (examSelect.value) {
+        loadOptions(optionSelect.value);
+    } else {
+        setEmptyState("Select an exam first", true);
+    }
+});
+</script>
 {% endblock %}

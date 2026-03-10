@@ -10,8 +10,12 @@ from apps.common.choices import (
     ExamRuleTypeChoices,
     LabRequestItemStatusChoices,
     LabRequestStatusChoices,
+    SignatoryTypeChoices,
 )
+from apps.core.models import Signatory
 from apps.results.models import Attachment, LabResultValue
+
+SIGNATORY_FIELD_NAMES = ("medtech_signatory", "pathologist_signatory")
 
 
 def build_rule_context(item):
@@ -242,8 +246,30 @@ def result_entry_schema(item):
             groups.append(group_lookup[group_key])
         return group_lookup[group_key]
 
-    form_fields = {}
-    initial_values = {}
+    form_fields = {
+        "medtech_signatory": forms.ModelChoiceField(
+            queryset=Signatory.objects.filter(
+                active=True,
+                signatory_type=SignatoryTypeChoices.MEDTECH,
+            ).order_by("display_name"),
+            required=False,
+            label="Medical Technologist",
+            widget=forms.Select(attrs={"class": "form-control"}),
+        ),
+        "pathologist_signatory": forms.ModelChoiceField(
+            queryset=Signatory.objects.filter(
+                active=True,
+                signatory_type=SignatoryTypeChoices.PATHOLOGIST,
+            ).order_by("display_name"),
+            required=False,
+            label="Pathologist",
+            widget=forms.Select(attrs={"class": "form-control"}),
+        ),
+    }
+    initial_values = {
+        "medtech_signatory": item.medtech_signatory_id,
+        "pathologist_signatory": item.pathologist_signatory_id,
+    }
     all_fields = item.exam_definition_version.fields.select_related("section").prefetch_related(
         "select_options",
         "reference_ranges",
@@ -371,6 +397,9 @@ def clear_value_columns(result_value):
 
 @transaction.atomic
 def persist_result_entry(item, cleaned_data, bindings, uploaded_by=None):
+    item.medtech_signatory = cleaned_data.get("medtech_signatory")
+    item.pathologist_signatory = cleaned_data.get("pathologist_signatory")
+
     existing_results = {
         result_value.field_id: result_value
         for result_value in item.result_values.select_related("field")
@@ -491,5 +520,13 @@ def persist_result_entry(item, cleaned_data, bindings, uploaded_by=None):
 
     item.item_status = LabRequestItemStatusChoices.FOR_REVIEW if item.result_values.exists() or item.attachments.exists() else LabRequestItemStatusChoices.ENCODING
     item.performed_at = item.performed_at or timezone.now()
-    item.save(update_fields=["item_status", "performed_at", "updated_at"])
+    item.save(
+        update_fields=[
+            "item_status",
+            "performed_at",
+            "medtech_signatory",
+            "pathologist_signatory",
+            "updated_at",
+        ]
+    )
     update_request_status(item.lab_request)

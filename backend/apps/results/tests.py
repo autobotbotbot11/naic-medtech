@@ -12,6 +12,7 @@ from apps.common.choices import (
     ExamVersionStatusChoices,
 )
 from apps.core.models import LabRequest, Patient
+from apps.core.models import Facility, Organization, Signatory
 from apps.exams.models import (
     ExamDefinition,
     ExamDefinitionVersion,
@@ -41,6 +42,30 @@ class ResultEntryFlowTests(TestCase):
         self.settings_override.enable()
 
         self.patient = Patient.objects.create(full_name="Maria Santos", sex="female")
+        self.organization = Organization.objects.create(
+            legal_name="Naic Doctors Hospital Inc.",
+            display_name="Naic Doctors Hospital Inc.",
+            active=True,
+        )
+        self.facility = Facility.objects.create(
+            organization=self.organization,
+            display_name="Naic Main Facility",
+            address="Brgy. Makina Naic, Cavite",
+            contact_numbers="(046) 412-1443 / (046) 507-1510",
+            active=True,
+        )
+        self.medtech = Signatory.objects.create(
+            signatory_type="medtech",
+            display_name="Imelda A. Elemia",
+            license_no="MT-001",
+            active=True,
+        )
+        self.pathologist = Signatory.objects.create(
+            signatory_type="pathologist",
+            display_name="Dr. Patho Sample",
+            license_no="P-001",
+            active=True,
+        )
         self.lab_request = LabRequest.objects.create(
             request_no="REQ-20260310-0001",
             patient=self.patient,
@@ -48,6 +73,11 @@ class ResultEntryFlowTests(TestCase):
             age_snapshot_text="35 y/o",
             sex_snapshot="female",
             request_datetime=timezone.now(),
+            facility=self.facility,
+            organization_name_snapshot=self.organization.display_name,
+            facility_name_snapshot=self.facility.display_name,
+            facility_address_snapshot=self.facility.address,
+            facility_contact_numbers_snapshot=self.facility.contact_numbers,
         )
         self.exam_definition = ExamDefinition.objects.create(
             exam_code="demo-exam",
@@ -205,6 +235,8 @@ class ResultEntryFlowTests(TestCase):
                 f"field_{self.select_field.pk}": "positive",
                 f"field_{self.grouped_field.pk}__blood_pressure": "120/80",
                 f"field_{self.grouped_field.pk}__temperature": "37.1",
+                "medtech_signatory": self.medtech.pk,
+                "pathologist_signatory": self.pathologist.pk,
                 f"field_{self.attachment_field.pk}": SimpleUploadedFile(
                     "result.jpg",
                     b"fake-image-content",
@@ -214,12 +246,15 @@ class ResultEntryFlowTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 302)
+        item.refresh_from_db()
         numeric_value = LabResultValue.objects.get(field=self.numeric_field)
         select_value = LabResultValue.objects.get(field=self.select_field)
         grouped_value = LabResultValue.objects.get(field=self.grouped_field)
         attachment_value = LabResultValue.objects.get(field=self.attachment_field)
         attachment = Attachment.objects.get(field=self.attachment_field)
 
+        self.assertEqual(item.medtech_signatory, self.medtech)
+        self.assertEqual(item.pathologist_signatory, self.pathologist)
         self.assertTrue(numeric_value.abnormal_flag)
         self.assertEqual(select_value.selected_option_label_snapshot, "Positive")
         self.assertEqual(grouped_value.value_json["blood_pressure"], "120/80")
@@ -233,6 +268,8 @@ class ResultEntryFlowTests(TestCase):
             exam_definition=self.exam_definition,
             exam_definition_version=self.version,
             exam_option=self.option,
+            medtech_signatory=self.medtech,
+            pathologist_signatory=self.pathologist,
         )
         self.create_result_value(
             item,
@@ -274,6 +311,9 @@ class ResultEntryFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Demo Exam")
         self.assertContains(response, "Maria Santos")
+        self.assertContains(response, "Naic Doctors Hospital Inc.")
+        self.assertContains(response, "Brgy. Makina Naic, Cavite")
+        self.assertContains(response, "(046) 412-1443 / (046) 507-1510")
         self.assertContains(response, "Hemoglobin")
         self.assertContains(response, "6.2")
         self.assertContains(response, "Above normal range (3 - 5)")
@@ -284,7 +324,7 @@ class ResultEntryFlowTests(TestCase):
         self.assertContains(response, "37.1")
         self.assertContains(response, "result.jpg")
 
-    def test_abg_variant_print_view_renders_compact_layout(self):
+    def test_abg_variant_print_view_renders_compact_layout_without_internal_note(self):
         exam_definition = ExamDefinition.objects.create(
             exam_code="abg-variant",
             exam_name="ABG Variant",
@@ -358,18 +398,6 @@ class ResultEntryFlowTests(TestCase):
             active=True,
             config_json={},
         )
-        note_field = ExamField.objects.create(
-            exam_version=version,
-            section=acid_section,
-            field_key="calculated_values_acid_base_status_note",
-            field_label="NOTE",
-            input_type=ExamFieldInputTypeChoices.DISPLAY_NOTE,
-            data_type=ExamFieldDataTypeChoices.STRING,
-            sort_order=4,
-            help_text="All out-of-range ABG values should print in red.",
-            active=True,
-            config_json={},
-        )
         ExamRenderProfile.objects.create(
             exam_version=version,
             layout_type="sectioned_report",
@@ -382,7 +410,6 @@ class ResultEntryFlowTests(TestCase):
                     "calculated_values_oximetry",
                     "calculated_values_acid_base_status",
                 ],
-                "note_field_keys": ["calculated_values_acid_base_status_note"],
             },
             active=True,
         )
@@ -404,7 +431,7 @@ class ResultEntryFlowTests(TestCase):
         self.assertContains(response, "Calculated values (ACID BASE STATUS)")
         self.assertContains(response, "7.2")
         self.assertContains(response, "Below normal range (7.35-7.45)")
-        self.assertContains(response, "All out-of-range ABG values should print in red.")
+        self.assertNotContains(response, "All out-of-range ABG values should print in red.")
 
     def test_bbank_variant_print_view_renders_crossmatch_layout(self):
         exam_definition = ExamDefinition.objects.create(

@@ -144,6 +144,49 @@ Decision:
 Reason:
 - dynamic UI/rendering cannot infer grouped structure safely from the flattened field alone
 
+### 2026-03-11: Workbook Notes Are Internal-Only
+
+Decision:
+- workbook `Notes` content is for developers/configuration only
+- workbook rows labeled `NOTE` are not patient-facing fields
+
+Implications:
+- importer must not map workbook notes into user-facing field help text
+- note rows must not appear in encoder forms
+- note rows must not appear in printed reports
+- internal instructions may still be preserved in config metadata for future admin tooling
+
+Reason:
+- the client uses these notes as implementation instructions, not as report content
+
+### 2026-03-11: Use Organization + Facility With Request Branding Snapshots
+
+Decision:
+- organization/company identity and facility/branch identity are fixed admin-managed models
+- each `LabRequest` should point to a `Facility`
+- request records capture text branding snapshots and a copied facility header image snapshot for historical print stability
+
+Reason:
+- branding data must be editable in admin
+- future multi-branch deployment should not require redesign
+- old printed requests should not silently change when facility branding is edited later
+
+### 2026-03-11: Signatories Belong to the Request-Item Encoding Flow
+
+Decision:
+- medtech and pathologist selection is part of the request-item/result-entry workflow
+
+Reason:
+- signatories apply to a specific lab report, not only to the patient or request shell
+
+### 2026-03-11: Exam Option Selection Must Be Dynamic in the Form
+
+Decision:
+- request-item exam options/packages are loaded immediately after exam selection via a small JSON endpoint and vanilla JS
+
+Reason:
+- the previous submit-then-error pattern was poor UX and caused avoidable confusion
+
 ## Current Standing Decisions
 
 Do not reverse these without a concrete replacement plan:

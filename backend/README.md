@@ -57,6 +57,7 @@ Implemented:
 - Django project scaffold
 - custom user model
 - fixed core clinic models
+- organization/facility branding models with request snapshots
 - configurable exam models
 - result storage models
 - admin registrations
@@ -64,8 +65,11 @@ Implemented:
 - workbook importer for the provided `.xlsx`
 - basic request intake UI
 - request-item creation flow
+- dynamic exam-option loading for request-item packages/options
 - dynamic result entry UI based on imported exam metadata
+- medtech/pathologist selection in result entry
 - initial HTML print preview for saved results
+- facility-branded print header
 - exam-specific print variants for `ABG` and `BBANK`
 
 Not yet implemented:

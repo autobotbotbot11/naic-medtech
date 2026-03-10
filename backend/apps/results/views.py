@@ -3,16 +3,20 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.results.models import LabRequestItem
 from apps.results.rendering import build_result_print_context
-from apps.results.services import build_result_entry, persist_result_entry
+from apps.results.services import SIGNATORY_FIELD_NAMES, build_result_entry, persist_result_entry
 
 
 def item_result_entry(request, pk):
     request_item = get_object_or_404(
         LabRequestItem.objects.select_related(
             "lab_request",
+            "lab_request__facility",
+            "lab_request__facility__organization",
             "exam_definition",
             "exam_definition_version",
             "exam_option",
+            "medtech_signatory",
+            "pathologist_signatory",
         ).prefetch_related(
             "result_values__field",
             "attachments",
@@ -44,6 +48,7 @@ def item_result_entry(request, pk):
         "request_item": request_item,
         "form": form,
         "groups": groups,
+        "signatory_field_names": SIGNATORY_FIELD_NAMES,
     }
     return render(request, "clinic/result_entry.html", context)
 
@@ -52,6 +57,8 @@ def item_result_print(request, pk):
     request_item = get_object_or_404(
         LabRequestItem.objects.select_related(
             "lab_request",
+            "lab_request__facility",
+            "lab_request__facility__organization",
             "exam_definition",
             "exam_definition_version",
             "exam_definition_version__render_profile",

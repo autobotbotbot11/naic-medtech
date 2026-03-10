@@ -18,6 +18,8 @@
         <dl class="detail-grid">
             <div><dt>Case Number</dt><dd>{{ lab_request.case_number|default:"-" }}</dd></div>
             <div><dt>Date/Time</dt><dd>{{ lab_request.request_datetime|date:"M d, Y h:i A" }}</dd></div>
+            <div><dt>Organization</dt><dd>{{ lab_request.organization_name_snapshot|default:"-" }}</dd></div>
+            <div><dt>Facility</dt><dd>{{ lab_request.facility_name_snapshot|default:"-" }}</dd></div>
             <div><dt>Physician</dt><dd>{{ lab_request.physician_name_snapshot|default:"-" }}</dd></div>
             <div><dt>Room</dt><dd>{{ lab_request.room_name_snapshot|default:"-" }}</dd></div>
             <div><dt>Status</dt><dd><span class="status status-{{ lab_request.status }}">{{ lab_request.get_status_display }}</span></dd></div>

@@ -1,4 +1,8 @@
+from pathlib import Path
+
+from django.core.files.base import ContentFile
 from django.utils import timezone
+from django.utils.text import slugify
 
 from apps.core.models import LabRequest, Patient
 
@@ -44,3 +48,40 @@ def resolve_patient(full_name, sex="", birth_date=None):
         sex=sex,
         birth_date=birth_date,
     )
+
+
+def facility_snapshot_defaults(facility):
+    if not facility:
+        return {
+            "facility": None,
+            "organization_name_snapshot": "",
+            "facility_name_snapshot": "",
+            "facility_address_snapshot": "",
+            "facility_contact_numbers_snapshot": "",
+        }
+
+    return {
+        "facility": facility,
+        "organization_name_snapshot": facility.organization.display_name or facility.organization.legal_name,
+        "facility_name_snapshot": facility.display_name,
+        "facility_address_snapshot": facility.address,
+        "facility_contact_numbers_snapshot": facility.contact_numbers,
+    }
+
+
+def capture_facility_branding_snapshot(lab_request, facility):
+    if not facility or not facility.report_header_image:
+        return
+
+    source_file = facility.report_header_image
+    source_file.open("rb")
+    try:
+        filename = Path(source_file.name).name
+        snapshot_name = f"{slugify(lab_request.request_no)}-{filename}"
+        lab_request.facility_header_image_snapshot.save(
+            snapshot_name,
+            ContentFile(source_file.read()),
+            save=False,
+        )
+    finally:
+        source_file.close()

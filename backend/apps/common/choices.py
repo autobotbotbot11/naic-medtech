@@ -11,6 +11,13 @@ class SignatoryTypeChoices(models.TextChoices):
     PATHOLOGIST = "pathologist", "Pathologist"
 
 
+class UserRoleChoices(models.TextChoices):
+    SYSTEM_OWNER = "system_owner", "System Owner"
+    ADMIN = "admin", "Admin"
+    ENCODER = "encoder", "Encoder"
+    VIEWER = "viewer", "Viewer"
+
+
 class LabRequestStatusChoices(models.TextChoices):
     DRAFT = "draft", "Draft"
     IN_PROGRESS = "in_progress", "In Progress"

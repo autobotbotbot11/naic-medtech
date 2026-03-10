@@ -47,6 +47,23 @@
         </div>
     {% endif %}
 
+    <section class="result-group">
+        <div class="group-title">Report Signatories</div>
+        <div class="form-grid">
+            {% for field_name in signatory_field_names %}
+                {% with input_field=form|bound_field:field_name %}
+                    <div class="form-row">
+                        <label for="{{ input_field.id_for_label }}">{{ input_field.label }}</label>
+                        {{ input_field }}
+                        {% for error in input_field.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+    </section>
+
     {% for group in groups %}
         <section class="result-group">
             {% if group.title %}

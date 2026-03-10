@@ -12,6 +12,7 @@ This project already has substantial planning and implementation history. Do not
 4. [backend/README.md](C:\Users\acer\Desktop\naic-app\backend\README.md)
 
 Then inspect these implementation files:
+- [backend/apps/core/models.py](C:\Users\acer\Desktop\naic-app\backend\apps\core\models.py)
 - [backend/apps/exams/services/workbook_import.py](C:\Users\acer\Desktop\naic-app\backend\apps\exams\services\workbook_import.py)
 - [backend/apps/exams/models.py](C:\Users\acer\Desktop\naic-app\backend\apps\exams\models.py)
 - [backend/apps/results/services.py](C:\Users\acer\Desktop\naic-app\backend\apps\results\services.py)
@@ -52,6 +53,7 @@ Do not let the old print templates drive schema decisions.
 4. Saved results must remain tied to the exact exam version used during encoding.
 5. Do not switch to table-per-exam storage.
 6. Future print logic must consume exam metadata, not replace it.
+7. Workbook notes are internal-only and must not be rendered as patient-facing fields.
 
 ## Current Stack
 
@@ -65,13 +67,17 @@ Do not let the old print templates drive schema decisions.
 Already implemented:
 - Django project scaffold
 - core clinic models
+- organization + facility branding models with request snapshots
 - configurable exam models
 - result models
 - workbook importer
 - request intake UI
 - request-item creation flow
+- dynamic exam-option loading in the add-item form
 - dynamic result-entry flow
+- medtech/pathologist selection in result-entry
 - initial print-preview flow
+- facility-branded print header
 - ABG compact print variant
 - BBANK crossmatch print variant
 

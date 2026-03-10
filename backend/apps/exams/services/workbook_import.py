@@ -100,7 +100,7 @@ UNSCOPED_FIELDS_BY_SHEET = {
     },
 }
 
-IMPORTER_SIGNATURE_VERSION = 5
+IMPORTER_SIGNATURE_VERSION = 6
 
 
 @dataclass
@@ -119,6 +119,10 @@ def normalize_text(value):
     if value is None:
         return ""
     return " ".join(str(value).replace("\n", " ").split()).strip()
+
+
+def is_internal_note_row(field_label):
+    return normalize_text(field_label).upper() == "NOTE"
 
 
 def split_multiline(value):
@@ -222,9 +226,6 @@ def infer_field_types(sheet_name, field_label, input_type, raw_options, referenc
     if sheet_name == "BBANK - Blood Bank" and normalized_label == "VITAL SIGNS":
         return ExamFieldInputTypeChoices.GROUPED_MEASUREMENT, ExamFieldDataTypeChoices.JSON
 
-    if normalized_label == "NOTE":
-        return ExamFieldInputTypeChoices.DISPLAY_NOTE, ExamFieldDataTypeChoices.STRING
-
     if normalized_input == "predefined selection":
         return ExamFieldInputTypeChoices.SELECT, ExamFieldDataTypeChoices.STRING
 
@@ -289,11 +290,13 @@ def parse_grouped_measurement_config(raw_options):
     return grouped_fields
 
 
-def build_field_config(field_input_type, raw_options):
+def build_field_config(field_input_type, raw_options, internal_note=""):
     raw_option_lines = split_multiline(raw_options)
     config = {}
     if raw_option_lines:
         config["raw_options_lines"] = raw_option_lines
+    if internal_note:
+        config["internal_note"] = internal_note
 
     if field_input_type == ExamFieldInputTypeChoices.GROUPED_MEASUREMENT:
         config["grouped_fields"] = parse_grouped_measurement_config(raw_options)
@@ -481,9 +484,6 @@ def default_render_profile(sheet_name, has_sections, has_reference_ranges):
                     "calculated_values_oximetry",
                     "calculated_values_acid_base_status",
                 ],
-                "note_field_keys": [
-                    "calculated_values_acid_base_status_note",
-                ],
             }
         )
     elif sheet_name == "BBANK - Blood Bank":
@@ -614,6 +614,9 @@ def import_workbook(
             if field_label in PATIENT_FIELDS or field_label in SIGNATORY_FIELDS:
                 continue
 
+            if is_internal_note_row(field_label):
+                continue
+
             if not input_type:
                 if field_label in SKIP_SECTION_LABELS:
                     current_section = None
@@ -643,7 +646,7 @@ def import_workbook(
             field_input_type, data_type = infer_field_types(ws.title, field_label, input_type, raw_options, reference)
             field_key = make_field_key(effective_section.section_key if effective_section else "", field_label)
             unit = extract_unit(input_type, raw_options)
-            field_config = build_field_config(field_input_type, raw_options)
+            field_config = build_field_config(field_input_type, raw_options, internal_note=notes)
             field_sort_order += 1
 
             exam_field = ExamField.objects.create(
@@ -657,7 +660,7 @@ def import_workbook(
                 required=False,
                 sort_order=field_sort_order,
                 default_value="",
-                help_text=notes,
+                help_text="",
                 placeholder_text="",
                 reference_text=reference,
                 config_json=field_config,
@@ -705,10 +708,10 @@ def import_workbook(
                 required=False,
                 sort_order=field_sort_order,
                 default_value="",
-                help_text="Imported from workbook note: kelangan may picture sa result",
+                help_text="",
                 placeholder_text="",
                 reference_text="",
-                config_json={},
+                config_json={"internal_note": "Imported from workbook note: kelangan may picture sa result"},
                 supports_attachment=True,
                 active=True,
             )

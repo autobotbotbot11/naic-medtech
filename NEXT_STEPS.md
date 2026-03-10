@@ -11,6 +11,7 @@ Goal:
 
 Why this is next:
 - an initial HTML print-preview layer now exists
+- organization/facility branding headers are now in the print flow
 - the next work is improving fidelity and coverage for real clinic use
 - `ABG` and `BBANK` custom variants are already implemented
 - the next refinement targets should extend that pattern only where needed
@@ -40,6 +41,7 @@ Implementation targets:
 - `SEROLOGY`
 - `OGTT`
 - `HEMATOLOGY`
+- verify browser print-to-PDF keeps the same compact layout as on-screen preview
 - decide whether browser print is sufficient or PDF export is required
 
 Acceptance criteria:
@@ -53,6 +55,7 @@ Goal:
 
 Why:
 - request intake and release workflow need real master data
+- organization/facility branding is now admin-manageable, but the rest of the master data is still mostly manual
 
 Targets:
 - physicians

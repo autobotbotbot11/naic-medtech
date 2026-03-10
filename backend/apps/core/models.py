@@ -7,6 +7,45 @@ from apps.common.choices import (
 from apps.common.models import TimeStampedModel
 
 
+class Organization(TimeStampedModel):
+    organization_code = models.CharField(max_length=64, unique=True, blank=True, null=True)
+    legal_name = models.CharField(max_length=255, unique=True)
+    display_name = models.CharField(max_length=255, blank=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["legal_name"]
+
+    def __str__(self):
+        return self.display_name or self.legal_name
+
+
+class Facility(TimeStampedModel):
+    facility_code = models.CharField(max_length=64, unique=True, blank=True, null=True)
+    organization = models.ForeignKey(
+        "core.Organization",
+        on_delete=models.PROTECT,
+        related_name="facilities",
+    )
+    display_name = models.CharField(max_length=255)
+    address = models.TextField(blank=True)
+    contact_numbers = models.CharField(max_length=255, blank=True)
+    report_header_image = models.ImageField(upload_to="facility_branding/", blank=True, null=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["organization__legal_name", "display_name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["organization", "display_name"],
+                name="uq_facility_name_per_organization",
+            ),
+        ]
+
+    def __str__(self):
+        return self.display_name
+
+
 class Patient(TimeStampedModel):
     patient_code = models.CharField(max_length=64, unique=True, blank=True, null=True)
     full_name = models.CharField(max_length=255)
@@ -74,6 +113,22 @@ class LabRequest(TimeStampedModel):
     age_snapshot_text = models.CharField(max_length=64, blank=True)
     sex_snapshot = models.CharField(max_length=16, choices=SexChoices.choices, blank=True)
     request_datetime = models.DateTimeField()
+    facility = models.ForeignKey(
+        "core.Facility",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="lab_requests",
+    )
+    organization_name_snapshot = models.CharField(max_length=255, blank=True)
+    facility_name_snapshot = models.CharField(max_length=255, blank=True)
+    facility_address_snapshot = models.TextField(blank=True)
+    facility_contact_numbers_snapshot = models.CharField(max_length=255, blank=True)
+    facility_header_image_snapshot = models.ImageField(
+        upload_to="request_branding/%Y/%m/",
+        blank=True,
+        null=True,
+    )
     physician = models.ForeignKey(
         "core.Physician",
         on_delete=models.SET_NULL,
@@ -111,6 +166,7 @@ class LabRequest(TimeStampedModel):
             models.Index(fields=["case_number"]),
             models.Index(fields=["request_datetime"]),
             models.Index(fields=["status"]),
+            models.Index(fields=["facility"]),
         ]
 
     def __str__(self):
