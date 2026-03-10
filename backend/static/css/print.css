@@ -167,6 +167,26 @@ body {
     font-size: 1.15rem;
 }
 
+.compact-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.compact-table th,
+.compact-table td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+}
+
+.compact-table th {
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+
 .result-table {
     width: 100%;
     border-collapse: collapse;
@@ -264,6 +284,94 @@ body {
     padding-top: 0;
 }
 
+.abg-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 18px;
+}
+
+.abg-side {
+    display: grid;
+    gap: 18px;
+}
+
+.abg-panel {
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.52);
+}
+
+.abg-note {
+    margin-top: 16px;
+}
+
+.bbank-summary {
+    display: grid;
+    gap: 12px;
+}
+
+.bbank-summary-row,
+.release-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.bbank-summary-row:first-child {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.bbank-summary-row:not(:first-child),
+.release-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.bbank-card strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 1rem;
+}
+
+.card-label {
+    display: block;
+    color: var(--muted);
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.bbank-crossmatch {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 18px;
+}
+
+.bbank-crossmatch-main,
+.bbank-crossmatch-side {
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.remarks-pill {
+    margin-top: 14px;
+    border: 1px dashed var(--line);
+    border-radius: 14px;
+    padding: 12px 14px;
+    background: rgba(24, 79, 103, 0.05);
+}
+
+.remarks-pill span,
+.inline-help {
+    color: var(--muted);
+}
+
+.remarks-pill strong {
+    display: block;
+    margin-top: 6px;
+}
+
 .attachment-block {
     margin-top: 10px;
 }
@@ -335,6 +443,13 @@ body {
     .grouped-row {
         grid-template-columns: 1fr;
         flex-direction: column;
+    }
+
+    .abg-grid,
+    .bbank-crossmatch,
+    .bbank-summary-row,
+    .release-grid {
+        grid-template-columns: 1fr;
     }
 
     .summary-card dl {

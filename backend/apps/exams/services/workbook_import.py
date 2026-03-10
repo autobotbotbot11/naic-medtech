@@ -100,7 +100,7 @@ UNSCOPED_FIELDS_BY_SHEET = {
     },
 }
 
-IMPORTER_SIGNATURE_VERSION = 4
+IMPORTER_SIGNATURE_VERSION = 5
 
 
 @dataclass
@@ -458,12 +458,65 @@ def build_safe_rules(sheet_name, version, options_by_key, sections_by_key, field
     return created
 
 
-def default_render_layout(has_sections, has_reference_ranges):
+def default_render_profile(sheet_name, has_sections, has_reference_ranges):
+    layout_type = RenderLayoutTypeChoices.LABEL_VALUE_LIST
     if has_sections:
-        return RenderLayoutTypeChoices.SECTIONED_REPORT
-    if has_reference_ranges:
-        return RenderLayoutTypeChoices.RESULT_TABLE
-    return RenderLayoutTypeChoices.LABEL_VALUE_LIST
+        layout_type = RenderLayoutTypeChoices.SECTIONED_REPORT
+    elif has_reference_ranges:
+        layout_type = RenderLayoutTypeChoices.RESULT_TABLE
+
+    config = {
+        "sheet_name": sheet_name,
+        "show_reference_ranges": has_reference_ranges,
+        "show_units": True,
+        "render_variant": "generic",
+    }
+
+    if sheet_name == "ABG - Blood Gas Analysis":
+        config.update(
+            {
+                "render_variant": "abg_compact",
+                "left_section_key": "blood_gas_value_abg",
+                "right_section_keys": [
+                    "calculated_values_oximetry",
+                    "calculated_values_acid_base_status",
+                ],
+                "note_field_keys": [
+                    "calculated_values_acid_base_status_note",
+                ],
+            }
+        )
+    elif sheet_name == "BBANK - Blood Bank":
+        config.update(
+            {
+                "render_variant": "bbank_crossmatch",
+                "show_reference_ranges": False,
+                "general_field_keys": [
+                    "patients_blood_type",
+                    "blood_component",
+                    "donors_blood_type",
+                    "source_of_blood",
+                    "serial_number",
+                    "date_extracted",
+                    "date_expiry",
+                ],
+                "crossmatch_section_key": "type_of_crossmatching",
+                "crossmatch_result_field_keys": [
+                    "type_of_crossmatching_immediate_spin_saline_phase",
+                    "type_of_crossmatching_albumin_phase_37_c",
+                    "type_of_crossmatching_anti_human_globilin_phase",
+                ],
+                "remarks_field_key": "type_of_crossmatching_remarks",
+                "vital_signs_field_key": "type_of_crossmatching_vital_signs",
+                "release_field_keys": [
+                    "type_of_crossmatching_released_by",
+                    "type_of_crossmatching_released_to",
+                    "type_of_crossmatching_datetime",
+                ],
+            }
+        )
+
+    return layout_type, config
 
 
 @transaction.atomic
@@ -666,14 +719,11 @@ def import_workbook(
 
         has_sections = bool(sections_by_key)
         has_reference_ranges = ExamFieldReferenceRange.objects.filter(field__exam_version=version).exists()
+        layout_type, render_config = default_render_profile(ws.title, has_sections, has_reference_ranges)
         ExamRenderProfile.objects.create(
             exam_version=version,
-            layout_type=default_render_layout(has_sections, has_reference_ranges),
-            config_json={
-                "sheet_name": ws.title,
-                "show_reference_ranges": has_reference_ranges,
-                "show_units": True,
-            },
+            layout_type=layout_type,
+            config_json=render_config,
             active=True,
         )
 

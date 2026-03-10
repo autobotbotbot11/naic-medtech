@@ -66,6 +66,7 @@ Implemented:
 - request-item creation flow
 - dynamic result entry UI based on imported exam metadata
 - initial HTML print preview for saved results
+- exam-specific print variants for `ABG` and `BBANK`
 
 Not yet implemented:
 - custom admin exam builder UI

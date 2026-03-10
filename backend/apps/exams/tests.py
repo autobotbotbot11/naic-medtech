@@ -4,9 +4,10 @@ from pathlib import Path
 from django.test import SimpleTestCase, TestCase
 from openpyxl import Workbook
 
-from apps.common.choices import ExamFieldDataTypeChoices, ExamFieldInputTypeChoices
+from apps.common.choices import ExamFieldDataTypeChoices, ExamFieldInputTypeChoices, RenderLayoutTypeChoices
 from apps.exams.models import ExamDefinition
 from apps.exams.services.workbook_import import (
+    default_render_profile,
     infer_field_types,
     import_workbook,
     make_field_key,
@@ -55,6 +56,28 @@ class WorkbookImportHelpersTests(SimpleTestCase):
         )
         self.assertEqual(input_type, ExamFieldInputTypeChoices.DISPLAY_NOTE)
         self.assertEqual(data_type, ExamFieldDataTypeChoices.STRING)
+
+    def test_default_render_profile_sets_abg_variant(self):
+        layout_type, config = default_render_profile(
+            "ABG - Blood Gas Analysis",
+            has_sections=True,
+            has_reference_ranges=True,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.SECTIONED_REPORT)
+        self.assertEqual(config["render_variant"], "abg_compact")
+        self.assertEqual(config["left_section_key"], "blood_gas_value_abg")
+
+    def test_default_render_profile_sets_bbank_variant(self):
+        layout_type, config = default_render_profile(
+            "BBANK - Blood Bank",
+            has_sections=True,
+            has_reference_ranges=True,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.SECTIONED_REPORT)
+        self.assertEqual(config["render_variant"], "bbank_crossmatch")
+        self.assertFalse(config["show_reference_ranges"])
 
 
 class WorkbookImportIntegrationTests(TestCase):

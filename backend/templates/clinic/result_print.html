@@ -50,123 +50,268 @@
                 </article>
             </section>
 
-            {% for group in groups %}
-                <section class="report-group">
-                    {% if group.title %}
-                        <h2 class="group-heading">{{ group.title }}</h2>
-                    {% endif %}
-
-                    {% if layout_type == "label_value_list" or layout_type == "grouped_measurements" %}
-                        <div class="value-list">
-                            {% for entry in group.entries %}
-                                {% if entry.kind == "note" %}
-                                    <div class="print-note">
-                                        <strong>{{ entry.label }}</strong>
-                                        <p>{{ entry.text }}</p>
-                                    </div>
-                                {% elif entry.kind == "grouped" %}
-                                    <div class="grouped-block">
-                                        <div class="grouped-block-head">
-                                            <strong>{{ entry.label }}</strong>
-                                            {% if summary.show_reference_ranges and entry.reference_text %}<span>{{ entry.reference_text }}</span>{% endif %}
-                                        </div>
-                                        <div class="grouped-list">
-                                            {% for row in entry.subrows %}
-                                                <div class="grouped-row">
-                                                    <span>{{ row.label }}{% if summary.show_units and row.unit %} ({{ row.unit }}){% endif %}</span>
-                                                    <strong>{{ row.value_display }}</strong>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                {% else %}
-                                    <div class="value-row {% if entry.abnormal_flag %}abnormal{% endif %}">
-                                        <div>
-                                            <span class="value-label">{{ entry.label }}{% if summary.show_units and entry.unit %} ({{ entry.unit }}){% endif %}</span>
-                                            {% if summary.show_reference_ranges and entry.reference_text %}
-                                                <span class="value-reference">{{ entry.reference_text }}</span>
-                                            {% endif %}
-                                        </div>
-                                        <div class="value-output">
+            {% if render_variant == "abg_compact" %}
+                <section class="report-group abg-grid">
+                    <article class="abg-panel">
+                        <h2 class="group-heading">{{ variant_context.left_group.title }}</h2>
+                        <table class="compact-table">
+                            <thead>
+                                <tr>
+                                    <th>Test</th>
+                                    <th>Result</th>
+                                    {% if summary.show_reference_ranges %}<th>Normal</th>{% endif %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in variant_context.left_group.entries %}
+                                    <tr class="{% if entry.abnormal_flag %}abnormal{% endif %}">
+                                        <td>{{ entry.label }}{% if summary.show_units and entry.unit %} ({{ entry.unit }}){% endif %}</td>
+                                        <td>
                                             <strong>{{ entry.value_display }}</strong>
                                             {% if entry.abnormal_reason %}<span class="flag">{{ entry.abnormal_reason }}</span>{% endif %}
-                                        </div>
-                                        {% if entry.attachment %}
-                                            <div class="attachment-block">
-                                                <a href="{{ entry.attachment.url }}" target="_blank" rel="noreferrer">{{ entry.attachment.name }}</a>
-                                                {% if entry.attachment.is_image %}
-                                                    <img src="{{ entry.attachment.url }}" alt="{{ entry.attachment.name }}">
-                                                {% endif %}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {% with field_entries=group.entries %}
-                            <table class="result-table">
-                                <thead>
-                                    <tr>
-                                        <th>Test</th>
-                                        <th>Result</th>
-                                        {% if summary.show_units %}<th>Unit</th>{% endif %}
-                                        {% if summary.show_reference_ranges %}<th>Reference</th>{% endif %}
-                                        <th>Flag</th>
+                                        </td>
+                                        {% if summary.show_reference_ranges %}<td>{{ entry.reference_text|default:"-" }}</td>{% endif %}
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {% for entry in field_entries %}
-                                        {% if entry.kind == "field" %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </article>
+
+                    <div class="abg-side">
+                        {% for block in variant_context.right_groups %}
+                            <article class="abg-panel">
+                                <h2 class="group-heading">{{ block.title }}</h2>
+                                <table class="compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Test</th>
+                                            <th>Result</th>
+                                            {% if summary.show_reference_ranges %}<th>Normal</th>{% endif %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for entry in block.entries %}
                                             <tr class="{% if entry.abnormal_flag %}abnormal{% endif %}">
-                                                <td>{{ entry.label }}</td>
+                                                <td>{{ entry.label }}{% if summary.show_units and entry.unit %} ({{ entry.unit }}){% endif %}</td>
                                                 <td>
                                                     <strong>{{ entry.value_display }}</strong>
-                                                    {% if entry.attachment %}
-                                                        <div class="attachment-block">
-                                                            <a href="{{ entry.attachment.url }}" target="_blank" rel="noreferrer">{{ entry.attachment.name }}</a>
-                                                            {% if entry.attachment.is_image %}
-                                                                <img src="{{ entry.attachment.url }}" alt="{{ entry.attachment.name }}">
-                                                            {% endif %}
-                                                        </div>
-                                                    {% endif %}
+                                                    {% if entry.abnormal_reason %}<span class="flag">{{ entry.abnormal_reason }}</span>{% endif %}
                                                 </td>
-                                                {% if summary.show_units %}<td>{{ entry.unit|default:"-" }}</td>{% endif %}
                                                 {% if summary.show_reference_ranges %}<td>{{ entry.reference_text|default:"-" }}</td>{% endif %}
-                                                <td>{{ entry.abnormal_reason|default:"-" }}</td>
                                             </tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-
-                            {% for entry in field_entries %}
-                                {% if entry.kind == "grouped" %}
-                                    <div class="grouped-block">
-                                        <div class="grouped-block-head">
-                                            <strong>{{ entry.label }}</strong>
-                                            {% if summary.show_reference_ranges and entry.reference_text %}<span>{{ entry.reference_text }}</span>{% endif %}
-                                        </div>
-                                        <div class="grouped-list">
-                                            {% for row in entry.subrows %}
-                                                <div class="grouped-row">
-                                                    <span>{{ row.label }}{% if summary.show_units and row.unit %} ({{ row.unit }}){% endif %}</span>
-                                                    <strong>{{ row.value_display }}</strong>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                {% elif entry.kind == "note" %}
-                                    <div class="print-note">
-                                        <strong>{{ entry.label }}</strong>
-                                        <p>{{ entry.text }}</p>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        {% endwith %}
-                    {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </article>
+                        {% endfor %}
+                    </div>
                 </section>
-            {% endfor %}
+
+                {% for note in variant_context.notes %}
+                    <div class="print-note abg-note">
+                        <strong>{{ note.label }}</strong>
+                        <p>{{ note.text }}</p>
+                    </div>
+                {% endfor %}
+
+            {% elif render_variant == "bbank_crossmatch" %}
+                <section class="report-group">
+                    <div class="bbank-summary">
+                        {% for row in variant_context.general_rows %}
+                            <div class="bbank-summary-row">
+                                {% for entry in row %}
+                                    <article class="summary-card bbank-card">
+                                        <span class="card-label">{{ entry.label }}</span>
+                                        <strong>{{ entry.value_display }}</strong>
+                                    </article>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="report-group bbank-crossmatch">
+                    <div class="bbank-crossmatch-main">
+                        <h2 class="group-heading">{{ variant_context.crossmatch_title }}</h2>
+                        <table class="compact-table">
+                            <thead>
+                                <tr>
+                                    <th>Phase</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in variant_context.crossmatch_result_entries %}
+                                    <tr class="{% if entry.abnormal_flag %}abnormal{% endif %}">
+                                        <td>{{ entry.label }}</td>
+                                        <td><strong>{{ entry.value_display }}</strong></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        {% if variant_context.remarks_entry %}
+                            <div class="remarks-pill">
+                                <span>Remarks</span>
+                                <strong>{{ variant_context.remarks_entry.value_display }}</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <aside class="bbank-crossmatch-side">
+                        {% if variant_context.vital_signs_entry %}
+                            <div class="grouped-block">
+                                <div class="grouped-block-head">
+                                    <strong>{{ variant_context.vital_signs_entry.label }}</strong>
+                                </div>
+                                {% if variant_context.vital_signs_entry.help_text %}
+                                    <p class="inline-help">{{ variant_context.vital_signs_entry.help_text }}</p>
+                                {% endif %}
+                                <div class="grouped-list">
+                                    {% for row in variant_context.vital_signs_entry.subrows %}
+                                        <div class="grouped-row">
+                                            <span>{{ row.label }}{% if summary.show_units and row.unit %} ({{ row.unit }}){% endif %}</span>
+                                            <strong>{{ row.value_display }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </aside>
+                </section>
+
+                {% if variant_context.release_entries %}
+                    <section class="report-group">
+                        <div class="release-grid">
+                            {% for entry in variant_context.release_entries %}
+                                <article class="summary-card bbank-card">
+                                    <span class="card-label">{{ entry.label }}</span>
+                                    <strong>{{ entry.value_display }}</strong>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    </section>
+                {% endif %}
+
+            {% else %}
+                {% for group in groups %}
+                    <section class="report-group">
+                        {% if group.title %}
+                            <h2 class="group-heading">{{ group.title }}</h2>
+                        {% endif %}
+
+                        {% if layout_type == "label_value_list" or layout_type == "grouped_measurements" %}
+                            <div class="value-list">
+                                {% for entry in group.entries %}
+                                    {% if entry.kind == "note" %}
+                                        <div class="print-note">
+                                            <strong>{{ entry.label }}</strong>
+                                            <p>{{ entry.text }}</p>
+                                        </div>
+                                    {% elif entry.kind == "grouped" %}
+                                        <div class="grouped-block">
+                                            <div class="grouped-block-head">
+                                                <strong>{{ entry.label }}</strong>
+                                                {% if summary.show_reference_ranges and entry.reference_text %}<span>{{ entry.reference_text }}</span>{% endif %}
+                                            </div>
+                                            <div class="grouped-list">
+                                                {% for row in entry.subrows %}
+                                                    <div class="grouped-row">
+                                                        <span>{{ row.label }}{% if summary.show_units and row.unit %} ({{ row.unit }}){% endif %}</span>
+                                                        <strong>{{ row.value_display }}</strong>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="value-row {% if entry.abnormal_flag %}abnormal{% endif %}">
+                                            <div>
+                                                <span class="value-label">{{ entry.label }}{% if summary.show_units and entry.unit %} ({{ entry.unit }}){% endif %}</span>
+                                                {% if summary.show_reference_ranges and entry.reference_text %}
+                                                    <span class="value-reference">{{ entry.reference_text }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="value-output">
+                                                <strong>{{ entry.value_display }}</strong>
+                                                {% if entry.abnormal_reason %}<span class="flag">{{ entry.abnormal_reason }}</span>{% endif %}
+                                            </div>
+                                            {% if entry.attachment %}
+                                                <div class="attachment-block">
+                                                    <a href="{{ entry.attachment.url }}" target="_blank" rel="noreferrer">{{ entry.attachment.name }}</a>
+                                                    {% if entry.attachment.is_image %}
+                                                        <img src="{{ entry.attachment.url }}" alt="{{ entry.attachment.name }}">
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {% with field_entries=group.entries %}
+                                <table class="result-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Test</th>
+                                            <th>Result</th>
+                                            {% if summary.show_units %}<th>Unit</th>{% endif %}
+                                            {% if summary.show_reference_ranges %}<th>Reference</th>{% endif %}
+                                            <th>Flag</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for entry in field_entries %}
+                                            {% if entry.kind == "field" %}
+                                                <tr class="{% if entry.abnormal_flag %}abnormal{% endif %}">
+                                                    <td>{{ entry.label }}</td>
+                                                    <td>
+                                                        <strong>{{ entry.value_display }}</strong>
+                                                        {% if entry.attachment %}
+                                                            <div class="attachment-block">
+                                                                <a href="{{ entry.attachment.url }}" target="_blank" rel="noreferrer">{{ entry.attachment.name }}</a>
+                                                                {% if entry.attachment.is_image %}
+                                                                    <img src="{{ entry.attachment.url }}" alt="{{ entry.attachment.name }}">
+                                                                {% endif %}
+                                                            </div>
+                                                        {% endif %}
+                                                    </td>
+                                                    {% if summary.show_units %}<td>{{ entry.unit|default:"-" }}</td>{% endif %}
+                                                    {% if summary.show_reference_ranges %}<td>{{ entry.reference_text|default:"-" }}</td>{% endif %}
+                                                    <td>{{ entry.abnormal_reason|default:"-" }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                                {% for entry in field_entries %}
+                                    {% if entry.kind == "grouped" %}
+                                        <div class="grouped-block">
+                                            <div class="grouped-block-head">
+                                                <strong>{{ entry.label }}</strong>
+                                                {% if summary.show_reference_ranges and entry.reference_text %}<span>{{ entry.reference_text }}</span>{% endif %}
+                                            </div>
+                                            <div class="grouped-list">
+                                                {% for row in entry.subrows %}
+                                                    <div class="grouped-row">
+                                                        <span>{{ row.label }}{% if summary.show_units and row.unit %} ({{ row.unit }}){% endif %}</span>
+                                                        <strong>{{ row.value_display }}</strong>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% elif entry.kind == "note" %}
+                                        <div class="print-note">
+                                            <strong>{{ entry.label }}</strong>
+                                            <p>{{ entry.text }}</p>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endwith %}
+                        {% endif %}
+                    </section>
+                {% endfor %}
+            {% endif %}
 
             <section class="signature-grid">
                 <article>

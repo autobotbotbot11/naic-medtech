@@ -98,6 +98,7 @@ def build_render_groups(item):
             group_lookup[group_key] = {
                 "title": section.section_label if section else "",
                 "section": section,
+                "section_key": section.section_key if section else "",
                 "entries": [],
             }
             groups.append(group_lookup[group_key])
@@ -125,6 +126,7 @@ def build_render_groups(item):
             group["entries"].append(
                 {
                     "kind": "note",
+                    "field_key": field.field_key,
                     "label": field.field_label,
                     "text": field.help_text or field.reference_text or field.field_label,
                 }
@@ -148,6 +150,7 @@ def build_render_groups(item):
             group["entries"].append(
                 {
                     "kind": "grouped",
+                    "field_key": field.field_key,
                     "label": field.field_label,
                     "reference_text": reference_text,
                     "help_text": field.help_text,
@@ -163,6 +166,7 @@ def build_render_groups(item):
         group["entries"].append(
             {
                 "kind": "field",
+                "field_key": field.field_key,
                 "label": field.field_label,
                 "unit": field.unit,
                 "value_display": display_value or "-",
@@ -179,6 +183,95 @@ def build_render_groups(item):
     return groups
 
 
+def first_group_by_section_key(groups, section_key):
+    return next((group for group in groups if group["section_key"] == section_key), None)
+
+
+def first_entry_by_field_key(groups, field_key):
+    for group in groups:
+        for entry in group["entries"]:
+            if entry.get("field_key") == field_key:
+                return entry
+    return None
+
+
+def entries_by_field_keys(groups, field_keys):
+    return [entry for field_key in field_keys if (entry := first_entry_by_field_key(groups, field_key))]
+
+
+def split_group_entries(group):
+    if not group:
+        return {"fields": [], "grouped": [], "notes": []}
+
+    return {
+        "fields": [entry for entry in group["entries"] if entry["kind"] == "field"],
+        "grouped": [entry for entry in group["entries"] if entry["kind"] == "grouped"],
+        "notes": [entry for entry in group["entries"] if entry["kind"] == "note"],
+    }
+
+
+def build_abg_variant_context(groups, render_config):
+    left_group = first_group_by_section_key(groups, render_config.get("left_section_key", ""))
+    right_groups = [
+        first_group_by_section_key(groups, section_key)
+        for section_key in render_config.get("right_section_keys", [])
+    ]
+    note_entries = entries_by_field_keys(groups, render_config.get("note_field_keys", []))
+
+    return {
+        "left_group": {
+            "title": left_group["title"] if left_group else "",
+            "entries": split_group_entries(left_group)["fields"],
+        },
+        "right_groups": [
+            {
+                "title": group["title"],
+                "entries": split_group_entries(group)["fields"],
+            }
+            for group in right_groups
+            if group
+        ],
+        "notes": note_entries,
+    }
+
+
+def build_bbank_variant_context(groups, render_config):
+    general_entries = entries_by_field_keys(groups, render_config.get("general_field_keys", []))
+    general_rows = []
+    row_sizes = [3, 2, 2]
+    index = 0
+    for row_size in row_sizes:
+        current_row = general_entries[index:index + row_size]
+        if current_row:
+            general_rows.append(current_row)
+        index += row_size
+    if index < len(general_entries):
+        general_rows.append(general_entries[index:])
+
+    crossmatch_group = first_group_by_section_key(groups, render_config.get("crossmatch_section_key", ""))
+    crossmatch_result_entries = entries_by_field_keys(groups, render_config.get("crossmatch_result_field_keys", []))
+    remarks_entry = first_entry_by_field_key(groups, render_config.get("remarks_field_key", ""))
+    vital_signs_entry = first_entry_by_field_key(groups, render_config.get("vital_signs_field_key", ""))
+    release_entries = entries_by_field_keys(groups, render_config.get("release_field_keys", []))
+
+    return {
+        "general_rows": general_rows,
+        "crossmatch_title": crossmatch_group["title"] if crossmatch_group else "Type of Crossmatching",
+        "crossmatch_result_entries": crossmatch_result_entries,
+        "remarks_entry": remarks_entry,
+        "vital_signs_entry": vital_signs_entry,
+        "release_entries": release_entries,
+    }
+
+
+def build_variant_context(render_variant, groups, render_config):
+    if render_variant == "abg_compact":
+        return build_abg_variant_context(groups, render_config)
+    if render_variant == "bbank_crossmatch":
+        return build_bbank_variant_context(groups, render_config)
+    return {}
+
+
 def render_profile_for_item(item):
     return getattr(item.exam_definition_version, "render_profile", None)
 
@@ -188,12 +281,16 @@ def build_result_print_context(item):
     layout_type = render_profile.layout_type if render_profile else RenderLayoutTypeChoices.LABEL_VALUE_LIST
     render_config = render_profile.config_json if render_profile else {}
     groups = build_render_groups(item)
+    render_variant = render_config.get("render_variant", "generic")
+    variant_context = build_variant_context(render_variant, groups, render_config)
 
     return {
         "request_item": item,
         "layout_type": layout_type,
         "render_profile": render_profile,
         "render_config": render_config,
+        "render_variant": render_variant,
+        "variant_context": variant_context,
         "groups": groups,
         "header": {
             "exam_name": item.exam_definition.exam_name,
