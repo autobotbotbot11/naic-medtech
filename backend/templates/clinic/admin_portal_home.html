@@ -1,0 +1,61 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}Admin Portal | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Administration</div>
+        <h2>Admin Portal</h2>
+        <p>Use these guided pages for day-to-day setup. This is the intended operational admin area, not Django admin.</p>
+    </div>
+</section>
+
+<section class="stat-grid">
+    <article class="stat-card">
+        <span>Users</span>
+        <strong>{{ user_count }}</strong>
+    </article>
+    <article class="stat-card">
+        <span>Organizations</span>
+        <strong>{{ organization_count }}</strong>
+    </article>
+    <article class="stat-card">
+        <span>Facilities</span>
+        <strong>{{ facility_count }}</strong>
+    </article>
+</section>
+
+<section class="admin-card-grid">
+    <article class="panel admin-card">
+        <h3>Users</h3>
+        <p>Create staff accounts, assign roles, and reset temporary passwords.</p>
+        <a class="button button-primary" href="{% url 'user_list' %}">Manage Users</a>
+    </article>
+    <article class="panel admin-card">
+        <h3>Organizations</h3>
+        <p>Maintain the legal/company identity used by facilities and reports.</p>
+        <a class="button button-primary" href="{% url 'organization_list' %}">Manage Organizations</a>
+    </article>
+    <article class="panel admin-card">
+        <h3>Facilities</h3>
+        <p>Manage branches, addresses, contact numbers, and report branding images.</p>
+        <a class="button button-primary" href="{% url 'facility_list' %}">Manage Facilities</a>
+    </article>
+    <article class="panel admin-card">
+        <h3>Physicians</h3>
+        <p>Maintain the physician list used during request intake.</p>
+        <a class="button button-primary" href="{% url 'physician_list' %}">Manage Physicians</a>
+    </article>
+    <article class="panel admin-card">
+        <h3>Rooms</h3>
+        <p>Maintain the room and ward list used in requests.</p>
+        <a class="button button-primary" href="{% url 'room_list' %}">Manage Rooms</a>
+    </article>
+    <article class="panel admin-card">
+        <h3>Signatories</h3>
+        <p>Maintain medtech and pathologist records used in reports.</p>
+        <a class="button button-primary" href="{% url 'signatory_list' %}">Manage Signatories</a>
+    </article>
+</section>
+{% endblock %}

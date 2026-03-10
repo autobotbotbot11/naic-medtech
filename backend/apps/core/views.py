@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -10,6 +11,7 @@ from apps.results.forms import LabRequestItemCreateForm
 from apps.results.models import LabRequestItem
 
 
+@login_required
 def dashboard(request):
     recent_requests = LabRequest.objects.select_related(
         "patient",
@@ -29,6 +31,7 @@ def dashboard(request):
     return render(request, "clinic/dashboard.html", context)
 
 
+@login_required
 def request_create(request):
     if request.method == "POST":
         form = LabRequestCreateForm(request.POST)
@@ -42,6 +45,7 @@ def request_create(request):
     return render(request, "clinic/request_form.html", {"form": form})
 
 
+@login_required
 def request_detail(request, pk):
     lab_request = get_object_or_404(
         LabRequest.objects.select_related(
@@ -66,6 +70,7 @@ def request_detail(request, pk):
     return render(request, "clinic/request_detail.html", context)
 
 
+@login_required
 def request_add_item(request, pk):
     lab_request = get_object_or_404(LabRequest, pk=pk)
     initial = {}
@@ -92,6 +97,7 @@ def request_add_item(request, pk):
     )
 
 
+@login_required
 def exam_definition_options(request, pk):
     exam_definition = get_object_or_404(ExamDefinition.objects.filter(active=True), pk=pk)
     version = exam_definition.versions.filter(

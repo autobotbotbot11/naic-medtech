@@ -1,6 +1,7 @@
 import shutil
 import tempfile
 
+from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -25,6 +26,8 @@ from apps.exams.models import (
 )
 from apps.results.models import Attachment, LabRequestItem, LabResultValue
 
+User = get_user_model()
+
 
 class ResultEntryFlowTests(TestCase):
     @classmethod
@@ -40,6 +43,12 @@ class ResultEntryFlowTests(TestCase):
     def setUp(self):
         self.settings_override = override_settings(MEDIA_ROOT=self.media_root)
         self.settings_override.enable()
+        self.user = User.objects.create_user(
+            username="resultuser",
+            password="StrongPass123!",
+            role="encoder",
+        )
+        self.client.force_login(self.user)
 
         self.patient = Patient.objects.create(full_name="Maria Santos", sex="female")
         self.organization = Organization.objects.create(

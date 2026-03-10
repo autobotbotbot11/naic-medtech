@@ -1,0 +1,65 @@
+{% extends "clinic/base.html" %}
+{% load form_extras %}
+
+{% block title %}{{ page_title }} | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Admin Portal</div>
+        <h2>{{ page_title }}</h2>
+        <p>{{ page_description }}</p>
+    </div>
+    <div class="action-row">
+        <a class="button button-secondary" href="{% url 'admin_portal_home' %}">Back to Admin Portal</a>
+        <a class="button button-primary" href="{% url create_url_name %}">Add New</a>
+    </div>
+</section>
+
+<section class="panel">
+    {% if items %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        {% for field in fields %}
+                            <th>{{ field.verbose_name|title }}</th>
+                        {% endfor %}
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            {% for field in fields %}
+                                <td>
+                                    {% with value=item|attr:field.name %}
+                                        {% if field.name == "report_header_image" or field.name == "signature_image" %}
+                                            {% if value %}
+                                                <a href="{{ value.url }}" target="_blank" rel="noreferrer">View file</a>
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        {% elif field.name == "active" %}
+                                            {% if value %}
+                                                <span class="status status-completed">Active</span>
+                                            {% else %}
+                                                <span class="status status-draft">Inactive</span>
+                                            {% endif %}
+                                        {% else %}
+                                            {{ value|default:"-" }}
+                                        {% endif %}
+                                    {% endwith %}
+                                </td>
+                            {% endfor %}
+                            <td><a class="text-link" href="{% url edit_url_name item.pk %}">Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No records yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

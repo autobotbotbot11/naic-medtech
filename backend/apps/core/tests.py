@@ -2,11 +2,14 @@ import shutil
 import tempfile
 
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 from django.test import override_settings
 
 from apps.core.models import Facility, LabRequest, Organization, Patient
+
+User = get_user_model()
 
 
 class RequestCreateViewTests(TestCase):
@@ -23,6 +26,12 @@ class RequestCreateViewTests(TestCase):
     def setUp(self):
         self.settings_override = override_settings(MEDIA_ROOT=self.media_root)
         self.settings_override.enable()
+        self.user = User.objects.create_user(
+            username="coreuser",
+            password="StrongPass123!",
+            role="admin",
+        )
+        self.client.force_login(self.user)
 
     def tearDown(self):
         self.settings_override.disable()
@@ -136,3 +145,16 @@ class RequestCreateViewTests(TestCase):
         payload = response.json()
         self.assertTrue(payload["requires_option"])
         self.assertEqual(payload["options"][0]["label"], "Fasting")
+
+    def test_admin_can_create_physician_from_custom_admin_portal(self):
+        response = self.client.post(
+            reverse("physician_create"),
+            {
+                "physician_code": "PHY-001",
+                "display_name": "Dr. Sample",
+                "active": "on",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse("physician_list"))

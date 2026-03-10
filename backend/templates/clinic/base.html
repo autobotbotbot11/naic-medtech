@@ -15,11 +15,30 @@
                 <h1>Clinic Lab System</h1>
                 <p>Workbook-driven lab request and result entry.</p>
             </div>
-            <nav class="nav">
-                <a href="{% url 'dashboard' %}">Dashboard</a>
-                <a href="{% url 'request_create' %}">New Request</a>
-                <a href="/admin/">Admin</a>
-            </nav>
+            {% if request.user.is_authenticated %}
+                <div class="user-panel">
+                    <strong>{{ request.user.display_name|default:request.user.username }}</strong>
+                    <span>{{ request.user.get_role_display }}</span>
+                </div>
+                <nav class="nav">
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    <a href="{% url 'request_create' %}">New Request</a>
+                    {% if request.user.role == 'system_owner' or request.user.role == 'admin' or request.user.is_superuser %}
+                        <a href="{% url 'admin_portal_home' %}">Admin Portal</a>
+                    {% endif %}
+                    {% if request.user.is_staff %}
+                        <a href="/admin/">Django Admin</a>
+                    {% endif %}
+                </nav>
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button class="button button-secondary button-full" type="submit">Sign Out</button>
+                </form>
+            {% else %}
+                <nav class="nav">
+                    <a href="{% url 'login' %}">Sign In</a>
+                </nav>
+            {% endif %}
         </aside>
         <main class="main">
             {% if messages %}

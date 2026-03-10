@@ -27,6 +27,16 @@
     </article>
 </section>
 
+{% if request.user.role == 'system_owner' or request.user.role == 'admin' or request.user.is_superuser %}
+    <section class="panel">
+        <div class="panel-head">
+            <h3>Administration</h3>
+        </div>
+        <p class="helper-text">Manage users, branding, physicians, rooms, and signatories from the guided admin portal.</p>
+        <a class="button button-secondary" href="{% url 'admin_portal_home' %}">Open Admin Portal</a>
+    </section>
+{% endif %}
+
 <section class="panel">
     <div class="panel-head">
         <h3>Latest Activity</h3>

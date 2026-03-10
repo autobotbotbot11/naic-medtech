@@ -150,6 +150,9 @@ Main implemented app modules:
 Current implementation status:
 - Django project scaffold exists
 - custom user model exists
+- custom login/logout flow exists
+- forced password-change flow exists
+- custom admin portal exists for daily non-technical administration
 - fixed clinic core models exist
 - configurable exam engine models exist
 - result storage models exist
@@ -159,6 +162,7 @@ Current implementation status:
 - request-item creation flow exists
 - dynamic result-entry UI exists
 - initial print preview/render layer exists
+- operational app pages are protected behind authentication
 
 Not yet implemented:
 - advanced print layout parity and export flow
@@ -172,6 +176,7 @@ Not yet implemented:
 The main model structure is already implemented in Django.
 
 Core models:
+- [User](C:\Users\acer\Desktop\naic-app\backend\apps\accounts\models.py)
 - [Organization](C:\Users\acer\Desktop\naic-app\backend\apps\core\models.py)
 - [Facility](C:\Users\acer\Desktop\naic-app\backend\apps\core\models.py)
 - [Patient](C:\Users\acer\Desktop\naic-app\backend\apps\core\models.py)
@@ -201,6 +206,12 @@ Important implemented constraints:
 - one published-or-archived exam version is kept historically per definition version number
 - `LabResultValue` is unique per `lab_request_item + field`
 - attachments can be tied to a specific exam field
+- current small-clinic auth baseline roles are:
+- `system_owner`
+- `admin`
+- `encoder`
+- `viewer`
+- `must_change_password` supports temporary-password onboarding
 
 ## 9. Workbook Importer
 
@@ -272,6 +283,11 @@ Important note:
 
 Minimal working flow:
 
+0. sign in
+- view: [login_view](C:\Users\acer\Desktop\naic-app\backend\apps\accounts\views.py)
+- template: [login.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\login.html)
+- there is no public self-registration flow
+
 1. create lab request
 - view: [request_create](C:\Users\acer\Desktop\naic-app\backend\apps\core\views.py)
 - template: [request_form.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\request_form.html)
@@ -296,6 +312,22 @@ Minimal working flow:
 - service: [rendering.py](C:\Users\acer\Desktop\naic-app\backend\apps\results\rendering.py)
 - template: [result_print.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\result_print.html)
 - print headers now consume facility branding and organization/facility snapshot data
+
+6. change password if required
+- view: [password_change_view](C:\Users\acer\Desktop\naic-app\backend\apps\accounts\views.py)
+- template: [password_change.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\password_change.html)
+- middleware: [middleware.py](C:\Users\acer\Desktop\naic-app\backend\apps\accounts\middleware.py)
+
+7. use the custom admin portal
+- home: [admin_portal_home](C:\Users\acer\Desktop\naic-app\backend\apps\accounts\views.py)
+- templates and routes now exist for:
+- users
+- organizations
+- facilities
+- physicians
+- rooms
+- signatories
+- this is the intended daily configuration UI for the clinic, not Django admin
 
 Supported saved input types in the MVP:
 - text
@@ -324,6 +356,12 @@ Run server:
 python backend\manage.py runserver
 ```
 
+Sign in:
+
+```powershell
+http://127.0.0.1:8000/login/
+```
+
 Run checks:
 
 ```powershell
@@ -333,7 +371,7 @@ python backend\manage.py check
 Run tests:
 
 ```powershell
-python backend\manage.py test apps.core apps.results apps.exams
+python backend\manage.py test apps.accounts apps.core apps.results apps.exams
 ```
 
 Import workbook into exam metadata:
@@ -353,6 +391,10 @@ Create superuser:
 python backend\manage.py createsuperuser
 ```
 
+Important note:
+- `createsuperuser` is the bootstrap `system_owner`
+- daily clinic onboarding should use the custom in-app admin portal, not Django admin
+
 ## 13. Important Design Rules That Should Not Be Broken
 
 1. The workbook is the schema source of truth.
@@ -363,6 +405,8 @@ python backend\manage.py createsuperuser
 6. Results must stay tied to the exact exam version used for encoding.
 7. Dynamic exam data is allowed, but core clinic entities stay fixed.
 8. Future print/render work should sit on top of exam metadata, not replace it.
+9. Operational pages require authenticated users.
+10. Do not build open public self-registration for this clinic system.
 
 ## 14. Recommended Next Steps
 
@@ -425,7 +469,7 @@ If you are a new agent and need to continue quickly:
 ```powershell
 .venv\Scripts\activate
 python backend\manage.py check
-python backend\manage.py test apps.core apps.results apps.exams
+python backend\manage.py test apps.accounts apps.core apps.results apps.exams
 ```
 
 5. only then continue implementation

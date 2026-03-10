@@ -1,0 +1,38 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}Sign In | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Access Control</div>
+        <h2>Sign In</h2>
+        <p>Use your assigned clinic account. Public self-registration is not enabled for this system.</p>
+    </div>
+</section>
+
+<form method="post" class="panel form-panel auth-panel">
+    {% csrf_token %}
+    <div class="form-grid auth-grid">
+        {% for field in form %}
+            <div class="form-row form-row-wide">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    {% if form.non_field_errors %}
+        <div class="form-errors">
+            {% for error in form.non_field_errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="form-actions">
+        <button class="button button-primary" type="submit">Sign In</button>
+    </div>
+</form>
+{% endblock %}

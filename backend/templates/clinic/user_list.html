@@ -1,0 +1,66 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}Users | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Admin Portal</div>
+        <h2>User Accounts</h2>
+        <p>Create and maintain staff accounts with simple roles and temporary-password onboarding.</p>
+    </div>
+    <div class="action-row">
+        <a class="button button-secondary" href="{% url 'admin_portal_home' %}">Back to Admin Portal</a>
+        <a class="button button-primary" href="{% url 'user_create' %}">Create User</a>
+    </div>
+</section>
+
+<section class="panel">
+    {% if users %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Password Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for managed_user in users %}
+                        <tr>
+                            <td>{{ managed_user.username }}</td>
+                            <td>{{ managed_user.display_name|default:"-" }}</td>
+                            <td>{{ managed_user.get_role_display }}</td>
+                            <td>
+                                {% if managed_user.is_active %}
+                                    <span class="status status-completed">Active</span>
+                                {% else %}
+                                    <span class="status status-draft">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if managed_user.must_change_password %}
+                                    <span class="status status-encoding">Change Required</span>
+                                {% else %}
+                                    <span class="status status-completed">Ready</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a class="text-link" href="{% url 'user_update' managed_user.pk %}">Edit</a>
+                                |
+                                <a class="text-link" href="{% url 'user_reset_password' managed_user.pk %}">Reset Password</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No user accounts yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

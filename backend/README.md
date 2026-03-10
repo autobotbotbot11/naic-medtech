@@ -28,6 +28,9 @@ From the repository root:
 python backend\manage.py runserver
 ```
 
+Sign in page:
+- `http://127.0.0.1:8000/login/`
+
 ## Django admin
 Create a superuser:
 
@@ -38,6 +41,14 @@ python backend\manage.py createsuperuser
 
 Open:
 - `http://127.0.0.1:8000/admin/`
+
+Notes:
+- `createsuperuser` is the bootstrap `system_owner`
+- public self-registration is intentionally not implemented
+- day-to-day user management should use the custom in-app admin portal, not Django admin
+
+Custom admin portal:
+- `http://127.0.0.1:8000/manage/`
 
 ## Workbook importer
 Import the clinic workbook into configurable exam metadata:
@@ -56,6 +67,10 @@ Useful flags:
 Implemented:
 - Django project scaffold
 - custom user model
+- custom login/logout flow
+- forced password-change flow
+- authenticated protection on operational pages
+- custom admin portal for users and core master data
 - fixed core clinic models
 - organization/facility branding models with request snapshots
 - configurable exam models

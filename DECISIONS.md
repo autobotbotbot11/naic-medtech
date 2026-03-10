@@ -187,6 +187,63 @@ Decision:
 Reason:
 - the previous submit-then-error pattern was poor UX and caused avoidable confusion
 
+### 2026-03-11: Use Controlled Login, Not Public Registration
+
+Decision:
+- the app requires authenticated users
+- use custom login/logout flow inside the app
+- do not add open public self-registration
+
+Reason:
+- this is an internal clinic system with patient/laboratory data
+- public registration adds complexity and weakens control without meaningful benefit for this use case
+
+### 2026-03-11: Small-Clinic Role Baseline
+
+Decision:
+- current baseline app roles are:
+- `system_owner`
+- `admin`
+- `encoder`
+- `viewer`
+
+Reason:
+- the clinic is small enough that more granular roles would add complexity too early
+- medtech/pathologist remain signatory records for now and can become full app roles later only if actual usage requires it
+
+### 2026-03-11: Use Admin-Created Accounts With Temporary Passwords
+
+Decision:
+- accounts should be created by a trusted admin/system owner
+- temporary-password onboarding is supported with `must_change_password`
+
+Rejected alternatives:
+- public self-registration
+- self-registration with approval queue as the default flow
+
+Reason:
+- simpler for a small clinic
+- stronger accountability
+- avoids duplicate/unverified accounts and extra approval workflow
+
+### 2026-03-11: Use a Custom Admin Portal for Daily Company Administration
+
+Decision:
+- Django admin is only a bootstrap/backoffice tool
+- day-to-day clinic administration should happen in a custom in-app admin portal
+
+Current custom admin portal scope:
+- users
+- organizations
+- facilities
+- physicians
+- rooms
+- signatories
+
+Reason:
+- the clinic admin is not expected to be comfortable using Django admin
+- guided forms and limited actions reduce mistakes and make the system easier to operate
+
 ## Current Standing Decisions
 
 Do not reverse these without a concrete replacement plan:

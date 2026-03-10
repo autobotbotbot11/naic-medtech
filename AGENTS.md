@@ -54,6 +54,7 @@ Do not let the old print templates drive schema decisions.
 5. Do not switch to table-per-exam storage.
 6. Future print logic must consume exam metadata, not replace it.
 7. Workbook notes are internal-only and must not be rendered as patient-facing fields.
+8. Operational pages require authenticated users; do not add public self-registration.
 
 ## Current Stack
 
@@ -68,6 +69,16 @@ Already implemented:
 - Django project scaffold
 - core clinic models
 - organization + facility branding models with request snapshots
+- custom login/logout flow
+- forced password-change flow
+- authenticated protection on operational pages
+- custom admin portal for:
+- users
+- organizations
+- facilities
+- physicians
+- rooms
+- signatories
 - configurable exam models
 - result models
 - workbook importer
@@ -95,7 +106,7 @@ From repo root:
 ```powershell
 .venv\Scripts\activate
 python backend\manage.py check
-python backend\manage.py test apps.core apps.results apps.exams
+python backend\manage.py test apps.accounts apps.core apps.results apps.exams
 ```
 
 If you are changing exam-import behavior, also run:

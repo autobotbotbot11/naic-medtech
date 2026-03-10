@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.results.models import LabRequestItem
@@ -6,6 +7,7 @@ from apps.results.rendering import build_result_print_context
 from apps.results.services import SIGNATORY_FIELD_NAMES, build_result_entry, persist_result_entry
 
 
+@login_required
 def item_result_entry(request, pk):
     request_item = get_object_or_404(
         LabRequestItem.objects.select_related(
@@ -53,6 +55,7 @@ def item_result_entry(request, pk):
     return render(request, "clinic/result_entry.html", context)
 
 
+@login_required
 def item_result_print(request, pk):
     request_item = get_object_or_404(
         LabRequestItem.objects.select_related(
