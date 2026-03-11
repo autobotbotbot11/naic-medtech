@@ -49,6 +49,8 @@ Notes:
 
 Custom admin portal:
 - `http://127.0.0.1:8000/manage/`
+- intended for daily company administration
+- includes guided setup checklist, searchable/filterable lists, and temporary-password helper tools
 
 ## Workbook importer
 Import the clinic workbook into configurable exam metadata:
@@ -71,6 +73,11 @@ Implemented:
 - forced password-change flow
 - authenticated protection on operational pages
 - custom admin portal for users and core master data
+- admin-portal polish for non-tech staff:
+- guided setup checklist
+- searchable/filterable management lists
+- temporary-password helpers for onboarding/reset flows
+- clearer empty states and current-file previews
 - fixed core clinic models
 - organization/facility branding models with request snapshots
 - configurable exam models

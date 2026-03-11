@@ -11,6 +11,8 @@
     </div>
 </section>
 
+{% include "clinic/admin_portal_nav.html" %}
+
 <section class="stat-grid">
     <article class="stat-card">
         <span>Users</span>
@@ -24,6 +26,65 @@
         <span>Facilities</span>
         <strong>{{ facility_count }}</strong>
     </article>
+</section>
+
+<section class="panel-split">
+    <section class="panel">
+        <div class="panel-head">
+            <h3>Setup Checklist</h3>
+        </div>
+        <div class="setup-check-grid">
+            {% for check in setup_checks %}
+                <article class="setup-check {% if check.is_ready %}is-ready{% else %}is-pending{% endif %}">
+                    <div>
+                        <strong>{{ check.label }}</strong>
+                        <p>{% if check.is_ready %}{{ check.ready_text }}{% else %}{{ check.missing_text }}{% endif %}</p>
+                    </div>
+                    <div class="setup-check-actions">
+                        {% if check.is_ready %}
+                            <span class="status status-completed">Ready</span>
+                        {% else %}
+                            <span class="status status-draft">Needs setup</span>
+                        {% endif %}
+                        <a class="text-link" href="{% url check.url_name %}">Open</a>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-head">
+            <h3>Best Next Step</h3>
+        </div>
+        {% if next_setup_check %}
+            <p class="helper-text">Finish the first item below before moving deeper into daily operations.</p>
+            <div class="next-step-card">
+                <strong>{{ next_setup_check.label }}</strong>
+                <p>{{ next_setup_check.missing_text }}</p>
+                <a class="button button-primary" href="{% url next_setup_check.url_name %}">Open This Setup Page</a>
+            </div>
+        {% else %}
+            <div class="next-step-card">
+                <strong>Core setup is ready.</strong>
+                <p>You can move into request intake and result entry, then refine the remaining workflow pages later.</p>
+                <a class="button button-primary" href="{% url 'dashboard' %}">Go to Dashboard</a>
+            </div>
+        {% endif %}
+    </section>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Recommended Setup Order</h3>
+    </div>
+    <div class="setup-steps">
+        <div><strong>1.</strong> Add the organization/company name.</div>
+        <div><strong>2.</strong> Add the facility/branch and upload report branding.</div>
+        <div><strong>3.</strong> Create staff user accounts with temporary passwords.</div>
+        <div><strong>4.</strong> Add physicians, rooms, and signatories.</div>
+        <div><strong>5.</strong> Start using request intake and result entry.</div>
+    </div>
 </section>
 
 <section class="admin-card-grid">

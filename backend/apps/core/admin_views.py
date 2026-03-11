@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.accounts.permissions import role_required
@@ -16,21 +17,47 @@ def render_management_page(
     create_url_name,
     edit_url_name,
     field_names,
+    search_fields,
+    ordering_fields,
+    supports_active_filter=True,
     template_name="clinic/master_data_list.html",
 ):
+    search_query = request.GET.get("q", "").strip()
+    status_filter = request.GET.get("status", "").strip()
     items = model.objects.all()
+
+    if search_query:
+        query = Q()
+        for search_field in search_fields:
+            query |= Q(**{f"{search_field}__icontains": search_query})
+        items = items.filter(query)
+
+    if supports_active_filter:
+        if status_filter == "active":
+            items = items.filter(active=True)
+        elif status_filter == "inactive":
+            items = items.filter(active=False)
+
+    items = items.order_by(*ordering_fields)
+
     return render(
         request,
         template_name,
         {
             "items": items,
+            "item_count": items.count(),
+            "has_filters": bool(search_query or status_filter),
             "model_name": model._meta.verbose_name.title(),
             "model_name_plural": model._meta.verbose_name_plural.title(),
             "page_title": page_title,
             "page_description": page_description,
             "create_url_name": create_url_name,
             "edit_url_name": edit_url_name,
+            "clear_url_name": create_url_name.replace("_create", "_list"),
             "fields": [model._meta.get_field(field_name) for field_name in field_names],
+            "search_query": search_query,
+            "status_filter": status_filter,
+            "supports_active_filter": supports_active_filter,
         },
     )
 
@@ -44,6 +71,7 @@ def render_management_form(
     submit_label,
     success_message,
     redirect_url_name,
+    back_url_name,
     template_name="clinic/master_data_form.html",
 ):
     if request.method == "POST" and form.is_valid():
@@ -59,6 +87,7 @@ def render_management_form(
             "page_title": page_title,
             "page_description": page_description,
             "submit_label": submit_label,
+            "back_url_name": back_url_name,
         },
     )
 
@@ -73,6 +102,8 @@ def organization_list(request):
         create_url_name="organization_create",
         edit_url_name="organization_update",
         field_names=["organization_code", "legal_name", "display_name", "active"],
+        search_fields=["organization_code", "legal_name", "display_name"],
+        ordering_fields=["-active", "display_name", "legal_name", "organization_code"],
     )
 
 
@@ -87,6 +118,7 @@ def organization_create(request):
         submit_label="Create Organization",
         success_message="Organization {instance} created.",
         redirect_url_name="organization_list",
+        back_url_name="organization_list",
     )
 
 
@@ -102,6 +134,7 @@ def organization_update(request, pk):
         submit_label="Save Changes",
         success_message="Organization {instance} updated.",
         redirect_url_name="organization_list",
+        back_url_name="organization_list",
     )
 
 
@@ -115,6 +148,8 @@ def facility_list(request):
         create_url_name="facility_create",
         edit_url_name="facility_update",
         field_names=["organization", "facility_code", "display_name", "contact_numbers", "report_header_image", "active"],
+        search_fields=["facility_code", "display_name", "organization__legal_name", "organization__display_name", "contact_numbers"],
+        ordering_fields=["-active", "display_name", "facility_code"],
     )
 
 
@@ -129,6 +164,7 @@ def facility_create(request):
         submit_label="Create Facility",
         success_message="Facility {instance} created.",
         redirect_url_name="facility_list",
+        back_url_name="facility_list",
     )
 
 
@@ -144,6 +180,7 @@ def facility_update(request, pk):
         submit_label="Save Changes",
         success_message="Facility {instance} updated.",
         redirect_url_name="facility_list",
+        back_url_name="facility_list",
     )
 
 
@@ -157,6 +194,8 @@ def physician_list(request):
         create_url_name="physician_create",
         edit_url_name="physician_update",
         field_names=["physician_code", "display_name", "active"],
+        search_fields=["physician_code", "display_name"],
+        ordering_fields=["-active", "display_name", "physician_code"],
     )
 
 
@@ -171,6 +210,7 @@ def physician_create(request):
         submit_label="Create Physician",
         success_message="Physician {instance} created.",
         redirect_url_name="physician_list",
+        back_url_name="physician_list",
     )
 
 
@@ -186,6 +226,7 @@ def physician_update(request, pk):
         submit_label="Save Changes",
         success_message="Physician {instance} updated.",
         redirect_url_name="physician_list",
+        back_url_name="physician_list",
     )
 
 
@@ -199,6 +240,8 @@ def room_list(request):
         create_url_name="room_create",
         edit_url_name="room_update",
         field_names=["room_code", "display_name", "active"],
+        search_fields=["room_code", "display_name"],
+        ordering_fields=["-active", "display_name", "room_code"],
     )
 
 
@@ -213,6 +256,7 @@ def room_create(request):
         submit_label="Create Room",
         success_message="Room {instance} created.",
         redirect_url_name="room_list",
+        back_url_name="room_list",
     )
 
 
@@ -228,6 +272,7 @@ def room_update(request, pk):
         submit_label="Save Changes",
         success_message="Room {instance} updated.",
         redirect_url_name="room_list",
+        back_url_name="room_list",
     )
 
 
@@ -241,6 +286,8 @@ def signatory_list(request):
         create_url_name="signatory_create",
         edit_url_name="signatory_update",
         field_names=["signatory_type", "display_name", "license_no", "signature_image", "active"],
+        search_fields=["display_name", "license_no", "signatory_type"],
+        ordering_fields=["-active", "signatory_type", "display_name"],
     )
 
 
@@ -255,6 +302,7 @@ def signatory_create(request):
         submit_label="Create Signatory",
         success_message="Signatory {instance} created.",
         redirect_url_name="signatory_list",
+        back_url_name="signatory_list",
     )
 
 
@@ -270,4 +318,5 @@ def signatory_update(request, pk):
         submit_label="Save Changes",
         success_message="Signatory {instance} updated.",
         redirect_url_name="signatory_list",
+        back_url_name="signatory_list",
     )

@@ -35,6 +35,12 @@ class ManagedUserCreateForm(forms.ModelForm):
         self.fields["is_active"].initial = True
         self.fields["must_change_password"].initial = True
         self.fields["role"].choices = self.role_choices_for_actor(actor)
+        self.fields["username"].help_text = "Use a short username the staff member can remember."
+        self.fields["display_name"].help_text = "This is the name shown inside the app."
+        self.fields["email"].help_text = "Optional, but useful for future account recovery features."
+        self.fields["role"].help_text = "Choose the lowest role that still lets the staff member do their job."
+        self.fields["is_active"].help_text = "Turn this off if the staff member should no longer use the app."
+        self.fields["must_change_password"].help_text = "Keep this on for temporary-password onboarding."
 
     @staticmethod
     def role_choices_for_actor(actor):
@@ -84,6 +90,11 @@ class ManagedUserUpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.actor = actor
         self.fields["role"].choices = ManagedUserCreateForm.role_choices_for_actor(actor)
+        self.fields["display_name"].help_text = "This is the name shown inside the app."
+        self.fields["email"].help_text = "Optional, but useful for future account recovery features."
+        self.fields["role"].help_text = "Choose the lowest role that still lets the staff member do their job."
+        self.fields["is_active"].help_text = "Turn this off instead of deleting the account."
+        self.fields["must_change_password"].help_text = "Turn this on if the user must set a new password on next sign-in."
 
     def clean_role(self):
         role = self.cleaned_data["role"]
@@ -116,6 +127,7 @@ class ManagedUserPasswordResetForm(forms.Form):
         required=False,
         initial=True,
         label="Require password change on next sign-in",
+        help_text="Recommended for temporary password resets.",
     )
 
     def clean_new_password2(self):

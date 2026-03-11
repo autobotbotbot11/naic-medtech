@@ -158,3 +158,21 @@ class RequestCreateViewTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse("physician_list"))
+
+    def test_physician_list_filters_by_search_and_status(self):
+        from apps.core.models import Physician
+
+        Physician.objects.create(physician_code="PHY-001", display_name="Dr. Active", active=True)
+        Physician.objects.create(physician_code="PHY-002", display_name="Dr. Hidden", active=False)
+
+        response = self.client.get(
+            reverse("physician_list"),
+            {
+                "q": "Active",
+                "status": "active",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Dr. Active")
+        self.assertNotContains(response, "Dr. Hidden")

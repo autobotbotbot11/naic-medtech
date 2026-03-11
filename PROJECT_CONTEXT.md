@@ -153,6 +153,7 @@ Current implementation status:
 - custom login/logout flow exists
 - forced password-change flow exists
 - custom admin portal exists for daily non-technical administration
+- admin portal now includes guided setup checklist, searchable/filterable management lists, and temporary-password helper tools
 - fixed clinic core models exist
 - configurable exam engine models exist
 - result storage models exist
@@ -327,6 +328,11 @@ Minimal working flow:
 - physicians
 - rooms
 - signatories
+- the portal now surfaces:
+- best-next-step setup guidance
+- search/filter support on user and master-data lists
+- clearer empty states and file previews
+- temporary-password generator helpers on user onboarding/reset pages
 - this is the intended daily configuration UI for the clinic, not Django admin
 
 Supported saved input types in the MVP:

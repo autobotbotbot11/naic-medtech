@@ -82,6 +82,7 @@ class AdminPortalTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Admin Portal")
+        self.assertContains(response, "Best Next Step")
 
     def test_encoder_is_redirected_away_from_admin_portal(self):
         self.client.force_login(self.encoder_user)
@@ -120,3 +121,21 @@ class AdminPortalTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse("user_list"))
+
+    def test_user_list_filters_by_search_role_and_status(self):
+        self.encoder_user.is_active = False
+        self.encoder_user.save(update_fields=["is_active", "updated_at"])
+        self.client.force_login(self.admin_user)
+
+        response = self.client.get(
+            reverse("user_list"),
+            {
+                "q": "encoder",
+                "role": UserRoleChoices.ENCODER,
+                "status": "inactive",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        filtered_users = list(response.context["users"])
+        self.assertEqual([user.username for user in filtered_users], ["encoder1"])

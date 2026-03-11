@@ -14,8 +14,22 @@
     </div>
 </section>
 
+{% include "clinic/admin_portal_nav.html" %}
+
 <form method="post" class="panel form-panel admin-form-panel">
     {% csrf_token %}
+    {% if password_tool_enabled %}
+        <div class="helper-card">
+            <div class="helper-card-head">
+                <h3>Temporary Password Helper</h3>
+                <button class="button button-secondary button-small" type="button" id="generate-password-button">Generate Password</button>
+            </div>
+            <p class="helper-text">Use a generated temporary password so staff can sign in once and then set their own password.</p>
+            <div class="generated-password-wrap">
+                <input id="generated-password-output" class="form-control" type="text" readonly placeholder="Generated password will appear here">
+            </div>
+        </div>
+    {% endif %}
     <div class="form-grid">
         {% for field in form %}
             <div class="form-row {% if field.name == 'display_name' or field.name == 'email' or field.name == 'password1' or field.name == 'password2' %}form-row-wide{% endif %}">
@@ -42,4 +56,58 @@
         <a class="button button-secondary" href="{% url 'user_list' %}">Cancel</a>
     </div>
 </form>
+
+<section class="panel helper-card">
+    <div class="panel-head">
+        <h3>Role Guide</h3>
+    </div>
+    <div class="role-guide">
+        <div><strong>Admin</strong><span>Can manage operational setup and daily configuration pages.</span></div>
+        <div><strong>Encoder</strong><span>Can create requests and encode operational data, but not manage the system.</span></div>
+        <div><strong>Viewer</strong><span>Read-only access for viewing and printing released information.</span></div>
+        {% if request.user.is_superuser or request.user.role == "system_owner" %}
+            <div><strong>System Owner</strong><span>Reserved for the bootstrap/owner account with deepest system control.</span></div>
+        {% endif %}
+    </div>
+</section>
+
+{% if password_tool_enabled %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const generateButton = document.getElementById("generate-password-button");
+    const output = document.getElementById("generated-password-output");
+    const firstField = document.getElementById("id_password1");
+    const secondField = document.getElementById("id_password2");
+
+    if (!generateButton || !output || !firstField || !secondField) {
+        return;
+    }
+
+    function generatePassword() {
+        const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
+        let result = "";
+        if (window.crypto && window.crypto.getRandomValues) {
+            const array = new Uint32Array(14);
+            window.crypto.getRandomValues(array);
+            array.forEach(function (value) {
+                result += alphabet[value % alphabet.length];
+            });
+            return result;
+        }
+
+        for (let index = 0; index < 14; index += 1) {
+            result += alphabet[Math.floor(Math.random() * alphabet.length)];
+        }
+        return result;
+    }
+
+    generateButton.addEventListener("click", function () {
+        const password = generatePassword();
+        firstField.value = password;
+        secondField.value = password;
+        output.value = password;
+    });
+});
+</script>
+{% endif %}
 {% endblock %}

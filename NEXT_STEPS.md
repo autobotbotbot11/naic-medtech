@@ -4,6 +4,13 @@ This file is the working queue for future implementation.
 
 Priority is ordered. Unless the user explicitly redirects, continue from the top.
 
+Recently completed:
+- admin portal polish baseline
+- guided setup checklist on the admin home page
+- searchable/filterable user and master-data lists
+- temporary-password helper tools for onboarding/reset pages
+- clearer empty states, help text, and current-file previews
+
 ## 1. Print / Render Engine Refinement
 
 Goal:

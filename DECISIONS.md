@@ -244,6 +244,20 @@ Reason:
 - the clinic admin is not expected to be comfortable using Django admin
 - guided forms and limited actions reduce mistakes and make the system easier to operate
 
+### 2026-03-11: Admin Portal UX Should Favor Guided, Low-Overwhelm Operations
+
+Decision:
+- the custom admin portal should prefer:
+- setup-order guidance
+- search/filter on management lists
+- clear empty states
+- non-destructive wording such as deactivate instead of delete
+- temporary-password helper tools for onboarding/reset flows
+
+Reason:
+- the target users are non-technical clinic staff
+- operational admin pages should reduce confusion, not expose raw system complexity
+
 ## Current Standing Decisions
 
 Do not reverse these without a concrete replacement plan:

@@ -13,6 +13,12 @@ class OrganizationForm(forms.ModelForm):
             "display_name": forms.TextInput(attrs={"class": "form-control"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["organization_code"].help_text = "Optional internal code for your own tracking."
+        self.fields["display_name"].help_text = "Use this if the printed display name should differ from the legal name."
+        self.fields["active"].help_text = "Turn this off instead of deleting the record."
+
 
 class FacilityForm(forms.ModelForm):
     class Meta:
@@ -35,6 +41,16 @@ class FacilityForm(forms.ModelForm):
             "report_header_image": forms.ClearableFileInput(attrs={"class": "form-control"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["facility_code"].help_text = "Optional internal code for the branch/facility."
+        self.fields["organization"].help_text = "Choose the company/legal entity that owns this facility."
+        self.fields["display_name"].help_text = "This name appears in request setup and can appear in reports."
+        self.fields["address"].help_text = "This address appears in the report header."
+        self.fields["contact_numbers"].help_text = "Example: (046) 412-1443 / (046) 507-1510"
+        self.fields["report_header_image"].help_text = "Upload the logo or branding image used on printed reports."
+        self.fields["active"].help_text = "Turn this off instead of deleting the record."
+
 
 class PhysicianForm(forms.ModelForm):
     class Meta:
@@ -45,6 +61,12 @@ class PhysicianForm(forms.ModelForm):
             "display_name": forms.TextInput(attrs={"class": "form-control"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["physician_code"].help_text = "Optional internal code."
+        self.fields["display_name"].help_text = "Use the name staff should see in the request form."
+        self.fields["active"].help_text = "Turn this off instead of deleting the record."
+
 
 class RoomForm(forms.ModelForm):
     class Meta:
@@ -54,6 +76,12 @@ class RoomForm(forms.ModelForm):
             "room_code": forms.TextInput(attrs={"class": "form-control"}),
             "display_name": forms.TextInput(attrs={"class": "form-control"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["room_code"].help_text = "Optional internal code."
+        self.fields["display_name"].help_text = "Example: ER, Ward 2, OPD, ICU."
+        self.fields["active"].help_text = "Turn this off instead of deleting the record."
 
 
 class SignatoryForm(forms.ModelForm):
@@ -66,3 +94,11 @@ class SignatoryForm(forms.ModelForm):
             "license_no": forms.TextInput(attrs={"class": "form-control"}),
             "signature_image": forms.ClearableFileInput(attrs={"class": "form-control"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["signatory_type"].help_text = "Choose whether this person signs as medtech or pathologist."
+        self.fields["display_name"].help_text = "This name appears on reports."
+        self.fields["license_no"].help_text = "Optional, if the clinic wants to store license details."
+        self.fields["signature_image"].help_text = "Optional signature file for future report enhancements."
+        self.fields["active"].help_text = "Turn this off instead of deleting the record."

@@ -1,0 +1,9 @@
+<nav class="admin-subnav">
+    <a class="{% if request.resolver_match.url_name == 'admin_portal_home' %}is-active{% endif %}" href="{% url 'admin_portal_home' %}">Overview</a>
+    <a class="{% if request.resolver_match.url_name == 'user_list' or request.resolver_match.url_name == 'user_create' or request.resolver_match.url_name == 'user_update' or request.resolver_match.url_name == 'user_reset_password' %}is-active{% endif %}" href="{% url 'user_list' %}">Users</a>
+    <a class="{% if request.resolver_match.url_name == 'organization_list' or request.resolver_match.url_name == 'organization_create' or request.resolver_match.url_name == 'organization_update' %}is-active{% endif %}" href="{% url 'organization_list' %}">Organizations</a>
+    <a class="{% if request.resolver_match.url_name == 'facility_list' or request.resolver_match.url_name == 'facility_create' or request.resolver_match.url_name == 'facility_update' %}is-active{% endif %}" href="{% url 'facility_list' %}">Facilities</a>
+    <a class="{% if request.resolver_match.url_name == 'physician_list' or request.resolver_match.url_name == 'physician_create' or request.resolver_match.url_name == 'physician_update' %}is-active{% endif %}" href="{% url 'physician_list' %}">Physicians</a>
+    <a class="{% if request.resolver_match.url_name == 'room_list' or request.resolver_match.url_name == 'room_create' or request.resolver_match.url_name == 'room_update' %}is-active{% endif %}" href="{% url 'room_list' %}">Rooms</a>
+    <a class="{% if request.resolver_match.url_name == 'signatory_list' or request.resolver_match.url_name == 'signatory_create' or request.resolver_match.url_name == 'signatory_update' %}is-active{% endif %}" href="{% url 'signatory_list' %}">Signatories</a>
+</nav>

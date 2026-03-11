@@ -79,6 +79,11 @@ Already implemented:
 - physicians
 - rooms
 - signatories
+- admin-portal polish baseline:
+- guided setup checklist on `/manage/`
+- search/filter on user and master-data lists
+- temporary-password helpers on user create/reset pages
+- clearer empty states and file previews
 - configurable exam models
 - result models
 - workbook importer

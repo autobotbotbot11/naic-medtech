@@ -10,9 +10,11 @@
         <p>{{ page_description }}</p>
     </div>
     <div class="action-row">
-        <a class="button button-secondary" href="javascript:history.back()">Back</a>
+        <a class="button button-secondary" href="{% url back_url_name %}">Back</a>
     </div>
 </section>
+
+{% include "clinic/admin_portal_nav.html" %}
 
 <form method="post" enctype="multipart/form-data" class="panel form-panel admin-form-panel">
     {% csrf_token %}
@@ -23,6 +25,20 @@
                 {{ field }}
                 {% if field.help_text %}
                     <small>{{ field.help_text|safe }}</small>
+                {% endif %}
+                {% if form.instance.pk and field.name == "report_header_image" and form.instance.report_header_image %}
+                    <div class="current-file-card">
+                        <span>Current file</span>
+                        <a href="{{ form.instance.report_header_image.url }}" target="_blank" rel="noreferrer">{{ form.instance.report_header_image.name }}</a>
+                        <img class="media-preview" src="{{ form.instance.report_header_image.url }}" alt="{{ form.instance.display_name }}">
+                    </div>
+                {% endif %}
+                {% if form.instance.pk and field.name == "signature_image" and form.instance.signature_image %}
+                    <div class="current-file-card">
+                        <span>Current file</span>
+                        <a href="{{ form.instance.signature_image.url }}" target="_blank" rel="noreferrer">{{ form.instance.signature_image.name }}</a>
+                        <img class="media-preview" src="{{ form.instance.signature_image.url }}" alt="{{ form.instance.display_name }}">
+                    </div>
                 {% endif %}
                 {% for error in field.errors %}
                     <p class="field-error">{{ error }}</p>
@@ -39,6 +55,7 @@
     {% endif %}
     <div class="form-actions">
         <button class="button button-primary" type="submit">{{ submit_label }}</button>
+        <a class="button button-secondary" href="{% url back_url_name %}">Cancel</a>
     </div>
 </form>
 {% endblock %}
