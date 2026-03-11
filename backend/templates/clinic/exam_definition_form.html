@@ -1,0 +1,47 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}{{ page_title }} | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Admin Portal</div>
+        <h2>{{ page_title }}</h2>
+        <p>{{ page_description }}</p>
+    </div>
+    <div class="action-row">
+        <a class="button button-secondary" href="{% if definition %}{% url 'exam_definition_detail' definition.pk %}{% else %}{% url 'exam_definition_list' %}{% endif %}">Back</a>
+    </div>
+</section>
+
+{% include "clinic/admin_portal_nav.html" %}
+
+<form method="post" class="panel form-panel admin-form-panel">
+    {% csrf_token %}
+    <div class="form-grid">
+        {% for field in form %}
+            <div class="form-row {% if field.name == 'description' %}form-row-wide{% endif %}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text|safe }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    {% if form.non_field_errors %}
+        <div class="form-errors">
+            {% for error in form.non_field_errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="form-actions">
+        <button class="button button-primary" type="submit">{{ submit_label }}</button>
+        <a class="button button-secondary" href="{% if definition %}{% url 'exam_definition_detail' definition.pk %}{% else %}{% url 'exam_definition_list' %}{% endif %}">Cancel</a>
+    </div>
+</form>
+{% endblock %}

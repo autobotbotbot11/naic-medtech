@@ -1,0 +1,246 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}{{ definition.exam_name }} v{{ version.version_no }} | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Admin Portal</div>
+        <h2>{{ definition.exam_name }} v{{ version.version_no }}</h2>
+        <p>{{ definition.exam_code }} | {{ version.get_version_status_display }}</p>
+    </div>
+    <div class="action-row">
+        <a class="button button-secondary" href="{% url 'exam_definition_detail' definition.pk %}">Back to Exam</a>
+        {% if is_draft %}
+            <a class="button button-secondary" href="{% url 'exam_render_profile_update' version.pk %}">Edit Render Profile</a>
+        {% endif %}
+    </div>
+</section>
+
+{% include "clinic/admin_portal_nav.html" %}
+
+<section class="panel panel-split">
+    <article>
+        <h3>Version Summary</h3>
+        <dl class="detail-grid">
+            <div><dt>Status</dt><dd><span class="status status-{{ version.version_status }}">{{ version.get_version_status_display }}</span></dd></div>
+            <div><dt>Created</dt><dd>{{ version.created_at|date:"M d, Y h:i A" }}</dd></div>
+            <div><dt>Published</dt><dd>{{ version.published_at|date:"M d, Y h:i A"|default:"-" }}</dd></div>
+            <div><dt>Published By</dt><dd>{% if version.published_by %}{{ version.published_by.display_name|default:version.published_by.username }}{% else %}-{% endif %}</dd></div>
+            <div><dt>Source</dt><dd>{{ version.source_reference|default:"-" }}</dd></div>
+            <div><dt>Change Summary</dt><dd>{{ version.change_summary|default:"-" }}</dd></div>
+        </dl>
+    </article>
+    <article>
+        <h3>Draft Checklist</h3>
+        {% if is_draft %}
+            {% if publish_errors %}
+                <div class="workflow-blockers">
+                    <strong>Publish is blocked by:</strong>
+                    <ul>
+                        {% for error in publish_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <div class="workflow-banner">This draft is structurally valid and ready to publish.</div>
+            {% endif %}
+            <form method="post" action="{% url 'exam_version_publish' version.pk %}" class="publish-form">
+                {% csrf_token %}
+                <div class="form-row">
+                    <label for="id_change_summary">Change Summary</label>
+                    <textarea id="id_change_summary" name="change_summary" rows="3" class="form-control" placeholder="Example: Updated dengue fields and added pregnancy-test range."></textarea>
+                    <small>Required discipline: write a short summary so future admins know what changed in this version.</small>
+                </div>
+                <div class="form-actions">
+                    <button class="button button-primary" type="submit" {% if publish_errors %}disabled{% endif %}>Publish Draft</button>
+                </div>
+            </form>
+        {% else %}
+            <p class="helper-text">Published and archived versions are read-only for historical safety. Create a new draft from the exam page to make changes.</p>
+        {% endif %}
+    </article>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Render Profile</h3>
+    </div>
+    {% if render_profile %}
+        <dl class="detail-grid">
+            <div><dt>Layout</dt><dd>{{ render_profile.get_layout_type_display }}</dd></div>
+            <div><dt>Active</dt><dd>{% if render_profile.active %}<span class="status status-completed">Active</span>{% else %}<span class="status status-draft">Inactive</span>{% endif %}</dd></div>
+            <div class="form-row-wide"><dt>Config</dt><dd><pre class="json-preview">{{ render_profile.config_json }}</pre></dd></div>
+        </dl>
+    {% else %}
+        <p class="empty-state">No render profile yet.</p>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Exam Options</h3>
+    </div>
+    {% if is_draft %}
+        <div class="action-row admin-inline-actions">
+            <a class="button button-secondary button-small" href="{% url 'exam_option_create' version.pk %}">Add Option</a>
+        </div>
+    {% endif %}
+    {% if options %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>Key</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for option in options %}
+                        <tr>
+                            <td>{{ option.option_label }}</td>
+                            <td>{{ option.option_key }}</td>
+                            <td>{{ option.sort_order }}</td>
+                            <td>{% if option.active %}<span class="status status-completed">Active</span>{% else %}<span class="status status-draft">Inactive</span>{% endif %}</td>
+                            <td>{% if is_draft %}<a class="text-link" href="{% url 'exam_option_update' option.pk %}">Edit</a>{% else %}-{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No exam options yet. Leave this empty if the exam has only one path.</p>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Sections</h3>
+    </div>
+    {% if is_draft %}
+        <div class="action-row admin-inline-actions">
+            <a class="button button-secondary button-small" href="{% url 'exam_section_create' version.pk %}">Add Section</a>
+        </div>
+    {% endif %}
+    {% if sections %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>Key</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for section in sections %}
+                        <tr>
+                            <td>{{ section.section_label }}</td>
+                            <td>{{ section.section_key }}</td>
+                            <td>{{ section.sort_order }}</td>
+                            <td>{% if section.active %}<span class="status status-completed">Active</span>{% else %}<span class="status status-draft">Inactive</span>{% endif %}</td>
+                            <td>{% if is_draft %}<a class="text-link" href="{% url 'exam_section_update' section.pk %}">Edit</a>{% else %}-{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No sections yet. Leave this empty if the exam is a flat list of fields.</p>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Fields</h3>
+    </div>
+    {% if is_draft %}
+        <div class="action-row admin-inline-actions">
+            <a class="button button-secondary button-small" href="{% url 'exam_field_create' version.pk %}">Add Field</a>
+        </div>
+    {% endif %}
+    {% if fields %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>Key</th>
+                        <th>Section</th>
+                        <th>Input Type</th>
+                        <th>Unit</th>
+                        <th>Required</th>
+                        <th>Order</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for field in fields %}
+                        <tr>
+                            <td>{{ field.field_label }}</td>
+                            <td>{{ field.field_key }}</td>
+                            <td>{{ field.section.section_label|default:"-" }}</td>
+                            <td>{{ field.get_input_type_display }}</td>
+                            <td>{{ field.unit|default:"-" }}</td>
+                            <td>{% if field.required %}Yes{% else %}No{% endif %}</td>
+                            <td>{{ field.sort_order }}</td>
+                            <td><a class="text-link" href="{% url 'exam_field_detail' field.pk %}">Open</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No fields yet. Add fields before publishing this draft.</p>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Rules</h3>
+    </div>
+    {% if is_draft %}
+        <div class="action-row admin-inline-actions">
+            <a class="button button-secondary button-small" href="{% url 'exam_rule_create' version.pk %}">Add Rule</a>
+        </div>
+    {% endif %}
+    {% if rules %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Target</th>
+                        <th>Conditions</th>
+                        <th>Effect</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rule in rules %}
+                        <tr>
+                            <td>{{ rule.get_rule_type_display }}</td>
+                            <td>{{ rule.target_type }}:{{ rule.target_id }}</td>
+                            <td><pre class="json-preview compact-json">{{ rule.condition_json }}</pre></td>
+                            <td><pre class="json-preview compact-json">{{ rule.effect_json }}</pre></td>
+                            <td>{{ rule.sort_order }}</td>
+                            <td>{% if rule.active %}<span class="status status-completed">Active</span>{% else %}<span class="status status-draft">Inactive</span>{% endif %}</td>
+                            <td>{% if is_draft %}<a class="text-link" href="{% url 'exam_rule_update' rule.pk %}">Edit</a>{% else %}-{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No controlled rules yet. Add them only when visibility or requirement depends on options or sex.</p>
+    {% endif %}
+</section>
+{% endblock %}

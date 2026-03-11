@@ -1,6 +1,7 @@
 from django.urls import path
 
 from apps.core import admin_views, views
+from apps.exams import admin_views as exam_admin_views
 
 
 urlpatterns = [
@@ -12,6 +13,27 @@ urlpatterns = [
     path("manage/facilities/", admin_views.facility_list, name="facility_list"),
     path("manage/facilities/new/", admin_views.facility_create, name="facility_create"),
     path("manage/facilities/<int:pk>/edit/", admin_views.facility_update, name="facility_update"),
+    path("manage/exams/", exam_admin_views.exam_definition_list, name="exam_definition_list"),
+    path("manage/exams/new/", exam_admin_views.exam_definition_create, name="exam_definition_create"),
+    path("manage/exams/<int:pk>/", exam_admin_views.exam_definition_detail, name="exam_definition_detail"),
+    path("manage/exams/<int:pk>/edit/", exam_admin_views.exam_definition_update, name="exam_definition_update"),
+    path("manage/exams/<int:pk>/drafts/new/", exam_admin_views.exam_definition_create_draft, name="exam_definition_create_draft"),
+    path("manage/exam-versions/<int:pk>/", exam_admin_views.exam_version_detail, name="exam_version_detail"),
+    path("manage/exam-versions/<int:pk>/publish/", exam_admin_views.exam_version_publish, name="exam_version_publish"),
+    path("manage/exam-versions/<int:pk>/render-profile/", exam_admin_views.exam_render_profile_update, name="exam_render_profile_update"),
+    path("manage/exam-versions/<int:version_pk>/options/new/", exam_admin_views.exam_option_create, name="exam_option_create"),
+    path("manage/exam-options/<int:pk>/edit/", exam_admin_views.exam_option_update, name="exam_option_update"),
+    path("manage/exam-versions/<int:version_pk>/sections/new/", exam_admin_views.exam_section_create, name="exam_section_create"),
+    path("manage/exam-sections/<int:pk>/edit/", exam_admin_views.exam_section_update, name="exam_section_update"),
+    path("manage/exam-versions/<int:version_pk>/fields/new/", exam_admin_views.exam_field_create, name="exam_field_create"),
+    path("manage/exam-fields/<int:pk>/", exam_admin_views.exam_field_detail, name="exam_field_detail"),
+    path("manage/exam-fields/<int:pk>/edit/", exam_admin_views.exam_field_update, name="exam_field_update"),
+    path("manage/exam-fields/<int:field_pk>/select-options/new/", exam_admin_views.exam_field_select_option_create, name="exam_field_select_option_create"),
+    path("manage/exam-field-select-options/<int:pk>/edit/", exam_admin_views.exam_field_select_option_update, name="exam_field_select_option_update"),
+    path("manage/exam-fields/<int:field_pk>/reference-ranges/new/", exam_admin_views.exam_reference_range_create, name="exam_reference_range_create"),
+    path("manage/exam-field-reference-ranges/<int:pk>/edit/", exam_admin_views.exam_reference_range_update, name="exam_reference_range_update"),
+    path("manage/exam-versions/<int:version_pk>/rules/new/", exam_admin_views.exam_rule_create, name="exam_rule_create"),
+    path("manage/exam-rules/<int:pk>/edit/", exam_admin_views.exam_rule_update, name="exam_rule_update"),
     path("manage/physicians/", admin_views.physician_list, name="physician_list"),
     path("manage/physicians/new/", admin_views.physician_create, name="physician_create"),
     path("manage/physicians/<int:pk>/edit/", admin_views.physician_update, name="physician_update"),

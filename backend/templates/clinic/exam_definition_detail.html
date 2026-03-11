@@ -1,0 +1,95 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}{{ definition.exam_name }} | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Admin Portal</div>
+        <h2>{{ definition.exam_name }}</h2>
+        <p>{{ definition.exam_code }}{% if definition.category %} | {{ definition.category }}{% endif %}</p>
+    </div>
+    <div class="action-row">
+        <a class="button button-secondary" href="{% url 'exam_definition_list' %}">Back to Exams</a>
+        <a class="button button-secondary" href="{% url 'exam_definition_update' definition.pk %}">Edit Exam Info</a>
+        {% if draft_version %}
+            <a class="button button-primary" href="{% url 'exam_version_detail' draft_version.pk %}">Open Draft v{{ draft_version.version_no }}</a>
+        {% else %}
+            <form method="post" action="{% url 'exam_definition_create_draft' definition.pk %}" class="inline-action-form">
+                {% csrf_token %}
+                <button class="button button-primary" type="submit">Create Draft</button>
+            </form>
+        {% endif %}
+    </div>
+</section>
+
+{% include "clinic/admin_portal_nav.html" %}
+
+<section class="panel panel-split">
+    <article>
+        <h3>Exam Info</h3>
+        <dl class="detail-grid">
+            <div><dt>Code</dt><dd>{{ definition.exam_code }}</dd></div>
+            <div><dt>Category</dt><dd>{{ definition.category|default:"-" }}</dd></div>
+            <div><dt>Status</dt><dd>{% if definition.active %}<span class="status status-completed">Active</span>{% else %}<span class="status status-draft">Inactive</span>{% endif %}</dd></div>
+            <div><dt>Latest Published</dt><dd>{% if published_version %}v{{ published_version.version_no }}{% else %}-{% endif %}</dd></div>
+            <div class="form-row-wide"><dt>Description</dt><dd>{{ definition.description|default:"-" }}</dd></div>
+        </dl>
+    </article>
+    <article>
+        <h3>Builder Guidance</h3>
+        <div class="setup-steps">
+            <div><strong>1.</strong> Open or create a draft version.</div>
+            <div><strong>2.</strong> Add exam options if the exam has packages or variants.</div>
+            <div><strong>3.</strong> Add sections if the report needs grouped headings.</div>
+            <div><strong>4.</strong> Add fields, then configure select choices and ranges per field.</div>
+            <div><strong>5.</strong> Add simple visibility or requirement rules only when needed.</div>
+            <div><strong>6.</strong> Fix any publish blockers, then publish the draft.</div>
+        </div>
+    </article>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Versions</h3>
+    </div>
+    {% if versions %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Version</th>
+                        <th>Status</th>
+                        <th>Published</th>
+                        <th>Published By</th>
+                        <th>Source</th>
+                        <th>Summary</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for version in versions %}
+                        <tr>
+                            <td>v{{ version.version_no }}</td>
+                            <td><span class="status status-{{ version.version_status }}">{{ version.get_version_status_display }}</span></td>
+                            <td>{{ version.published_at|date:"M d, Y h:i A"|default:"-" }}</td>
+                            <td>
+                                {% if version.published_by %}
+                                    {{ version.published_by.display_name|default:version.published_by.username }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{{ version.source_reference|default:"-" }}</td>
+                            <td>{{ version.change_summary|default:"-" }}</td>
+                            <td><a class="text-link" href="{% url 'exam_version_detail' version.pk %}">Open</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No versions yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

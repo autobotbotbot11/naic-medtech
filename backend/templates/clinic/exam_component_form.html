@@ -1,0 +1,63 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}{{ page_title }} | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Exam Builder</div>
+        <h2>{{ page_title }}</h2>
+        <p>{{ page_description }}</p>
+    </div>
+    <div class="action-row">
+        <a class="button button-secondary" href="{% url back_url_name back_url_args.0 %}">Back</a>
+    </div>
+</section>
+
+{% include "clinic/admin_portal_nav.html" %}
+
+<section class="panel panel-split">
+    <article>
+        <h3>Editing Draft</h3>
+        <dl class="detail-grid">
+            <div><dt>Exam</dt><dd>{{ definition.exam_name }}</dd></div>
+            <div><dt>Version</dt><dd>v{{ version.version_no }}</dd></div>
+            <div><dt>Status</dt><dd><span class="status status-{{ version.version_status }}">{{ version.get_version_status_display }}</span></dd></div>
+            <div><dt>Code</dt><dd>{{ definition.exam_code }}</dd></div>
+        </dl>
+    </article>
+    <article>
+        <h3>Safe Editing Rule</h3>
+        <p class="helper-text">Only draft versions can be edited. Once published, this version becomes read-only and the next changes must go into a new draft.</p>
+    </article>
+</section>
+
+<form method="post" class="panel form-panel admin-form-panel">
+    {% csrf_token %}
+    <div class="form-grid">
+        {% for field in form %}
+            <div class="form-row {% if field.name == 'help_text' or field.name == 'config_json' or field.name == 'advanced_config_json' %}form-row-wide{% endif %}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text|safe }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    {% if form.non_field_errors %}
+        <div class="form-errors">
+            {% for error in form.non_field_errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="form-actions">
+        <button class="button button-primary" type="submit">{{ submit_label }}</button>
+        <a class="button button-secondary" href="{% url back_url_name back_url_args.0 %}">Cancel</a>
+    </div>
+</form>
+{% endblock %}

@@ -1,11 +1,22 @@
 import tempfile
 from pathlib import Path
 
+from django.contrib.auth import get_user_model
 from django.test import SimpleTestCase, TestCase
+from django.urls import reverse
+from django.utils import timezone
 from openpyxl import Workbook
 
-from apps.common.choices import ExamFieldDataTypeChoices, ExamFieldInputTypeChoices, RenderLayoutTypeChoices
-from apps.exams.models import ExamDefinition
+from apps.common.choices import (
+    ExamFieldDataTypeChoices,
+    ExamFieldInputTypeChoices,
+    ExamRuleTypeChoices,
+    ExamVersionStatusChoices,
+    RenderLayoutTypeChoices,
+    UserRoleChoices,
+)
+from apps.exams.builder import create_draft_version, publish_draft_version, validate_draft_version
+from apps.exams.models import ExamDefinition, ExamDefinitionVersion, ExamField, ExamFieldSelectOption, ExamOption, ExamRenderProfile, ExamRule, ExamSection
 from apps.exams.services.workbook_import import (
     default_render_profile,
     infer_field_types,
@@ -15,6 +26,8 @@ from apps.exams.services.workbook_import import (
     parse_reference_range,
     sheet_payload,
 )
+
+User = get_user_model()
 
 
 class WorkbookImportHelpersTests(SimpleTestCase):
@@ -493,3 +506,230 @@ class WorkbookImportIntegrationTests(TestCase):
         self.assertEqual(first_stats.created_versions, 1)
         self.assertEqual(second_stats.skipped_versions, 1)
         self.assertEqual(exam.versions.count(), 1)
+
+
+class ExamBuilderTests(TestCase):
+    def setUp(self):
+        self.admin_user = User.objects.create_user(
+            username="examadmin",
+            password="StrongPass123!",
+            role=UserRoleChoices.ADMIN,
+        )
+        self.client.force_login(self.admin_user)
+
+    def test_exam_definition_create_view_builds_initial_draft_and_render_profile(self):
+        response = self.client.post(
+            reverse("exam_definition_create"),
+            {
+                "exam_code": "",
+                "exam_name": "Custom Viral Test",
+                "category": "Serology",
+                "description": "Admin-created custom exam",
+                "active": "on",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        definition = ExamDefinition.objects.get(exam_name="Custom Viral Test")
+        draft = definition.versions.get(version_status=ExamVersionStatusChoices.DRAFT)
+        self.assertEqual(definition.exam_code, "custom-viral-test")
+        self.assertEqual(draft.version_no, 1)
+        self.assertEqual(draft.source_reference, "manual-builder:new-exam")
+        self.assertTrue(hasattr(draft, "render_profile"))
+
+    def test_create_draft_version_clones_options_sections_fields_ranges_rules_and_render_profile(self):
+        definition = ExamDefinition.objects.create(exam_code="clone-demo", exam_name="Clone Demo", active=True)
+        published_version = ExamDefinitionVersion.objects.create(
+            exam_definition=definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="test-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=published_version,
+            option_key="panel_a",
+            option_label="Panel A",
+            sort_order=1,
+            active=True,
+        )
+        section = ExamSection.objects.create(
+            exam_version=published_version,
+            section_key="main_results",
+            section_label="Main Results",
+            sort_order=1,
+            active=True,
+        )
+        field = ExamField.objects.create(
+            exam_version=published_version,
+            section=section,
+            field_key="result_value",
+            field_label="Result Value",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+        )
+        ExamFieldSelectOption.objects.create(
+            field=field,
+            option_value="positive",
+            option_label="Positive",
+            sort_order=1,
+            active=True,
+        )
+        field.reference_ranges.create(
+            option_scope=option,
+            range_type="text_only",
+            reference_text="Non-reactive",
+            sort_order=1,
+        )
+        ExamRule.objects.create(
+            exam_version=published_version,
+            rule_type=ExamRuleTypeChoices.VISIBILITY,
+            target_type="field",
+            target_id=field.id,
+            condition_json={"exam_option_keys": ["panel_a"]},
+            effect_json={"visible": True},
+            sort_order=1,
+            active=True,
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=published_version,
+            layout_type=RenderLayoutTypeChoices.RESULT_TABLE,
+            config_json={"show_units": False, "show_reference_ranges": True, "render_variant": "serology_panel"},
+            active=True,
+        )
+
+        draft, created = create_draft_version(definition, user=self.admin_user)
+
+        self.assertTrue(created)
+        self.assertEqual(draft.version_status, ExamVersionStatusChoices.DRAFT)
+        self.assertEqual(draft.version_no, 2)
+        self.assertEqual(draft.options.count(), 1)
+        self.assertEqual(draft.sections.count(), 1)
+        self.assertEqual(draft.fields.count(), 1)
+        cloned_field = draft.fields.get()
+        self.assertEqual(cloned_field.section.section_key, "main_results")
+        self.assertEqual(cloned_field.select_options.get().option_label, "Positive")
+        self.assertEqual(cloned_field.reference_ranges.get().option_scope.option_key, "panel_a")
+        self.assertEqual(draft.rules.get().target_id, cloned_field.id)
+        self.assertEqual(draft.render_profile.config_json["render_variant"], "serology_panel")
+
+    def test_publish_draft_version_archives_old_published_version(self):
+        definition = ExamDefinition.objects.create(exam_code="publish-demo", exam_name="Publish Demo", active=True)
+        published_version = ExamDefinitionVersion.objects.create(
+            exam_definition=definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="test-v1",
+            published_at=timezone.now(),
+        )
+        draft = ExamDefinitionVersion.objects.create(
+            exam_definition=definition,
+            version_no=2,
+            version_status=ExamVersionStatusChoices.DRAFT,
+            source_type="manual_builder",
+            source_reference="manual-builder:new-exam",
+        )
+        field = ExamField.objects.create(
+            exam_version=draft,
+            field_key="result_value",
+            field_label="Result Value",
+            input_type=ExamFieldInputTypeChoices.TEXT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=draft,
+            layout_type=RenderLayoutTypeChoices.RESULT_TABLE,
+            config_json={"show_units": True, "show_reference_ranges": True},
+            active=True,
+        )
+
+        publish_draft_version(draft, user=self.admin_user, change_summary="Released new custom layout.")
+
+        published_version.refresh_from_db()
+        draft.refresh_from_db()
+        self.assertEqual(published_version.version_status, ExamVersionStatusChoices.ARCHIVED)
+        self.assertEqual(draft.version_status, ExamVersionStatusChoices.PUBLISHED)
+        self.assertEqual(draft.published_by, self.admin_user)
+        self.assertEqual(draft.change_summary, "Released new custom layout.")
+
+    def test_validate_draft_version_blocks_select_field_without_choices(self):
+        definition = ExamDefinition.objects.create(exam_code="validation-demo", exam_name="Validation Demo", active=True)
+        draft = ExamDefinitionVersion.objects.create(
+            exam_definition=definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.DRAFT,
+            source_type="manual_builder",
+            source_reference="manual-builder:new-exam",
+        )
+        ExamField.objects.create(
+            exam_version=draft,
+            field_key="qualitative_result",
+            field_label="Qualitative Result",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=draft,
+            layout_type=RenderLayoutTypeChoices.RESULT_TABLE,
+            config_json={"show_units": True, "show_reference_ranges": True},
+            active=True,
+        )
+
+        errors = validate_draft_version(draft)
+
+        self.assertIn("Select field 'Qualitative Result' needs at least one active choice.", errors)
+
+    def test_exam_rule_create_view_serializes_conditions(self):
+        definition = ExamDefinition.objects.create(exam_code="rule-demo", exam_name="Rule Demo", active=True)
+        draft = ExamDefinitionVersion.objects.create(
+            exam_definition=definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.DRAFT,
+            source_type="manual_builder",
+            source_reference="manual-builder:new-exam",
+        )
+        option = ExamOption.objects.create(
+            exam_version=draft,
+            option_key="panel_a",
+            option_label="Panel A",
+            sort_order=1,
+            active=True,
+        )
+        field = ExamField.objects.create(
+            exam_version=draft,
+            field_key="result_value",
+            field_label="Result Value",
+            input_type=ExamFieldInputTypeChoices.TEXT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+        )
+
+        response = self.client.post(
+            reverse("exam_rule_create", args=[draft.pk]),
+            {
+                "rule_type": ExamRuleTypeChoices.REQUIREMENT,
+                "target_type": "field",
+                "target_field": field.pk,
+                "target_section": "",
+                "option_scopes": [option.pk],
+                "sex_scope": "female",
+                "sort_order": 1,
+                "active": "on",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        rule = draft.rules.get()
+        self.assertEqual(rule.target_type, "field")
+        self.assertEqual(rule.target_id, field.id)
+        self.assertEqual(rule.condition_json, {"exam_option_keys": ["panel_a"], "patient_sex": ["female"]})
+        self.assertEqual(rule.effect_json, {"required": True})

@@ -1,0 +1,136 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}{{ field.field_label }} | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Exam Builder</div>
+        <h2>{{ field.field_label }}</h2>
+        <p>{{ definition.exam_name }} | v{{ version.version_no }}</p>
+    </div>
+    <div class="action-row">
+        <a class="button button-secondary" href="{% url 'exam_version_detail' version.pk %}">Back to Draft</a>
+        {% if is_draft %}
+            <a class="button button-secondary" href="{% url 'exam_field_update' field.pk %}">Edit Field</a>
+        {% endif %}
+    </div>
+</section>
+
+{% include "clinic/admin_portal_nav.html" %}
+
+<section class="panel panel-split">
+    <article>
+        <h3>Field Summary</h3>
+        <dl class="detail-grid">
+            <div><dt>Key</dt><dd>{{ field.field_key }}</dd></div>
+            <div><dt>Section</dt><dd>{{ field.section.section_label|default:"-" }}</dd></div>
+            <div><dt>Input Type</dt><dd>{{ field.get_input_type_display }}</dd></div>
+            <div><dt>Data Type</dt><dd>{{ field.get_data_type_display }}</dd></div>
+            <div><dt>Unit</dt><dd>{{ field.unit|default:"-" }}</dd></div>
+            <div><dt>Required</dt><dd>{% if field.required %}Yes{% else %}No{% endif %}</dd></div>
+            <div><dt>Default Value</dt><dd>{{ field.default_value|default:"-" }}</dd></div>
+            <div><dt>Placeholder</dt><dd>{{ field.placeholder_text|default:"-" }}</dd></div>
+            <div><dt>Reference Text</dt><dd>{{ field.reference_text|default:"-" }}</dd></div>
+            <div><dt>Sort Order</dt><dd>{{ field.sort_order }}</dd></div>
+            <div class="form-row-wide"><dt>Help Text</dt><dd>{{ field.help_text|default:"-" }}</dd></div>
+            <div class="form-row-wide"><dt>Advanced Config</dt><dd><pre class="json-preview">{{ field.config_json }}</pre></dd></div>
+        </dl>
+    </article>
+    <article>
+        <h3>Builder Guidance</h3>
+        <div class="setup-steps">
+            <div><strong>1.</strong> Use dropdown choices only when the input type is Select.</div>
+            <div><strong>2.</strong> Add reference ranges only when the field needs visible normals or abnormal checks.</div>
+            <div><strong>3.</strong> Keep keys stable after publish so old saved data remains interpretable.</div>
+            <div><strong>4.</strong> Leave advanced config alone unless this is a special imported field.</div>
+        </div>
+    </article>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Select Choices</h3>
+    </div>
+    {% if is_draft %}
+        <div class="action-row admin-inline-actions">
+            <a class="button button-secondary button-small" href="{% url 'exam_field_select_option_create' field.pk %}">Add Choice</a>
+        </div>
+    {% endif %}
+    {% if select_options %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>Stored Value</th>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for option in select_options %}
+                        <tr>
+                            <td>{{ option.option_label }}</td>
+                            <td>{{ option.option_value }}</td>
+                            <td>{{ option.sort_order }}</td>
+                            <td>{% if option.active %}<span class="status status-completed">Active</span>{% else %}<span class="status status-draft">Inactive</span>{% endif %}</td>
+                            <td>{% if is_draft %}<a class="text-link" href="{% url 'exam_field_select_option_update' option.pk %}">Edit</a>{% else %}-{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No select choices yet.</p>
+    {% endif %}
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Reference Ranges</h3>
+    </div>
+    {% if is_draft %}
+        <div class="action-row admin-inline-actions">
+            <a class="button button-secondary button-small" href="{% url 'exam_reference_range_create' field.pk %}">Add Range</a>
+        </div>
+    {% endif %}
+    {% if reference_ranges %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scope</th>
+                        <th>Type</th>
+                        <th>Min</th>
+                        <th>Max</th>
+                        <th>Reference Text</th>
+                        <th>Order</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reference_range in reference_ranges %}
+                        <tr>
+                            <td>
+                                {% if reference_range.option_scope %}Option: {{ reference_range.option_scope.option_label }}{% endif %}
+                                {% if reference_range.sex_scope %}{% if reference_range.option_scope %}<br>{% endif %}Sex: {{ reference_range.get_sex_scope_display }}{% endif %}
+                                {% if not reference_range.option_scope and not reference_range.sex_scope %}-{% endif %}
+                            </td>
+                            <td>{{ reference_range.range_type }}</td>
+                            <td>{{ reference_range.min_numeric|default:"-" }}</td>
+                            <td>{{ reference_range.max_numeric|default:"-" }}</td>
+                            <td>{{ reference_range.reference_text|default:"-" }}</td>
+                            <td>{{ reference_range.sort_order }}</td>
+                            <td>{% if is_draft %}<a class="text-link" href="{% url 'exam_reference_range_update' reference_range.pk %}">Edit</a>{% else %}-{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="empty-state">No reference ranges yet.</p>
+    {% endif %}
+</section>
+{% endblock %}
