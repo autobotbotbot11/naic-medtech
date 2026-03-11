@@ -1,5 +1,6 @@
 import shutil
 import tempfile
+from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -11,6 +12,9 @@ from apps.common.choices import (
     ExamFieldDataTypeChoices,
     ExamFieldInputTypeChoices,
     ExamVersionStatusChoices,
+    LabRequestItemStatusChoices,
+    LabRequestStatusChoices,
+    UserRoleChoices,
 )
 from apps.core.models import LabRequest, Patient
 from apps.core.models import Facility, Organization, Signatory
@@ -24,7 +28,7 @@ from apps.exams.models import (
     ExamFieldSelectOption,
     ExamOption,
 )
-from apps.results.models import Attachment, LabRequestItem, LabResultValue
+from apps.results.models import Attachment, AuditLog, LabRequestItem, LabResultValue
 
 User = get_user_model()
 
@@ -46,7 +50,12 @@ class ResultEntryFlowTests(TestCase):
         self.user = User.objects.create_user(
             username="resultuser",
             password="StrongPass123!",
-            role="encoder",
+            role=UserRoleChoices.ENCODER,
+        )
+        self.admin_user = User.objects.create_user(
+            username="resultadmin",
+            password="StrongPass123!",
+            role=UserRoleChoices.ADMIN,
         )
         self.client.force_login(self.user)
 
@@ -270,6 +279,145 @@ class ResultEntryFlowTests(TestCase):
         self.assertEqual(grouped_value.value_json["temperature"], "37.1")
         self.assertEqual(attachment.original_name, "result.jpg")
         self.assertEqual(attachment_value.value_json["attachment_id"], attachment.id)
+        item.refresh_from_db()
+        self.lab_request.refresh_from_db()
+        self.assertEqual(item.item_status, LabRequestItemStatusChoices.FOR_REVIEW)
+        self.assertEqual(self.lab_request.status, LabRequestStatusChoices.COMPLETED)
+        self.assertTrue(
+            AuditLog.objects.filter(entity_type="lab_request_item", entity_id=item.pk, action="results_saved").exists()
+        )
+
+    def test_admin_can_release_item_and_request_becomes_released(self):
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=self.exam_definition,
+            exam_definition_version=self.version,
+            exam_option=self.option,
+            item_status=LabRequestItemStatusChoices.FOR_REVIEW,
+            medtech_signatory=self.medtech,
+        )
+        self.create_result_value(item, self.numeric_field, value_number="4.2")
+
+        self.client.force_login(self.admin_user)
+        response = self.client.post(
+            reverse("item_release", args=[item.pk]),
+            {"next": reverse("item_result_entry", args=[item.pk])},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        item.refresh_from_db()
+        self.lab_request.refresh_from_db()
+        self.assertEqual(item.item_status, LabRequestItemStatusChoices.RELEASED)
+        self.assertIsNotNone(item.released_at)
+        self.assertEqual(item.released_by, self.admin_user)
+        self.assertEqual(self.lab_request.status, LabRequestStatusChoices.RELEASED)
+        self.assertTrue(
+            AuditLog.objects.filter(entity_type="lab_request_item", entity_id=item.pk, action="released").exists()
+        )
+
+    def test_release_requires_medtech_signatory(self):
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=self.exam_definition,
+            exam_definition_version=self.version,
+            exam_option=self.option,
+            item_status=LabRequestItemStatusChoices.FOR_REVIEW,
+        )
+        self.create_result_value(item, self.numeric_field, value_number="4.2")
+
+        self.client.force_login(self.admin_user)
+        response = self.client.post(reverse("item_release", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 302)
+        item.refresh_from_db()
+        self.assertEqual(item.item_status, LabRequestItemStatusChoices.FOR_REVIEW)
+        self.assertIsNone(item.released_at)
+
+    def test_released_item_is_read_only_until_admin_reopens(self):
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=self.exam_definition,
+            exam_definition_version=self.version,
+            exam_option=self.option,
+            item_status=LabRequestItemStatusChoices.RELEASED,
+            medtech_signatory=self.medtech,
+            released_at=timezone.now(),
+            released_by=self.admin_user,
+        )
+        self.create_result_value(item, self.numeric_field, value_number="4.2")
+
+        response = self.client.post(
+            reverse("item_result_entry", args=[item.pk]),
+            {
+                "medtech_signatory": self.medtech.pk,
+                "pathologist_signatory": "",
+                f"field_{self.numeric_field.pk}": "4.8",
+                f"field_{self.select_field.pk}": "",
+                f"field_{self.grouped_field.pk}__blood_pressure": "",
+                f"field_{self.grouped_field.pk}__temperature": "",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        item.refresh_from_db()
+        self.assertEqual(item.result_values.get(field=self.numeric_field).value_number, Decimal("4.2"))
+
+        self.client.force_login(self.admin_user)
+        reopen_response = self.client.post(reverse("item_reopen", args=[item.pk]))
+
+        self.assertEqual(reopen_response.status_code, 302)
+        item.refresh_from_db()
+        self.assertEqual(item.item_status, LabRequestItemStatusChoices.FOR_REVIEW)
+        self.assertIsNone(item.released_at)
+        self.assertIsNone(item.printed_at)
+        self.assertTrue(
+            AuditLog.objects.filter(entity_type="lab_request_item", entity_id=item.pk, action="reopened_for_editing").exists()
+        )
+
+    def test_mark_printed_sets_timestamp_for_released_item(self):
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=self.exam_definition,
+            exam_definition_version=self.version,
+            exam_option=self.option,
+            item_status=LabRequestItemStatusChoices.RELEASED,
+            medtech_signatory=self.medtech,
+            released_at=timezone.now(),
+            released_by=self.admin_user,
+        )
+        self.create_result_value(item, self.numeric_field, value_number="4.2")
+
+        self.client.force_login(self.admin_user)
+        response = self.client.post(
+            reverse("item_mark_printed", args=[item.pk]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        item.refresh_from_db()
+        self.assertIsNotNone(item.printed_at)
+        self.assertTrue(response.json()["ok"])
+        self.assertTrue(
+            AuditLog.objects.filter(entity_type="lab_request_item", entity_id=item.pk, action="printed").exists()
+        )
+
+    def test_encoder_cannot_release_item(self):
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=self.exam_definition,
+            exam_definition_version=self.version,
+            exam_option=self.option,
+            item_status=LabRequestItemStatusChoices.FOR_REVIEW,
+            medtech_signatory=self.medtech,
+        )
+        self.create_result_value(item, self.numeric_field, value_number="4.2")
+
+        response = self.client.post(reverse("item_release", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse("dashboard"))
+        item.refresh_from_db()
+        self.assertEqual(item.item_status, LabRequestItemStatusChoices.FOR_REVIEW)
 
     def test_print_view_renders_saved_results(self):
         item = LabRequestItem.objects.create(

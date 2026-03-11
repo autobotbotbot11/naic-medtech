@@ -11,7 +11,7 @@
     <div class="print-shell">
         <header class="print-actions">
             <a class="print-button" href="{% url 'item_result_entry' request_item.pk %}">Back to Encoder</a>
-            <button class="print-button print-button-primary" type="button" onclick="window.print()">Print</button>
+            <button class="print-button print-button-primary" type="button" onclick="markPrintedAndPrint()">Print</button>
         </header>
 
         <main class="report-sheet">
@@ -70,6 +70,23 @@
                         <div><dt>Physician</dt><dd>{{ header.physician_name|default:"-" }}</dd></div>
                         <div><dt>Room</dt><dd>{{ header.room_name|default:"-" }}</dd></div>
                         <div><dt>Status</dt><dd>{{ request_item.get_item_status_display }}</dd></div>
+                    </dl>
+                </article>
+                <article class="summary-card">
+                    <h2>Workflow</h2>
+                    <dl>
+                        <div><dt>Released</dt><dd>{{ request_item.released_at|date:"M d, Y h:i A"|default:"-" }}</dd></div>
+                        <div><dt>Printed</dt><dd id="printed-at-text">{{ request_item.printed_at|date:"M d, Y h:i A"|default:"-" }}</dd></div>
+                        <div>
+                            <dt>Released By</dt>
+                            <dd>
+                                {% if request_item.released_by %}
+                                    {{ request_item.released_by.display_name|default:request_item.released_by.username }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </dd>
+                        </div>
                     </dl>
                 </article>
             </section>
@@ -881,5 +898,36 @@
             </section>
         </main>
     </div>
+    <script>
+        async function markPrintedAndPrint() {
+            const canMarkPrinted = {{ workflow.can_mark_printed|yesno:"true,false" }};
+            if (!canMarkPrinted) {
+                window.print();
+                return;
+            }
+
+            try {
+                const response = await fetch("{% url 'item_mark_printed' request_item.pk %}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                });
+                if (response.ok) {
+                    const payload = await response.json();
+                    if (payload.printed_at) {
+                        const output = document.getElementById("printed-at-text");
+                        if (output) {
+                            output.textContent = payload.printed_at;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.warn("Could not record printed timestamp before printing.", error);
+            }
+            window.print();
+        }
+    </script>
 </body>
 </html>

@@ -1,5 +1,8 @@
+from pathlib import Path
+
 from django import forms
 
+from apps.core.master_data_import import DEFAULT_MASTER_DATA_WORKBOOK
 from apps.core.models import Facility, Organization, Physician, Room, Signatory
 
 
@@ -102,3 +105,28 @@ class SignatoryForm(forms.ModelForm):
         self.fields["license_no"].help_text = "Optional, if the clinic wants to store license details."
         self.fields["signature_image"].help_text = "Optional signature file for future report enhancements."
         self.fields["active"].help_text = "Turn this off instead of deleting the record."
+
+
+class MasterDataImportForm(forms.Form):
+    workbook_path = forms.CharField(
+        label="Workbook path",
+        initial=str(DEFAULT_MASTER_DATA_WORKBOOK),
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["workbook_path"].help_text = (
+            "Use the clinic workbook path. Relative paths are resolved from the project root."
+        )
+
+    def clean_workbook_path(self):
+        raw_value = self.cleaned_data["workbook_path"].strip()
+        workbook_path = Path(raw_value)
+        if not workbook_path.is_absolute():
+            workbook_path = Path.cwd() / workbook_path
+
+        if not workbook_path.exists():
+            raise forms.ValidationError("Workbook file not found.")
+
+        return str(workbook_path)

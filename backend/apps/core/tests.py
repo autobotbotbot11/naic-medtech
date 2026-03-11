@@ -1,13 +1,19 @@
 import shutil
 import tempfile
+from io import StringIO
+from pathlib import Path
 
+from django.core.management import call_command
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 from django.test import override_settings
+from openpyxl import Workbook
 
-from apps.core.models import Facility, LabRequest, Organization, Patient
+from apps.common.choices import SignatoryTypeChoices
+from apps.core.master_data_import import import_master_data
+from apps.core.models import Facility, LabRequest, Organization, Patient, Physician, Room, Signatory
 
 User = get_user_model()
 
@@ -160,8 +166,6 @@ class RequestCreateViewTests(TestCase):
         self.assertEqual(response.url, reverse("physician_list"))
 
     def test_physician_list_filters_by_search_and_status(self):
-        from apps.core.models import Physician
-
         Physician.objects.create(physician_code="PHY-001", display_name="Dr. Active", active=True)
         Physician.objects.create(physician_code="PHY-002", display_name="Dr. Hidden", active=False)
 
@@ -176,3 +180,145 @@ class RequestCreateViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Dr. Active")
         self.assertNotContains(response, "Dr. Hidden")
+
+
+class MasterDataImportTests(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.temp_dir = tempfile.mkdtemp()
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.temp_dir, ignore_errors=True)
+        super().tearDownClass()
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="importadmin",
+            password="StrongPass123!",
+            role="admin",
+        )
+        self.client.force_login(self.user)
+
+    def build_master_data_workbook(self):
+        workbook = Workbook()
+        ws = workbook.active
+        ws.title = "Sheet A"
+        ws["A1"] = "Field"
+        ws["B1"] = "Input Type"
+        ws["C1"] = "Dropdown List (Options)"
+        ws["A8"] = "Requesting Physician"
+        ws["C8"] = "DR. FIRST\nDR. SECOND\nDR. THIRD"
+        ws["A9"] = "Room"
+        ws["C9"] = "ER\nOPD \nNICU"
+        ws["A14"] = "Medical Technologist"
+        ws["C14"] = (
+            "Alpha Medtech, RMT\nLic. No: 001\n\n"
+            "Beta Medtech, RMT\nLic. No: 002"
+        )
+        ws["A16"] = "Pathologist"
+        ws["C16"] = "Patho One, MD\nLIC. NO. 777"
+
+        ws2 = workbook.create_sheet("Sheet B")
+        ws2["A1"] = "Field"
+        ws2["B1"] = "Input Type"
+        ws2["C1"] = "Dropdown List (Options)"
+        ws2["A8"] = "Requesting Physician"
+        ws2["C8"] = "DR. SECOND\nDR. FOURTH"
+        ws2["A9"] = "Room"
+        ws2["C9"] = "ER\nWARD 1"
+        ws2["A14"] = "Medical Technologist"
+        ws2["C14"] = (
+            "Alpha Medtech, RMT\nLic. No: 001\n\n"
+            "Gamma Medtech, RMT\nLic. No: 003"
+        )
+
+        workbook_path = Path(self.temp_dir) / "master-data.xlsx"
+        workbook.save(workbook_path)
+        return workbook_path
+
+    def test_import_master_data_creates_and_reactivates_records(self):
+        workbook_path = self.build_master_data_workbook()
+
+        Physician.objects.create(display_name="DR. SECOND", active=False)
+        Room.objects.create(display_name="WARD 1", active=False)
+        Signatory.objects.create(
+            signatory_type=SignatoryTypeChoices.MEDTECH,
+            display_name="Gamma Medtech, RMT",
+            license_no="",
+            active=False,
+        )
+
+        stats = import_master_data(workbook_path)
+
+        self.assertEqual(stats.physician_source_count, 4)
+        self.assertEqual(stats.room_source_count, 4)
+        self.assertEqual(stats.signatory_source_count, 4)
+        self.assertEqual(stats.physicians_created, 3)
+        self.assertEqual(stats.physicians_reactivated, 1)
+        self.assertEqual(stats.rooms_created, 3)
+        self.assertEqual(stats.rooms_reactivated, 1)
+        self.assertEqual(stats.signatories_created, 3)
+        self.assertEqual(stats.signatories_reactivated, 1)
+        self.assertEqual(stats.signatories_license_filled, 1)
+        self.assertEqual(Physician.objects.count(), 4)
+        self.assertEqual(Room.objects.count(), 4)
+        self.assertEqual(Signatory.objects.count(), 4)
+        self.assertTrue(Physician.objects.get(display_name="DR. SECOND").active)
+        self.assertTrue(Room.objects.get(display_name="WARD 1").active)
+        self.assertEqual(
+            Signatory.objects.get(display_name="Gamma Medtech, RMT").license_no,
+            "003",
+        )
+        self.assertTrue(Room.objects.filter(display_name="OPD").exists())
+
+    def test_import_master_data_keeps_existing_conflicting_license_and_warns(self):
+        workbook_path = self.build_master_data_workbook()
+        Signatory.objects.create(
+            signatory_type=SignatoryTypeChoices.PATHOLOGIST,
+            display_name="Patho One, MD",
+            license_no="OLD-LIC",
+            active=True,
+        )
+
+        stats = import_master_data(workbook_path)
+
+        self.assertTrue(stats.warnings)
+        self.assertEqual(
+            Signatory.objects.get(display_name="Patho One, MD").license_no,
+            "OLD-LIC",
+        )
+
+    def test_admin_portal_import_page_runs_import_and_shows_summary(self):
+        workbook_path = self.build_master_data_workbook()
+
+        response = self.client.post(
+            reverse("master_data_import"),
+            {"workbook_path": str(workbook_path)},
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Master data import finished.")
+        self.assertContains(response, "Last Import Summary")
+        self.assertContains(response, "Review Physicians")
+        self.assertEqual(Physician.objects.count(), 4)
+        self.assertEqual(Room.objects.count(), 4)
+        self.assertEqual(Signatory.objects.count(), 4)
+
+    def test_import_master_data_command_outputs_summary(self):
+        workbook_path = self.build_master_data_workbook()
+        stdout = StringIO()
+
+        call_command(
+            "import_master_data_workbook",
+            file=str(workbook_path),
+            stdout=stdout,
+        )
+
+        output = stdout.getvalue()
+        self.assertIn("Master data import completed.", output)
+        self.assertIn("Physicians found: 4", output)
+        self.assertIn("Rooms found: 4", output)
+        self.assertIn("Signatories found: 4", output)

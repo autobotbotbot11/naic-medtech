@@ -8,6 +8,7 @@ Companion continuity files:
 - [AGENTS.md](C:\Users\acer\Desktop\naic-app\AGENTS.md)
 - [DECISIONS.md](C:\Users\acer\Desktop\naic-app\DECISIONS.md)
 - [NEXT_STEPS.md](C:\Users\acer\Desktop\naic-app\NEXT_STEPS.md)
+- [STRATEGIC_ROADMAP.md](C:\Users\acer\Desktop\naic-app\STRATEGIC_ROADMAP.md)
 
 ## 1. What This App Is
 
@@ -160,6 +161,7 @@ Current implementation status:
 - forced password-change flow exists
 - custom admin portal exists for daily non-technical administration
 - admin portal now includes guided setup checklist, searchable/filterable management lists, and temporary-password helper tools
+- admin portal now also includes a workbook-driven master-data import page for physicians, rooms, and signatories
 - fixed clinic core models exist
 - configurable exam engine models exist
 - result storage models exist
@@ -168,6 +170,7 @@ Current implementation status:
 - basic request intake UI exists
 - request-item creation flow exists
 - dynamic result-entry UI exists
+- review/release workflow baseline exists
 - initial print preview/render layer exists
 - `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `PROTIME/APTT`, and `CARDIACI` now have dedicated print variants
 - `URINE` and `FECALYSIS` now use a dedicated microscopy print variant
@@ -177,14 +180,15 @@ Current implementation status:
 - `HBA1C` now uses a dedicated single-result focus print variant
 - `HIV 1 and 2 Testing` and `COVID 19 Antigen Rapid Test` now use dedicated rapid-test print variants
 - all current imported exams were browser-validated in both screen preview and print-media mode
+- a workbook-driven master-data importer now exists for physicians, rooms, and signatories
 - operational app pages are protected behind authentication
+- released items are now read-only until reopened by an admin/system owner
+- print actions can now stamp `printed_at` on released request items
 - a workbook recalibration audit has identified source-quality issues and importer-hardening work that should happen before deeper metadata-dependent feature work
 
 Not yet implemented:
 - final client-driven print parity polish and any future export flow
 - configurable admin exam-builder UI
-- master-data importer for physicians/rooms/signatories
-- release/approval workflow beyond basic statuses
 - reporting/dashboard beyond minimal request listing
 
 ## 8. Current Database / Metadata Model
@@ -218,6 +222,9 @@ Operational result models:
 - [Attachment](C:\Users\acer\Desktop\naic-app\backend\apps\results\models.py)
 - [AuditLog](C:\Users\acer\Desktop\naic-app\backend\apps\results\models.py)
 
+Master-data import service:
+- [master_data_import.py](C:\Users\acer\Desktop\naic-app\backend\apps\core\master_data_import.py)
+
 Important implemented constraints:
 - one published-or-archived exam version is kept historically per definition version number
 - `LabResultValue` is unique per `lab_request_item + field`
@@ -228,6 +235,11 @@ Important implemented constraints:
 - `encoder`
 - `viewer`
 - `must_change_password` supports temporary-password onboarding
+- request-item workflow now captures:
+- `performed_at`
+- `released_at`
+- `printed_at`
+- `released_by`
 
 ## 9. Workbook Importer
 
@@ -309,6 +321,11 @@ Important note:
 - these version numbers reflect repeated local imports during development
 - on a fresh database, the first import will start at `v1`
 
+Validated workbook master-data source counts:
+- `29` physicians
+- `21` rooms
+- `7` signatories
+
 ## 11. Current User-Facing Flow
 
 Minimal working flow:
@@ -336,24 +353,33 @@ Minimal working flow:
 - service: [results/services.py](C:\Users\acer\Desktop\naic-app\backend\apps\results\services.py)
 - template: [result_entry.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\result_entry.html)
 - report-level medtech and pathologist selection is now part of the encode flow
+- saving real content moves the item to `For Review`
+- released items are read-only until reopened
 
-5. preview printable result output
+5. release or reopen a result item
+- views: [item_release](C:\Users\acer\Desktop\naic-app\backend\apps\results\views.py), [item_reopen](C:\Users\acer\Desktop\naic-app\backend\apps\results\views.py)
+- only `admin` and `system_owner` users can release or reopen
+- release requires saved content and a selected medical technologist
+
+6. preview printable result output
 - view: [item_result_print](C:\Users\acer\Desktop\naic-app\backend\apps\results\views.py)
 - service: [rendering.py](C:\Users\acer\Desktop\naic-app\backend\apps\results\rendering.py)
 - template: [result_print.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\result_print.html)
 - print headers now consume facility branding and organization/facility snapshot data
+- clicking the `Print` button records `printed_at` for released items
 
-6. change password if required
+7. change password if required
 - view: [password_change_view](C:\Users\acer\Desktop\naic-app\backend\apps\accounts\views.py)
 - template: [password_change.html](C:\Users\acer\Desktop\naic-app\backend\templates\clinic\password_change.html)
 - middleware: [middleware.py](C:\Users\acer\Desktop\naic-app\backend\apps\accounts\middleware.py)
 
-7. use the custom admin portal
+8. use the custom admin portal
 - home: [admin_portal_home](C:\Users\acer\Desktop\naic-app\backend\apps\accounts\views.py)
 - templates and routes now exist for:
 - users
 - organizations
 - facilities
+- master-data import
 - physicians
 - rooms
 - signatories
@@ -362,6 +388,7 @@ Minimal working flow:
 - search/filter support on user and master-data lists
 - clearer empty states and file previews
 - temporary-password generator helpers on user onboarding/reset pages
+- a workbook-based import tool for physicians, rooms, and signatories
 - this is the intended daily configuration UI for the clinic, not Django admin
 
 Supported saved input types in the MVP:
@@ -420,6 +447,12 @@ Useful importer flags:
 - `--keep-published`
 - `--force`
 
+Import workbook master data:
+
+```powershell
+python backend\manage.py import_master_data_workbook --file "NAIC MEDTECH SYSTEM DATA.xlsx"
+```
+
 Create superuser:
 
 ```powershell
@@ -447,39 +480,26 @@ Important note:
 
 Recommended next implementation order:
 
-1. print/render engine refinement
-- importer hardening and workbook recalibration baseline are already done
-- remaining data-review follow-up items are listed in [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
-- continue from `ExamRenderProfile`
-- all current imported exams now have dedicated, browser-validated print variants
-- remaining work in this track is last-mile clinic parity polish, attachment/branding review on real data, and deciding whether browser print is sufficient or PDF export is required
-- decide whether PDF generation is needed or browser-print is enough
-
-2. clinic confirmation pass for suspicious source items
+1. clinic confirmation pass for suspicious source items
 - audit findings are documented in [workbook_recalibration_audit.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\workbook_recalibration_audit.md)
 - clinic-facing queue is documented in [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
+- a cleaner client discussion packet now exists in [client_confirmation_packet.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\client_confirmation_packet.md)
+- a Taglish client-facing script now exists in [client_confirmation_script_taglish.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\client_confirmation_script_taglish.md)
 - confirm suspicious ranges, spelling, signatory names, and package meanings
 
-3. master-data import
-- physicians
-- rooms
-- signatories
-- organization/facility branding is already admin-manageable, but the workbook-based importers for other master data do not exist yet
-
-4. admin exam-builder UI
+2. admin exam-builder UI
 - create draft exam versions
 - add fields/options/sections/rules
 - validate before publish
 
-5. release workflow
-- medtech/pathologist assignment
-- review/release actions
-- printed/released timestamps
-
-6. reports/search
+3. reports/search
 - abnormal results
 - per-exam daily counts
 - patient result history
+
+4. print parity/export follow-up
+- all current imported exams now have dedicated, browser-validated print variants
+- remaining work in this track is last-mile clinic parity polish, attachment/branding review on real data, and deciding whether browser print is sufficient or PDF export is required
 
 ## 15. Reference Analysis Docs
 
@@ -495,6 +515,8 @@ Most useful ones:
 - [admin_exam_builder_flow.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\admin_exam_builder_flow.md)
 - [workbook_recalibration_audit.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\workbook_recalibration_audit.md)
 - [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
+- [client_confirmation_packet.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\client_confirmation_packet.md)
+- [client_confirmation_script_taglish.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\client_confirmation_script_taglish.md)
 
 ## 16. Fast Onboarding For a New Agent
 

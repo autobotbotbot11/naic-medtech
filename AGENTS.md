@@ -9,7 +9,8 @@ This project already has substantial planning and implementation history. Do not
 1. [PROJECT_CONTEXT.md](C:\Users\acer\Desktop\naic-app\PROJECT_CONTEXT.md)
 2. [DECISIONS.md](C:\Users\acer\Desktop\naic-app\DECISIONS.md)
 3. [NEXT_STEPS.md](C:\Users\acer\Desktop\naic-app\NEXT_STEPS.md)
-4. [backend/README.md](C:\Users\acer\Desktop\naic-app\backend\README.md)
+4. [STRATEGIC_ROADMAP.md](C:\Users\acer\Desktop\naic-app\STRATEGIC_ROADMAP.md)
+5. [backend/README.md](C:\Users\acer\Desktop\naic-app\backend\README.md)
 
 Then inspect these implementation files:
 - [backend/apps/core/models.py](C:\Users\acer\Desktop\naic-app\backend\apps\core\models.py)
@@ -84,6 +85,11 @@ Already implemented:
 - search/filter on user and master-data lists
 - temporary-password helpers on user create/reset pages
 - clearer empty states and file previews
+- master-data importer:
+- workbook-driven physician/room/signatory extraction
+- safe upsert rules
+- custom admin import page at `/manage/import-master-data/`
+- management command `import_master_data_workbook`
 - configurable exam models
 - result models
 - workbook importer
@@ -92,6 +98,11 @@ Already implemented:
 - dynamic exam-option loading in the add-item form
 - dynamic result-entry flow
 - medtech/pathologist selection in result-entry
+- controlled review/release workflow:
+- save-to-review status transition
+- admin-only release and reopen actions
+- read-only released items
+- printed timestamp capture from the print action
 - initial print-preview flow
 - facility-branded print header
 - ABG compact print variant
@@ -119,8 +130,6 @@ Already implemented:
 Not yet implemented:
 - final client-driven print parity polish and any future export flow
 - admin exam-builder UI
-- master-data importer
-- full release workflow
 - reports/search
 
 ## Required Sanity Checks Before Continuing
@@ -142,6 +151,8 @@ python backend\manage.py import_exam_workbook --file "NAIC MEDTECH SYSTEM DATA.x
 Before continuing deeper metadata-dependent feature work, review:
 - [tmp/analysis/workbook_recalibration_audit.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\workbook_recalibration_audit.md)
 - [tmp/analysis/clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
+- [tmp/analysis/client_confirmation_packet.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\client_confirmation_packet.md)
+- [STRATEGIC_ROADMAP.md](C:\Users\acer\Desktop\naic-app\STRATEGIC_ROADMAP.md)
 
 ## If You Change the Architecture or Workflow
 

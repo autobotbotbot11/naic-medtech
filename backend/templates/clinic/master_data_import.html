@@ -1,0 +1,112 @@
+{% extends "clinic/base.html" %}
+
+{% block title %}{{ page_title }} | Clinic Lab System{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <div class="eyebrow">Admin Portal</div>
+        <h2>{{ page_title }}</h2>
+        <p>{{ page_description }}</p>
+    </div>
+    <div class="action-row">
+        <a class="button button-secondary" href="{% url 'admin_portal_home' %}">Back to Admin Portal</a>
+    </div>
+</section>
+
+{% include "clinic/admin_portal_nav.html" %}
+
+<section class="panel-split">
+    <section class="panel">
+        <div class="panel-head">
+            <h3>What This Import Does</h3>
+        </div>
+        <div class="setup-steps">
+            <div><strong>1.</strong> Reads physicians from `Requesting Physician` rows.</div>
+            <div><strong>2.</strong> Reads rooms from `Room` rows.</div>
+            <div><strong>3.</strong> Reads medtech/pathologist names and license numbers from signatory rows.</div>
+            <div><strong>4.</strong> Creates missing records and reactivates matching inactive records.</div>
+            <div><strong>5.</strong> Keeps existing records instead of deleting or blindly renaming them.</div>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-head">
+            <h3>Safety Rules</h3>
+        </div>
+        <div class="setup-steps">
+            <div><strong>1.</strong> Existing master data is not deleted.</div>
+            <div><strong>2.</strong> Existing signatory licenses are only filled when blank.</div>
+            <div><strong>3.</strong> Conflicting signatory license numbers are kept as warnings for manual review.</div>
+            <div><strong>4.</strong> After import, use the management pages to clean up any clinic-confirmed corrections.</div>
+        </div>
+    </section>
+</section>
+
+<form method="post" class="panel form-panel admin-form-panel">
+    {% csrf_token %}
+    <div class="form-grid">
+        {% for field in form %}
+            <div class="form-row form-row-wide">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <p class="helper-text">Default workbook path: {{ default_workbook_path }}</p>
+    <div class="form-actions">
+        <button class="button button-primary" type="submit">Import Master Data</button>
+        <a class="button button-secondary" href="{% url 'admin_portal_home' %}">Cancel</a>
+    </div>
+</form>
+
+{% if summary %}
+    <section class="panel">
+        <div class="panel-head">
+            <h3>Last Import Summary</h3>
+        </div>
+        <div class="detail-grid">
+            <div class="summary-card">
+                <span class="card-label">Workbook</span>
+                <strong>{{ summary.workbook_path }}</strong>
+            </div>
+            <div class="summary-card">
+                <span class="card-label">Source Records</span>
+                <strong>{{ summary.physician_source_count }} physicians, {{ summary.room_source_count }} rooms, {{ summary.signatory_source_count }} signatories</strong>
+            </div>
+            <div class="summary-card">
+                <span class="card-label">Created</span>
+                <strong>{{ summary.physicians_created }} physicians, {{ summary.rooms_created }} rooms, {{ summary.signatories_created }} signatories</strong>
+            </div>
+            <div class="summary-card">
+                <span class="card-label">Reactivated</span>
+                <strong>{{ summary.physicians_reactivated }} physicians, {{ summary.rooms_reactivated }} rooms, {{ summary.signatories_reactivated }} signatories</strong>
+            </div>
+            <div class="summary-card">
+                <span class="card-label">Signatory Licenses Filled</span>
+                <strong>{{ summary.signatories_license_filled }}</strong>
+            </div>
+        </div>
+
+        {% if summary.warnings %}
+            <div class="form-errors">
+                {% for warning in summary.warnings %}
+                    <p class="field-error">{{ warning }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="form-actions">
+            <a class="button button-secondary" href="{% url 'physician_list' %}">Review Physicians</a>
+            <a class="button button-secondary" href="{% url 'room_list' %}">Review Rooms</a>
+            <a class="button button-secondary" href="{% url 'signatory_list' %}">Review Signatories</a>
+        </div>
+    </section>
+{% endif %}
+{% endblock %}

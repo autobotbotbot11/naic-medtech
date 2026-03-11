@@ -5,6 +5,7 @@ Then read:
 - [AGENTS.md](C:\Users\acer\Desktop\naic-app\AGENTS.md)
 - [DECISIONS.md](C:\Users\acer\Desktop\naic-app\DECISIONS.md)
 - [NEXT_STEPS.md](C:\Users\acer\Desktop\naic-app\NEXT_STEPS.md)
+- [STRATEGIC_ROADMAP.md](C:\Users\acer\Desktop\naic-app\STRATEGIC_ROADMAP.md)
 
 ## Stack
 - Django 5.2
@@ -65,6 +66,13 @@ Useful flags:
 - `--keep-published` leaves older published versions untouched.
 - `--force` creates a new version even when the workbook source matches the latest published version.
 
+Import workbook master data:
+
+```powershell
+.venv\Scripts\activate
+python backend\manage.py import_master_data_workbook --file "NAIC MEDTECH SYSTEM DATA.xlsx"
+```
+
 ## Current status
 Implemented:
 - Django project scaffold
@@ -78,6 +86,9 @@ Implemented:
 - searchable/filterable management lists
 - temporary-password helpers for onboarding/reset flows
 - clearer empty states and current-file previews
+- workbook-driven master-data importer for physicians, rooms, and signatories
+- custom admin import page at `/manage/import-master-data/`
+- management command `import_master_data_workbook`
 - fixed core clinic models
 - organization/facility branding models with request snapshots
 - configurable exam models
@@ -90,6 +101,11 @@ Implemented:
 - dynamic exam-option loading for request-item packages/options
 - dynamic result entry UI based on imported exam metadata
 - medtech/pathologist selection in result entry
+- review/release workflow baseline:
+- save-to-review status transition
+- admin-only release and reopen actions
+- read-only released items
+- printed timestamp capture from the print action
 - initial HTML print preview for saved results
 - facility-branded print header
 - exam-specific print variants for `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, and `PROTIME/APTT`
@@ -111,8 +127,8 @@ Not yet implemented:
 - custom admin exam builder UI
 - final client-driven print parity polish and any future export flow
 - reports/dashboard
-- master-data importer for physicians, rooms, and signatories
 
 Important current work item:
 - review [workbook_recalibration_audit.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\workbook_recalibration_audit.md) before modifying importer behavior or trusting workbook values blindly
 - use [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md) for the remaining clinic-confirmation items that should not be guessed by the developer
+- use [client_confirmation_packet.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\client_confirmation_packet.md) and [client_confirmation_script_taglish.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\client_confirmation_script_taglish.md) when preparing the client discussion

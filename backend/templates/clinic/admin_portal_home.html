@@ -82,8 +82,9 @@
         <div><strong>1.</strong> Add the organization/company name.</div>
         <div><strong>2.</strong> Add the facility/branch and upload report branding.</div>
         <div><strong>3.</strong> Create staff user accounts with temporary passwords.</div>
-        <div><strong>4.</strong> Add physicians, rooms, and signatories.</div>
-        <div><strong>5.</strong> Start using request intake and result entry.</div>
+        <div><strong>4.</strong> Import physicians, rooms, and signatories from the clinic workbook.</div>
+        <div><strong>5.</strong> Review the imported master data and adjust if needed.</div>
+        <div><strong>6.</strong> Start using request intake and result entry.</div>
     </div>
 </section>
 
@@ -102,6 +103,11 @@
         <h3>Facilities</h3>
         <p>Manage branches, addresses, contact numbers, and report branding images.</p>
         <a class="button button-primary" href="{% url 'facility_list' %}">Manage Facilities</a>
+    </article>
+    <article class="panel admin-card">
+        <h3>Import Master Data</h3>
+        <p>Pull physicians, rooms, and signatories from the clinic workbook before manual cleanup.</p>
+        <a class="button button-primary" href="{% url 'master_data_import' %}">Open Import Tool</a>
     </article>
     <article class="panel admin-card">
         <h3>Physicians</h3>

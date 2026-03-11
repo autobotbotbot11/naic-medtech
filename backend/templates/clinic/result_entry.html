@@ -18,6 +18,62 @@
 
 <section class="panel panel-split">
     <article>
+        <h3>Workflow Status</h3>
+        <dl class="detail-grid">
+            <div><dt>Current Status</dt><dd><span class="status status-{{ request_item.item_status }}">{{ request_item.get_item_status_display }}</span></dd></div>
+            <div><dt>Performed</dt><dd>{{ request_item.performed_at|date:"M d, Y h:i A"|default:"-" }}</dd></div>
+            <div><dt>Released</dt><dd>{{ request_item.released_at|date:"M d, Y h:i A"|default:"-" }}</dd></div>
+            <div><dt>Printed</dt><dd>{{ request_item.printed_at|date:"M d, Y h:i A"|default:"-" }}</dd></div>
+            <div>
+                <dt>Released By</dt>
+                <dd>
+                    {% if request_item.released_by %}
+                        {{ request_item.released_by.display_name|default:request_item.released_by.username }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </dd>
+            </div>
+        </dl>
+    </article>
+    <article>
+        <h3>Release Controls</h3>
+        {% if workflow.release_blockers %}
+            <div class="workflow-blockers">
+                <strong>Release is blocked by:</strong>
+                <ul>
+                    {% for blocker in workflow.release_blockers %}
+                        <li>{{ blocker }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p class="helper-text">This result is ready for release once you finish your final review.</p>
+        {% endif %}
+        <div class="action-row">
+            {% if workflow.can_release %}
+                <form method="post" action="{% url 'item_release' request_item.pk %}" class="inline-action-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'item_result_entry' request_item.pk %}">
+                    <button class="button button-primary" type="submit">Release Result</button>
+                </form>
+            {% endif %}
+            {% if workflow.can_reopen %}
+                <form method="post" action="{% url 'item_reopen' request_item.pk %}" class="inline-action-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'item_result_entry' request_item.pk %}">
+                    <button class="button button-secondary" type="submit">Reopen for Editing</button>
+                </form>
+            {% endif %}
+        </div>
+        {% if workflow.is_released %}
+            <p class="helper-text">Released results are read-only. Reopen the item first if a correction is required.</p>
+        {% endif %}
+    </article>
+</section>
+
+<section class="panel panel-split">
+    <article>
         <h3>Patient Snapshot</h3>
         <dl class="detail-grid">
             <div><dt>Patient</dt><dd>{{ request_item.lab_request.patient_name_snapshot }}</dd></div>
@@ -39,6 +95,11 @@
 
 <form method="post" enctype="multipart/form-data" class="panel form-panel">
     {% csrf_token %}
+    {% if workflow.is_released %}
+        <div class="workflow-banner">
+            This item is already released. The fields below are read-only until an admin reopens the result.
+        </div>
+    {% endif %}
     {% if form.non_field_errors %}
         <div class="form-errors">
             {% for error in form.non_field_errors %}
@@ -125,7 +186,9 @@
     {% endfor %}
 
     <div class="form-actions">
-        <button class="button button-primary" type="submit">Save Results</button>
+        {% if workflow.can_edit %}
+            <button class="button button-primary" type="submit">Save Results</button>
+        {% endif %}
         <a class="button button-secondary" href="{% url 'request_detail' request_item.lab_request.pk %}">Back to Request</a>
     </div>
 </form>

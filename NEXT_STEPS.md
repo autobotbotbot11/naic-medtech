@@ -3,6 +3,7 @@
 This file is the working queue for future implementation.
 
 Priority is ordered. Unless the user explicitly redirects, continue from the top.
+This queue now follows the phased direction in [STRATEGIC_ROADMAP.md](C:\Users\acer\Desktop\naic-app\STRATEGIC_ROADMAP.md): operations first, controlled configurability second.
 
 Recently completed:
 - admin portal polish baseline
@@ -24,49 +25,17 @@ Recently completed:
 - browser validation completed for `CARDIACI`, `BCMALE`, and `BCFEMALE` in both screen preview and print-media mode
 - exam-specific print refinement completed for `HBA1C`, `HIV 1 and 2 Testing`, and `COVID 19 Antigen Rapid Test`
 - browser validation completed for `HBA1C`, `HIV 1 and 2 Testing`, and `COVID 19 Antigen Rapid Test` in both screen preview and print-media mode
+- workbook-driven master-data importer completed for physicians, rooms, and signatories
+- custom admin import page completed at `/manage/import-master-data/`
+- browser validation completed for the admin master-data import flow
+- management command completed: `import_master_data_workbook`
+- review/release workflow baseline completed
+- admin/system-owner release and reopen actions completed
+- released-item read-only behavior completed
+- printed timestamp capture from the print action completed
+- browser validation completed for encode -> release -> print -> reopen flow
 
-## 1. Print / Render Engine Refinement
-
-Goal:
-- render saved request-item results into printable clinic reports
-
-Why this is next:
-- an initial HTML print-preview layer now exists
-- organization/facility branding headers are now in the print flow
-- all current imported exams now have dedicated, browser-validated print variants
-- the remaining work in this track is clinic-specific parity polish, real-print review, and export strategy
-
-Starting points:
-- [backend/apps/exams/models.py](C:\Users\acer\Desktop\naic-app\backend\apps\exams\models.py)
-- [backend/apps/results/models.py](C:\Users\acer\Desktop\naic-app\backend\apps\results\models.py)
-- [backend/apps/results/services.py](C:\Users\acer\Desktop\naic-app\backend\apps\results\services.py)
-- [backend/apps/results/rendering.py](C:\Users\acer\Desktop\naic-app\backend\apps\results\rendering.py)
-
-Implementation targets:
-- consume `ExamRenderProfile`
-- support:
-- label-value list
-- sectioned report
-- result table
-- grouped measurement rendering
-- include:
-- patient/request header
-- exam title and option
-- units
-- reference ranges
-- abnormal highlighting
-- attachment-aware handling where needed
-- preserve the current variant set for all `16` imported exams
-- refine only when actual clinic review exposes a concrete parity gap
-- verify browser print-to-PDF keeps the same compact layout as on-screen preview
-- decide whether browser print is sufficient or PDF export is required
-
-Acceptance criteria:
-- all current imported exams render end-to-end from saved metadata and saved result values
-- further work in this area is polish/export, not missing core exam coverage
-- result output is based on saved metadata and saved result values
-
-## 2. Clinic Confirmation Pass For Suspicious Source Items
+## 1. Clinic Confirmation Pass For Suspicious Source Items
 
 Goal:
 - keep a clean boundary between technical assumptions and clinic-confirmed truth
@@ -78,6 +47,8 @@ Why:
 Starting points:
 - [workbook_recalibration_audit.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\workbook_recalibration_audit.md)
 - [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
+- [client_confirmation_packet.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\client_confirmation_packet.md)
+- [client_confirmation_script_taglish.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\client_confirmation_script_taglish.md)
 
 Targets:
 - suspicious glucose ranges
@@ -88,24 +59,7 @@ Targets:
 Acceptance criteria:
 - the project has a clear clinic-facing queue of items that must be confirmed instead of guessed
 
-## 3. Master Data Import
-
-Goal:
-- populate physicians, rooms, and signatories from known source data
-
-Why:
-- request intake and release workflow need real master data
-- organization/facility branding is now admin-manageable, but the rest of the master data is still mostly manual
-
-Targets:
-- physicians
-- rooms
-- signatories
-
-Acceptance criteria:
-- admin does not need to create all common master data manually
-
-## 4. Admin Exam Builder
+## 2. Admin Exam Builder
 
 Goal:
 - allow controlled creation/editing of exam definitions inside the app
@@ -127,22 +81,7 @@ Do not build:
 Acceptance criteria:
 - admin can create a new draft exam version and publish it safely
 
-## 5. Review / Release Workflow
-
-Goal:
-- move from plain encoding into clinic-ready result release
-
-Requirements:
-- medtech signatory selection
-- pathologist signatory selection where applicable
-- review/release actions
-- released timestamps
-- printed timestamps
-
-Acceptance criteria:
-- request items can move through a controlled status flow
-
-## 6. Search / Reporting
+## 3. Search / Reporting
 
 Goal:
 - basic operational visibility
@@ -155,6 +94,23 @@ Likely first reports:
 
 Acceptance criteria:
 - clinic staff can find prior results without browsing raw admin pages
+
+## 4. Print Parity / Export Follow-Up
+
+Goal:
+- keep print output clinic-credible as real client review continues
+
+Why this is not top priority now:
+- all current imported exams already have dedicated, browser-validated print variants
+- the remaining work here is parity polish and export strategy, not missing core coverage
+
+Targets:
+- fix concrete parity issues found during real clinic review
+- verify browser print-to-PDF remains acceptable
+- decide whether browser print is enough or a PDF/export layer is required
+
+Acceptance criteria:
+- no unresolved print gaps block deployment for the clinic's actual workflow
 
 ## Operational Rule
 

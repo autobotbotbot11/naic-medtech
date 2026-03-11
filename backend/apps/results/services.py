@@ -11,9 +11,10 @@ from apps.common.choices import (
     LabRequestItemStatusChoices,
     LabRequestStatusChoices,
     SignatoryTypeChoices,
+    UserRoleChoices,
 )
 from apps.core.models import Signatory
-from apps.results.models import Attachment, LabResultValue
+from apps.results.models import Attachment, AuditLog, LabResultValue
 
 SIGNATORY_FIELD_NAMES = ("medtech_signatory", "pathologist_signatory")
 
@@ -361,11 +362,20 @@ def build_result_entry(item, data=None, files=None):
     return form, groups, bindings
 
 
+def item_has_saved_content(item):
+    return (
+        LabResultValue.objects.filter(lab_request_item=item).exists()
+        or Attachment.objects.filter(lab_request_item=item).exists()
+    )
+
+
 def update_request_status(lab_request):
     items = list(lab_request.items.all())
     if not items:
         lab_request.status = LabRequestStatusChoices.DRAFT
-    elif all(item.result_values.exists() or item.attachments.exists() for item in items):
+    elif all(item.item_status == LabRequestItemStatusChoices.RELEASED for item in items):
+        lab_request.status = LabRequestStatusChoices.RELEASED
+    elif all(item_has_saved_content(item) for item in items):
         lab_request.status = LabRequestStatusChoices.COMPLETED
     else:
         lab_request.status = LabRequestStatusChoices.IN_PROGRESS
@@ -395,8 +405,165 @@ def clear_value_columns(result_value):
     result_value.abnormal_reason = ""
 
 
+def workflow_actor_can_edit(user):
+    if not getattr(user, "is_authenticated", False):
+        return False
+    if getattr(user, "is_superuser", False):
+        return True
+    return getattr(user, "role", "") in {
+        UserRoleChoices.SYSTEM_OWNER,
+        UserRoleChoices.ADMIN,
+        UserRoleChoices.ENCODER,
+    }
+
+
+def workflow_actor_can_release(user):
+    if not getattr(user, "is_authenticated", False):
+        return False
+    if getattr(user, "is_superuser", False):
+        return True
+    return getattr(user, "role", "") in {
+        UserRoleChoices.SYSTEM_OWNER,
+        UserRoleChoices.ADMIN,
+    }
+
+
+def workflow_actor_can_mark_printed(user):
+    if not getattr(user, "is_authenticated", False):
+        return False
+    if getattr(user, "is_superuser", False):
+        return True
+    return getattr(user, "role", "") in {
+        UserRoleChoices.SYSTEM_OWNER,
+        UserRoleChoices.ADMIN,
+        UserRoleChoices.ENCODER,
+    }
+
+
+def get_release_blockers(item):
+    blockers = []
+    if item.item_status == LabRequestItemStatusChoices.VOID:
+        blockers.append("Void items cannot be released.")
+    if not item_has_saved_content(item):
+        blockers.append("Save at least one result value or attachment before release.")
+    if not item.medtech_signatory_id:
+        blockers.append("Select the medical technologist before release.")
+    return blockers
+
+
+def summarize_item_workflow(item, user):
+    blockers = get_release_blockers(item)
+    is_released = item.item_status == LabRequestItemStatusChoices.RELEASED
+    can_release = workflow_actor_can_release(user) and not is_released and not blockers
+    can_reopen = workflow_actor_can_release(user) and is_released
+    can_mark_printed = workflow_actor_can_mark_printed(user) and is_released
+    can_edit = workflow_actor_can_edit(user) and not is_released
+    return {
+        "has_saved_content": item_has_saved_content(item),
+        "release_blockers": blockers,
+        "can_edit": can_edit,
+        "can_release": can_release,
+        "can_reopen": can_reopen,
+        "can_mark_printed": can_mark_printed,
+        "is_released": is_released,
+    }
+
+
+def audit_request_item_action(item, action, user=None, before_json=None, after_json=None):
+    AuditLog.objects.create(
+        user=user if getattr(user, "is_authenticated", False) else None,
+        entity_type="lab_request_item",
+        entity_id=item.pk,
+        action=action,
+        before_json=before_json or {},
+        after_json=after_json or {},
+    )
+
+
+def workflow_snapshot(item):
+    return {
+        "item_status": item.item_status,
+        "released_at": item.released_at.isoformat() if item.released_at else "",
+        "printed_at": item.printed_at.isoformat() if item.printed_at else "",
+        "released_by_id": item.released_by_id or None,
+        "medtech_signatory_id": item.medtech_signatory_id or None,
+        "pathologist_signatory_id": item.pathologist_signatory_id or None,
+        "result_value_count": item.result_values.count(),
+        "attachment_count": item.attachments.count(),
+    }
+
+
+@transaction.atomic
+def release_request_item(item, user):
+    blockers = get_release_blockers(item)
+    if blockers:
+        raise ValueError(blockers[0])
+
+    before_json = workflow_snapshot(item)
+    item.item_status = LabRequestItemStatusChoices.RELEASED
+    item.released_at = timezone.now()
+    item.released_by = user if getattr(user, "is_authenticated", False) else None
+    item.save(update_fields=["item_status", "released_at", "released_by", "updated_at"])
+    update_request_status(item.lab_request)
+    audit_request_item_action(
+        item,
+        action="released",
+        user=user,
+        before_json=before_json,
+        after_json=workflow_snapshot(item),
+    )
+
+
+@transaction.atomic
+def reopen_request_item(item, user):
+    before_json = workflow_snapshot(item)
+    item.item_status = (
+        LabRequestItemStatusChoices.FOR_REVIEW
+        if item_has_saved_content(item)
+        else LabRequestItemStatusChoices.ENCODING
+    )
+    item.released_at = None
+    item.released_by = None
+    item.printed_at = None
+    item.save(
+        update_fields=[
+            "item_status",
+            "released_at",
+            "released_by",
+            "printed_at",
+            "updated_at",
+        ]
+    )
+    update_request_status(item.lab_request)
+    audit_request_item_action(
+        item,
+        action="reopened_for_editing",
+        user=user,
+        before_json=before_json,
+        after_json=workflow_snapshot(item),
+    )
+
+
+@transaction.atomic
+def mark_request_item_printed(item, user):
+    if item.item_status != LabRequestItemStatusChoices.RELEASED:
+        raise ValueError("Only released items can be marked as printed.")
+
+    before_json = workflow_snapshot(item)
+    item.printed_at = timezone.now()
+    item.save(update_fields=["printed_at", "updated_at"])
+    audit_request_item_action(
+        item,
+        action="printed",
+        user=user,
+        before_json=before_json,
+        after_json=workflow_snapshot(item),
+    )
+
+
 @transaction.atomic
 def persist_result_entry(item, cleaned_data, bindings, uploaded_by=None):
+    before_json = workflow_snapshot(item)
     item.medtech_signatory = cleaned_data.get("medtech_signatory")
     item.pathologist_signatory = cleaned_data.get("pathologist_signatory")
 
@@ -518,7 +685,7 @@ def persist_result_entry(item, cleaned_data, bindings, uploaded_by=None):
         result_value.save()
         existing_results[field.id] = result_value
 
-    item.item_status = LabRequestItemStatusChoices.FOR_REVIEW if item.result_values.exists() or item.attachments.exists() else LabRequestItemStatusChoices.ENCODING
+    item.item_status = LabRequestItemStatusChoices.FOR_REVIEW if item_has_saved_content(item) else LabRequestItemStatusChoices.ENCODING
     item.performed_at = item.performed_at or timezone.now()
     item.save(
         update_fields=[
@@ -530,3 +697,10 @@ def persist_result_entry(item, cleaned_data, bindings, uploaded_by=None):
         ]
     )
     update_request_status(item.lab_request)
+    audit_request_item_action(
+        item,
+        action="results_saved",
+        user=uploaded_by,
+        before_json=before_json,
+        after_json=workflow_snapshot(item),
+    )

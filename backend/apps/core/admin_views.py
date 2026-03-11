@@ -4,7 +4,15 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.accounts.permissions import role_required
 from apps.common.choices import UserRoleChoices
-from apps.core.admin_forms import FacilityForm, OrganizationForm, PhysicianForm, RoomForm, SignatoryForm
+from apps.core.admin_forms import (
+    FacilityForm,
+    MasterDataImportForm,
+    OrganizationForm,
+    PhysicianForm,
+    RoomForm,
+    SignatoryForm,
+)
+from apps.core.master_data_import import DEFAULT_MASTER_DATA_WORKBOOK, import_master_data
 from apps.core.models import Facility, Organization, Physician, Room, Signatory
 
 
@@ -319,4 +327,36 @@ def signatory_update(request, pk):
         success_message="Signatory {instance} updated.",
         redirect_url_name="signatory_list",
         back_url_name="signatory_list",
+    )
+
+
+@role_required(UserRoleChoices.SYSTEM_OWNER, UserRoleChoices.ADMIN)
+def master_data_import_view(request):
+    summary = request.session.pop("master_data_import_summary", None)
+    form = MasterDataImportForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        stats = import_master_data(form.cleaned_data["workbook_path"])
+        request.session["master_data_import_summary"] = stats.to_dict()
+        messages.success(
+            request,
+            "Master data import finished. "
+            f"Created {stats.physicians_created} physician(s), {stats.rooms_created} room(s), "
+            f"and {stats.signatories_created} signatory/signatories.",
+        )
+        if stats.warnings:
+            messages.warning(request, f"{len(stats.warnings)} warning(s) need review.")
+        return redirect("master_data_import")
+
+    return render(
+        request,
+        "clinic/master_data_import.html",
+        {
+            "form": form,
+            "page_title": "Import Master Data",
+            "page_description": (
+                "Pull physicians, rooms, and signatories from the clinic workbook into the admin-managed master data."
+            ),
+            "summary": summary,
+            "default_workbook_path": str(DEFAULT_MASTER_DATA_WORKBOOK),
+        },
     )

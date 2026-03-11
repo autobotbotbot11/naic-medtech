@@ -112,7 +112,7 @@ def admin_portal_home(request):
                 f"{active_signatory_count} signatory/signatories"
             ),
             "missing_text": "Complete the common master data used during request intake and report sign-off.",
-            "url_name": "physician_list",
+            "url_name": "master_data_import",
         },
     ]
 

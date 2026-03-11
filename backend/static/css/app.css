@@ -153,6 +153,12 @@ small {
     background: rgba(255, 255, 255, 0.65);
 }
 
+.button-danger {
+    background: rgba(164, 60, 47, 0.1);
+    border-color: rgba(164, 60, 47, 0.28);
+    color: var(--danger);
+}
+
 .button-full {
     width: 100%;
 }
@@ -237,6 +243,18 @@ small {
 
 .detail-grid dd {
     margin: 6px 0 0;
+}
+
+.table-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.inline-action-form {
+    display: inline-flex;
+    margin: 0;
 }
 
 .table-wrap {
@@ -544,6 +562,36 @@ th {
     justify-items: start;
 }
 
+.workflow-banner,
+.workflow-blockers {
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(220, 207, 183, 0.9);
+    background: rgba(255, 255, 255, 0.68);
+}
+
+.workflow-banner {
+    margin-bottom: 18px;
+    background: rgba(223, 242, 238, 0.55);
+    border-color: #b6ddcc;
+    color: var(--accent-strong);
+    font-weight: 600;
+}
+
+.workflow-blockers {
+    margin-bottom: 16px;
+}
+
+.workflow-blockers strong {
+    display: block;
+}
+
+.workflow-blockers ul {
+    margin: 10px 0 0;
+    padding-left: 18px;
+    color: var(--muted);
+}
+
 .media-preview {
     max-width: 260px;
     max-height: 160px;
@@ -608,7 +656,8 @@ th {
     }
 
     .page-head,
-    .form-actions {
+    .form-actions,
+    .table-actions {
         flex-direction: column;
     }
 

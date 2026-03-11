@@ -198,6 +198,58 @@ Implementation rules:
 - rapid-test panels separate metadata cards, result cards, and attachment blocks instead of collapsing everything into a generic label-value list
 - attachment-aware rapid-test output must remain stable in both preview and print media
 
+### 2026-03-11: Operational Readiness Comes Before Exam-Builder UI
+
+Decision:
+- after full print coverage and importer hardening, prioritize:
+- clinic confirmation
+- master-data convenience
+- release workflow
+- only then the custom admin exam-builder UI
+
+Reason:
+- the app must first become reliable for daily clinic operations
+- the exam-builder is core, but it is a change-management feature rather than the first proof of operational readiness
+- building configuration power too early would multiply unresolved business assumptions
+
+Implication:
+- keep the exam-builder in the roadmap, but do not let it displace operational workflow work that is closer to deployment
+
+### 2026-03-11: Master Data Import Uses Workbook-Driven Safe Upsert Rules
+
+Decision:
+- import physicians, rooms, and signatories from the clinic workbook
+- expose the import both as a management command and as a custom admin-portal page
+- create missing records, reactivate matching inactive records, and fill blank signatory licenses when safe
+
+Do not:
+- delete records that are missing from the workbook
+- blindly rename existing records
+- overwrite non-blank conflicting signatory licenses automatically
+
+Reason:
+- the workbook is the best available seed source for master data
+- but master data still needs safe operational behavior because the workbook is not unquestionable truth
+- non-technical admins need an in-app import flow, not terminal-only setup
+
+### 2026-03-11: Release Workflow Uses Controlled Status Transitions
+
+Decision:
+- request items move through `encoding -> for_review -> released`
+- saving any real result payload moves an item to `for_review`
+- only `admin` or `system_owner` users can release or reopen items
+- released items become read-only until explicitly reopened
+- the print action records `printed_at` for released reports
+
+Release requirements:
+- at least one saved result value or attachment
+- selected medical technologist signatory
+
+Reason:
+- clinic results need explicit accountability, not silent status drift
+- released reports must not be editable without a deliberate reopen action
+- printed timestamps matter operationally, but should be tied to the real print action rather than plain preview access
+
 ### 2026-03-10: Importer Uses Signature-Based Versioning
 
 Decision:
