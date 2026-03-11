@@ -92,10 +92,21 @@ Implemented:
 - medtech/pathologist selection in result entry
 - initial HTML print preview for saved results
 - facility-branded print header
-- exam-specific print variants for `ABG` and `BBANK`
+- exam-specific print variants for `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, and `HEMATOLOGY`
+- microscopy-focused print variant for `URINE` and `FECALYSIS`
+- browser validation completed for `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, and `FECALYSIS` in both screen preview and print-media mode
+- workbook recalibration audit identifying source-data and importer-hardening issues
+- importer hardening completed:
+- header-aware note/reference mapping
+- blank-row-safe source hashing
+- workbook re-imported to latest published `v9` versions
 
 Not yet implemented:
 - custom admin exam builder UI
-- advanced print fidelity / export flow
+- advanced print parity for the remaining exams and any future export flow
 - reports/dashboard
 - master-data importer for physicians, rooms, and signatories
+
+Important current work item:
+- review [workbook_recalibration_audit.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\workbook_recalibration_audit.md) before modifying importer behavior or trusting workbook values blindly
+- use [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md) for the remaining clinic-confirmation items that should not be guessed by the developer

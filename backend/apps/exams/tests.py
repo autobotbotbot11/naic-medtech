@@ -13,6 +13,7 @@ from apps.exams.services.workbook_import import (
     is_internal_note_row,
     make_field_key,
     parse_reference_range,
+    sheet_payload,
 )
 
 
@@ -72,17 +73,90 @@ class WorkbookImportHelpersTests(SimpleTestCase):
         self.assertEqual(config["render_variant"], "bbank_crossmatch")
         self.assertFalse(config["show_reference_ranges"])
 
+    def test_default_render_profile_sets_serology_variant(self):
+        layout_type, config = default_render_profile(
+            "SEROLOGY",
+            has_sections=True,
+            has_reference_ranges=False,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.SECTIONED_REPORT)
+        self.assertEqual(config["render_variant"], "serology_panel")
+        self.assertEqual(config["option_to_section_keys"]["dengue_test"], "dengue_test")
+        self.assertEqual(config["option_to_field_keys"]["hbsag_screening"], ["hbsag_screening"])
+
+    def test_default_render_profile_sets_ogtt_variant(self):
+        layout_type, config = default_render_profile(
+            "OGTT - Blood Chemistry",
+            has_sections=True,
+            has_reference_ranges=True,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.SECTIONED_REPORT)
+        self.assertEqual(config["render_variant"], "ogtt_timeline")
+        self.assertEqual(config["option_to_section_keys"]["75g_ogtt"], "75g_oral_glucose_tolerance")
+        self.assertEqual(config["option_to_field_keys"]["2_hour_postprandial"], ["2_hours_post_prandial"])
+
+    def test_default_render_profile_sets_hematology_variant(self):
+        layout_type, config = default_render_profile(
+            "HEMATOLOGY",
+            has_sections=False,
+            has_reference_ranges=True,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.RESULT_TABLE)
+        self.assertEqual(config["render_variant"], "hematology_panel")
+        self.assertEqual(config["sex_specific_field_map"]["hemoglobin"]["female"], "hemoglobin_f")
+        self.assertEqual(
+            config["option_to_panels"]["cbc_platelet_count_esr"][2]["keys"],
+            ["esr"],
+        )
+
+    def test_default_render_profile_sets_urine_variant(self):
+        layout_type, config = default_render_profile(
+            "URINE- Clinical Microscopy",
+            has_sections=True,
+            has_reference_ranges=False,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.SECTIONED_REPORT)
+        self.assertEqual(config["render_variant"], "microscopy_sections")
+        self.assertEqual(
+            config["option_to_sections"]["urinalysis"],
+            ["macroscopic_finding", "clinical_finding", "microscopic_finding"],
+        )
+        self.assertEqual(
+            config["option_to_field_keys"]["pregnancy_test"],
+            ["microscopic_finding_pregnancy_test"],
+        )
+
+    def test_default_render_profile_sets_fecalysis_variant(self):
+        layout_type, config = default_render_profile(
+            "FECALYSIS - Clinical Microscopy",
+            has_sections=True,
+            has_reference_ranges=False,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.SECTIONED_REPORT)
+        self.assertEqual(config["render_variant"], "microscopy_sections")
+        self.assertEqual(
+            config["option_to_sections"]["fecalysis"],
+            ["macroscopic_finding", "microscopic_finding", "microscopic_finding_2"],
+        )
+        self.assertEqual(
+            config["option_to_field_keys"]["fobt"],
+            ["macroscopic_finding_fecal_occult_blood"],
+        )
+
 
 class WorkbookImportIntegrationTests(TestCase):
-    def write_workbook(self, path, sheet_title, rows, exam_options=None):
+    def write_workbook(self, path, sheet_title, rows, exam_options=None, headers=None):
         workbook = Workbook()
         worksheet = workbook.active
         worksheet.title = sheet_title
-        worksheet.cell(1, 1, "Field")
-        worksheet.cell(1, 2, "Input Type")
-        worksheet.cell(1, 3, "Selection / Unit")
-        worksheet.cell(1, 4, "Normal Range")
-        worksheet.cell(1, 5, "Notes")
+        headers = headers or ["Field", "Input Type", "Selection / Unit", "Normal Range", "Notes"]
+        for col_idx, header in enumerate(headers, start=1):
+            worksheet.cell(1, col_idx, header)
 
         if exam_options:
             worksheet.cell(7, 3, "\n".join(exam_options))
@@ -233,3 +307,82 @@ class WorkbookImportIntegrationTests(TestCase):
         self.assertEqual(version.fields.count(), 1)
         self.assertEqual(field.help_text, "")
         self.assertEqual(field.config_json["internal_note"], "Do not show to users")
+
+    def test_header_aware_notes_column_does_not_become_reference_text(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workbook_path = Path(temp_dir) / "bbank.xlsx"
+            self.write_workbook(
+                workbook_path,
+                "BBANK - Blood Bank",
+                [
+                    ("TYPE OF CROSSMATCHING", "", "", "", ""),
+                    (
+                        "VITAL SIGNS",
+                        "Predefined Selection",
+                        "BLOOD PRESSURE: mmHg\nPULSE RATE: bpm\n",
+                        "Use dropdowns plus numeric entry",
+                        "",
+                    ),
+                ],
+                headers=["Field", "Input Type", "Dropdown List (Options)", "Notes", None],
+            )
+
+            import_workbook(workbook_path)
+
+        exam = ExamDefinition.objects.get(exam_code="bbank")
+        version = exam.versions.get(version_no=1)
+        field = version.fields.get(field_key="type_of_crossmatching_vital_signs")
+
+        self.assertEqual(field.reference_text, "")
+        self.assertEqual(field.config_json["internal_note"], "Use dropdowns plus numeric entry")
+
+    def test_sheet_payload_ignores_meaningless_whitespace_rows(self):
+        workbook = Workbook()
+        worksheet = workbook.active
+        worksheet.title = "SEROLOGY"
+        worksheet.cell(1, 1, "Field")
+        worksheet.cell(1, 2, "Input Type")
+        worksheet.cell(1, 3, "Dropdown List (Options)")
+        worksheet.cell(1, 4, "Notes")
+        worksheet.cell(2, 1, "HbsAg SCREENING:")
+        worksheet.cell(2, 2, "Manual Entry")
+        worksheet.cell(500, 1, "   ")
+
+        payload = sheet_payload(worksheet)
+
+        self.assertEqual(len(payload["rows"]), 2)
+        self.assertEqual(payload["rows"][1]["field"], "HbsAg SCREENING:")
+
+    def test_whitespace_only_rows_do_not_force_new_import_version(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            workbook_path = Path(temp_dir) / "serology.xlsx"
+            self.write_workbook(
+                workbook_path,
+                "SEROLOGY",
+                [
+                    ("HbsAg SCREENING:", "Manual Entry", "", "", ""),
+                ],
+                headers=["Field", "Input Type", "Dropdown List (Options)", "Notes", None],
+            )
+
+            first_stats = import_workbook(workbook_path)
+
+            workbook = Workbook()
+            worksheet = workbook.active
+            worksheet.title = "SEROLOGY"
+            worksheet.cell(1, 1, "Field")
+            worksheet.cell(1, 2, "Input Type")
+            worksheet.cell(1, 3, "Dropdown List (Options)")
+            worksheet.cell(1, 4, "Notes")
+            worksheet.cell(2, 1, "HbsAg SCREENING:")
+            worksheet.cell(2, 2, "Manual Entry")
+            worksheet.cell(500, 1, "   ")
+            workbook.save(workbook_path)
+
+            second_stats = import_workbook(workbook_path)
+
+        exam = ExamDefinition.objects.get(exam_code="serology")
+
+        self.assertEqual(first_stats.created_versions, 1)
+        self.assertEqual(second_stats.skipped_versions, 1)
+        self.assertEqual(exam.versions.count(), 1)

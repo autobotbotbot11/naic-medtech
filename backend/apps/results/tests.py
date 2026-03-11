@@ -647,3 +647,973 @@ class ResultEntryFlowTests(TestCase):
         self.assertContains(response, "COMPATIBLE")
         self.assertContains(response, "120/80")
         self.assertContains(response, "Imelda A. Elemia")
+
+    def test_serology_variant_print_view_centers_selected_option(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="serology-variant",
+            exam_name="Serology Variant",
+            category="Serology",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="serology-variant-v1",
+            published_at=timezone.now(),
+        )
+        typhidot_option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="tyhpidot",
+            option_label="TYHPIDOT",
+            sort_order=1,
+            active=True,
+        )
+        hbsag_option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="hbsag_screening",
+            option_label="HBSAG SCREENING",
+            sort_order=2,
+            active=True,
+        )
+        typhidot_section = ExamSection.objects.create(
+            exam_version=version,
+            section_key="typhidot",
+            section_label="TYPHIDOT",
+            sort_order=1,
+            active=True,
+        )
+        igm_field = ExamField.objects.create(
+            exam_version=version,
+            section=typhidot_section,
+            field_key="typhidot_igm",
+            field_label="IgM",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+            config_json={},
+        )
+        igg_field = ExamField.objects.create(
+            exam_version=version,
+            section=typhidot_section,
+            field_key="typhidot_igg",
+            field_label="IgG",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=2,
+            active=True,
+            config_json={},
+        )
+        hbsag_field = ExamField.objects.create(
+            exam_version=version,
+            field_key="hbsag_screening",
+            field_label="HbsAg SCREENING:",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=3,
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="sectioned_report",
+            config_json={
+                "render_variant": "serology_panel",
+                "show_reference_ranges": False,
+                "show_units": True,
+                "option_to_section_keys": {
+                    "tyhpidot": "typhidot",
+                },
+                "option_to_field_keys": {
+                    "hbsag_screening": ["hbsag_screening"],
+                },
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=typhidot_option,
+        )
+        self.create_result_value(
+            item,
+            igm_field,
+            value_text="Reactive",
+            selected_option_value="reactive",
+            selected_option_label_snapshot="Reactive",
+        )
+        self.create_result_value(
+            item,
+            igg_field,
+            value_text="Non-Reactive",
+            selected_option_value="non_reactive",
+            selected_option_label_snapshot="Non-Reactive",
+        )
+        self.create_result_value(
+            item,
+            hbsag_field,
+            value_text="Negative",
+            selected_option_value="negative",
+            selected_option_label_snapshot="Negative",
+        )
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "serology-card-grid")
+        self.assertContains(response, "TYPHIDOT")
+        self.assertContains(response, "IgM")
+        self.assertContains(response, "Reactive")
+        self.assertContains(response, "Additional Saved Results")
+        self.assertContains(response, "HbsAg SCREENING:")
+        self.assertContains(response, "Negative")
+
+    def test_ogtt_variant_print_view_renders_timeline_and_flags(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="ogtt-variant",
+            exam_name="OGTT Variant",
+            category="Blood Chemistry",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="ogtt-variant-v1",
+            published_at=timezone.now(),
+        )
+        ogtt_option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="75g_ogtt",
+            option_label="75g OGTT",
+            sort_order=1,
+            active=True,
+        )
+        section = ExamSection.objects.create(
+            exam_version=version,
+            section_key="75g_oral_glucose_tolerance",
+            section_label="75G ORAL GLUCOSE TOLERANCE",
+            sort_order=1,
+            active=True,
+        )
+        fasting_field = ExamField.objects.create(
+            exam_version=version,
+            section=section,
+            field_key="75g_oral_glucose_tolerance_fasting_blood_sugar",
+            field_label="FASTING BLOOD SUGAR",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=1,
+            unit="mg/dl",
+            reference_text="70.27-124.32 mg/dl",
+            active=True,
+            config_json={},
+        )
+        first_hour_field = ExamField.objects.create(
+            exam_version=version,
+            section=section,
+            field_key="75g_oral_glucose_tolerance_1st_hour",
+            field_label="1ST HOUR",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=2,
+            unit="mg/dl",
+            reference_text="< 200 mg/dl",
+            active=True,
+            config_json={},
+        )
+        second_hour_field = ExamField.objects.create(
+            exam_version=version,
+            section=section,
+            field_key="75g_oral_glucose_tolerance_2nd_hour",
+            field_label="2ND HOUR",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=3,
+            unit="mg/dl",
+            reference_text="< 140 mg/dl",
+            active=True,
+            config_json={},
+        )
+        post_prandial_field = ExamField.objects.create(
+            exam_version=version,
+            field_key="2_hours_post_prandial",
+            field_label="2 HOURS POST PRANDIAL",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=4,
+            unit="mg/dl",
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="sectioned_report",
+            config_json={
+                "render_variant": "ogtt_timeline",
+                "show_reference_ranges": True,
+                "show_units": True,
+                "option_to_section_keys": {
+                    "75g_ogtt": "75g_oral_glucose_tolerance",
+                },
+                "option_to_field_keys": {
+                    "2_hour_postprandial": ["2_hours_post_prandial"],
+                },
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=ogtt_option,
+        )
+        self.create_result_value(
+            item,
+            fasting_field,
+            value_number="95",
+            reference_text_snapshot="70.27-124.32 mg/dl",
+        )
+        self.create_result_value(
+            item,
+            first_hour_field,
+            value_number="210",
+            reference_text_snapshot="< 200 mg/dl",
+            abnormal_flag=True,
+            abnormal_reason="Above limit (< 200 mg/dl)",
+        )
+        self.create_result_value(
+            item,
+            second_hour_field,
+            value_number="132",
+            reference_text_snapshot="< 140 mg/dl",
+        )
+        self.create_result_value(
+            item,
+            post_prandial_field,
+            value_number="118",
+        )
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "ogtt-timeline")
+        self.assertContains(response, "75G ORAL GLUCOSE TOLERANCE")
+        self.assertContains(response, "FASTING BLOOD SUGAR")
+        self.assertContains(response, "210")
+        self.assertContains(response, "Above limit (&lt; 200 mg/dl)")
+        self.assertContains(response, "Flagged Values")
+        self.assertContains(response, "Additional Saved Results")
+        self.assertContains(response, "2 HOURS POST PRANDIAL")
+        self.assertContains(response, "118")
+
+    def test_serology_field_based_variant_does_not_render_unselected_empty_tests(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="serology-field-variant",
+            exam_name="Serology Field Variant",
+            category="Serology",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="serology-field-variant-v1",
+            published_at=timezone.now(),
+        )
+        hbsag_option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="hbsag_screening",
+            option_label="HBSAG SCREENING",
+            sort_order=1,
+            active=True,
+        )
+        hbsag_field = ExamField.objects.create(
+            exam_version=version,
+            field_key="hbsag_screening",
+            field_label="HbsAg SCREENING:",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+            config_json={},
+        )
+        vdrl_field = ExamField.objects.create(
+            exam_version=version,
+            field_key="vdrl",
+            field_label="VDRL:",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=2,
+            active=True,
+            config_json={},
+        )
+        others_field = ExamField.objects.create(
+            exam_version=version,
+            field_key="others",
+            field_label="OTHERS",
+            input_type=ExamFieldInputTypeChoices.TEXT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=3,
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="sectioned_report",
+            config_json={
+                "render_variant": "serology_panel",
+                "show_reference_ranges": False,
+                "show_units": True,
+                "option_to_section_keys": {
+                    "tyhpidot": "typhidot",
+                },
+                "option_to_field_keys": {
+                    "hbsag_screening": ["hbsag_screening"],
+                },
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=hbsag_option,
+        )
+        self.create_result_value(
+            item,
+            hbsag_field,
+            value_text="NON-REACTIVE",
+            selected_option_value="non_reactive",
+            selected_option_label_snapshot="NON-REACTIVE",
+        )
+        self.create_result_value(
+            item,
+            others_field,
+            value_text="No additional findings.",
+        )
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "HBSAG SCREENING")
+        self.assertContains(response, "HbsAg SCREENING:")
+        self.assertContains(response, "NON-REACTIVE")
+        self.assertContains(response, "Additional Saved Results")
+        self.assertContains(response, "No additional findings.")
+        self.assertNotContains(response, "VDRL:")
+
+    def test_ogtt_field_based_variant_does_not_render_unselected_empty_tests(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="ogtt-field-variant",
+            exam_name="OGTT Field Variant",
+            category="Blood Chemistry",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="ogtt-field-variant-v1",
+            published_at=timezone.now(),
+        )
+        post_prandial_option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="2_hour_postprandial",
+            option_label="2-HOUR POSTPRANDIAL",
+            sort_order=1,
+            active=True,
+        )
+        post_prandial_field = ExamField.objects.create(
+            exam_version=version,
+            field_key="2_hours_post_prandial",
+            field_label="2 HOURS POST PRANDIAL",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=1,
+            unit="mg/dl",
+            active=True,
+            config_json={},
+        )
+        challenge_field = ExamField.objects.create(
+            exam_version=version,
+            field_key="50_g_oral_glucose_challenge",
+            field_label="50 G ORAL GLUCOSE CHALLENGE",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=2,
+            unit="mg/dl",
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="sectioned_report",
+            config_json={
+                "render_variant": "ogtt_timeline",
+                "show_reference_ranges": True,
+                "show_units": True,
+                "option_to_field_keys": {
+                    "2_hour_postprandial": ["2_hours_post_prandial"],
+                },
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=post_prandial_option,
+        )
+        self.create_result_value(
+            item,
+            post_prandial_field,
+            value_number="126",
+        )
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "2-HOUR POSTPRANDIAL")
+        self.assertContains(response, "2 HOURS POST PRANDIAL")
+        self.assertContains(response, "126")
+        self.assertNotContains(response, "50 G ORAL GLUCOSE CHALLENGE")
+
+    def test_hematology_variant_uses_patient_sex_and_option_panels(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="hematology-variant",
+            exam_name="Hematology Variant",
+            category="Hematology",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="hematology-variant-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="cbc_platelet_count_esr",
+            option_label="CBC, PLATELET COUNT, ESR",
+            sort_order=1,
+            active=True,
+        )
+        rbc_m = ExamField.objects.create(
+            exam_version=version,
+            field_key="rbc_count_m",
+            field_label="RBC COUNT (M)",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=1,
+            unit="/L",
+            reference_text="4.6 - 6.2 X 1012/L",
+            active=True,
+            config_json={},
+        )
+        rbc_f = ExamField.objects.create(
+            exam_version=version,
+            field_key="rbc_count_f",
+            field_label="RBC COUNT (F)",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=2,
+            unit="/L",
+            reference_text="4.2 - 5.4 X 1012/L",
+            active=True,
+            config_json={},
+        )
+        wbc = ExamField.objects.create(
+            exam_version=version,
+            field_key="wbc_count",
+            field_label="WBC COUNT",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=3,
+            unit="/L",
+            reference_text="5.0 - 10.0 X 109/L",
+            active=True,
+            config_json={},
+        )
+        hgb_m = ExamField.objects.create(
+            exam_version=version,
+            field_key="hemoglobin_m",
+            field_label="HEMOGLOBIN (M)",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=4,
+            unit="g/L",
+            reference_text="140-180 g/L",
+            active=True,
+            config_json={},
+        )
+        hgb_f = ExamField.objects.create(
+            exam_version=version,
+            field_key="hemoglobin_f",
+            field_label="HEMOGLOBIN (F)",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=5,
+            unit="g/L",
+            reference_text="120-160 g/L",
+            active=True,
+            config_json={},
+        )
+        hct_m = ExamField.objects.create(
+            exam_version=version,
+            field_key="hematocrit_m",
+            field_label="HEMATOCRIT (M)",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=6,
+            unit="/L",
+            reference_text="0.40-0.54 /L",
+            active=True,
+            config_json={},
+        )
+        hct_f = ExamField.objects.create(
+            exam_version=version,
+            field_key="hematocrit_f",
+            field_label="HEMATOCRIT (F)",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=7,
+            unit="/L",
+            reference_text="0.37-0.42 /L",
+            active=True,
+            config_json={},
+        )
+        platelet = ExamField.objects.create(
+            exam_version=version,
+            field_key="platelet_count",
+            field_label="PLATELET COUNT",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=8,
+            unit="/L",
+            reference_text="150 - 450 X 109/L",
+            active=True,
+            config_json={},
+        )
+        segmenters = ExamField.objects.create(
+            exam_version=version,
+            field_key="segmenters",
+            field_label="SEGMENTERS",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=9,
+            reference_text="0.50 - 0.70",
+            active=True,
+            config_json={},
+        )
+        esr_m = ExamField.objects.create(
+            exam_version=version,
+            field_key="esr_m",
+            field_label="E.S.R . (M)",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=10,
+            unit="mm/hr",
+            reference_text="0 - 10 mm/hr",
+            active=True,
+            config_json={},
+        )
+        esr_f = ExamField.objects.create(
+            exam_version=version,
+            field_key="esr_f",
+            field_label="E.S.R . (F)",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=11,
+            unit="mm/hr",
+            reference_text="0 - 20 mm/hr",
+            active=True,
+            config_json={},
+        )
+        clotting_time = ExamField.objects.create(
+            exam_version=version,
+            field_key="clotting_time",
+            field_label="CLOTTING TIME",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=12,
+            unit="minutes",
+            reference_text="1 - 6 minutes",
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="result_table",
+            config_json={
+                "render_variant": "hematology_panel",
+                "show_reference_ranges": True,
+                "show_units": True,
+                "option_to_panels": {
+                    "cbc_platelet_count_esr": [
+                        {"title": "Cell Counts", "keys": ["rbc_count", "wbc_count", "hemoglobin", "hematocrit", "platelet_count"]},
+                        {"title": "Differential Count", "keys": ["segmenters"]},
+                        {"title": "E.S.R.", "keys": ["esr"]},
+                    ],
+                },
+                "sex_specific_field_map": {
+                    "rbc_count": {"male": "rbc_count_m", "female": "rbc_count_f", "label": "RBC COUNT"},
+                    "hemoglobin": {"male": "hemoglobin_m", "female": "hemoglobin_f", "label": "HEMOGLOBIN"},
+                    "hematocrit": {"male": "hematocrit_m", "female": "hematocrit_f", "label": "HEMATOCRIT"},
+                    "esr": {"male": "esr_m", "female": "esr_f", "label": "E.S.R."},
+                },
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=option,
+        )
+        self.create_result_value(item, rbc_f, value_number="4.8", reference_text_snapshot="4.2 - 5.4 X 1012/L")
+        self.create_result_value(item, wbc, value_number="6.5", reference_text_snapshot="5.0 - 10.0 X 109/L")
+        self.create_result_value(item, hgb_f, value_number="132", reference_text_snapshot="120-160 g/L")
+        self.create_result_value(item, hct_f, value_number="0.39", reference_text_snapshot="0.37-0.42 /L")
+        self.create_result_value(item, platelet, value_number="230", reference_text_snapshot="150 - 450 X 109/L")
+        self.create_result_value(item, segmenters, value_number="0.61", reference_text_snapshot="0.50 - 0.70")
+        self.create_result_value(item, esr_f, value_number="8", reference_text_snapshot="0 - 20 mm/hr")
+        self.create_result_value(item, clotting_time, value_number="4", reference_text_snapshot="1 - 6 minutes")
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "hematology-panels")
+        self.assertContains(response, "Reference values aligned to Female patient data.")
+        self.assertContains(response, "RBC COUNT")
+        self.assertContains(response, "4.8")
+        self.assertContains(response, "E.S.R.")
+        self.assertContains(response, "Additional Saved Results")
+        self.assertContains(response, "CLOTTING TIME")
+        self.assertNotContains(response, "RBC COUNT (M)")
+        self.assertNotContains(response, "HEMOGLOBIN (M)")
+
+    def test_microscopy_variant_excludes_pregnancy_field_for_plain_urinalysis(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="urine-variant",
+            exam_name="Urine Variant",
+            category="Urine",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="urine-variant-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="urinalysis",
+            option_label="URINALYSIS",
+            sort_order=1,
+            active=True,
+        )
+        macro = ExamSection.objects.create(
+            exam_version=version,
+            section_key="macroscopic_finding",
+            section_label="MACROSCOPIC FINDING",
+            sort_order=1,
+            active=True,
+        )
+        clinical = ExamSection.objects.create(
+            exam_version=version,
+            section_key="clinical_finding",
+            section_label="CLINICAL FINDING",
+            sort_order=2,
+            active=True,
+        )
+        microscopic = ExamSection.objects.create(
+            exam_version=version,
+            section_key="microscopic_finding",
+            section_label="MICROSCOPIC FINDING",
+            sort_order=3,
+            active=True,
+        )
+        color = ExamField.objects.create(
+            exam_version=version,
+            section=macro,
+            field_key="macroscopic_finding_color",
+            field_label="Color",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+            config_json={},
+        )
+        sugar = ExamField.objects.create(
+            exam_version=version,
+            section=clinical,
+            field_key="clinical_finding_sugar",
+            field_label="Sugar",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=2,
+            active=True,
+            config_json={},
+        )
+        wbc = ExamField.objects.create(
+            exam_version=version,
+            section=microscopic,
+            field_key="microscopic_finding_white_blood_cell",
+            field_label="White Blood Cell",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=3,
+            unit="/HPF",
+            active=True,
+            config_json={},
+        )
+        pregnancy = ExamField.objects.create(
+            exam_version=version,
+            section=microscopic,
+            field_key="microscopic_finding_pregnancy_test",
+            field_label="Pregnancy Test",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=4,
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="sectioned_report",
+            config_json={
+                "render_variant": "microscopy_sections",
+                "show_reference_ranges": False,
+                "show_units": True,
+                "option_to_sections": {
+                    "urinalysis": ["macroscopic_finding", "clinical_finding", "microscopic_finding"],
+                },
+                "option_to_excluded_field_keys": {
+                    "urinalysis": ["microscopic_finding_pregnancy_test"],
+                },
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=option,
+        )
+        self.create_result_value(item, color, value_text="YELLOW")
+        self.create_result_value(item, sugar, value_text="NEGATIVE")
+        self.create_result_value(item, wbc, value_number="2")
+        self.create_result_value(item, pregnancy, value_text="NEGATIVE")
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "microscopy-grid")
+        self.assertContains(response, "MACROSCOPIC FINDING")
+        self.assertContains(response, "Color")
+        self.assertContains(response, "White Blood Cell")
+        self.assertNotContains(response, "Pregnancy Test")
+
+    def test_microscopy_variant_field_only_option_does_not_render_empty_sections(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="fecalysis-variant",
+            exam_name="Fecalysis Variant",
+            category="Fecalysis",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="fecalysis-variant-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="fobt",
+            option_label="FOBT",
+            sort_order=1,
+            active=True,
+        )
+        macro = ExamSection.objects.create(
+            exam_version=version,
+            section_key="macroscopic_finding",
+            section_label="MACROSCOPIC FINDING",
+            sort_order=1,
+            active=True,
+        )
+        occult = ExamField.objects.create(
+            exam_version=version,
+            section=macro,
+            field_key="macroscopic_finding_fecal_occult_blood",
+            field_label="FECAL OCCULT BLOOD",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+            config_json={},
+        )
+        color = ExamField.objects.create(
+            exam_version=version,
+            section=macro,
+            field_key="macroscopic_finding_color",
+            field_label="COLOR",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=2,
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="sectioned_report",
+            config_json={
+                "render_variant": "microscopy_sections",
+                "show_reference_ranges": False,
+                "show_units": True,
+                "option_to_field_keys": {
+                    "fobt": ["macroscopic_finding_fecal_occult_blood"],
+                },
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=option,
+        )
+        self.create_result_value(item, occult, value_text="POSITIVE")
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "FOBT")
+        self.assertContains(response, "FECAL OCCULT BLOOD")
+        self.assertContains(response, "POSITIVE")
+        self.assertNotContains(response, "COLOR")
+        self.assertNotContains(response, "MACROSCOPIC FINDING")
+
+    def test_microscopy_variant_disambiguates_duplicate_section_titles(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="fecalysis-duplicate-sections",
+            exam_name="Fecalysis Duplicate Sections",
+            category="Fecalysis",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="fecalysis-duplicate-sections-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="fecalysis",
+            option_label="FECALYSIS",
+            sort_order=1,
+            active=True,
+        )
+        macro = ExamSection.objects.create(
+            exam_version=version,
+            section_key="macroscopic_finding",
+            section_label="MACROSCOPIC FINDING",
+            sort_order=1,
+            active=True,
+        )
+        micro_one = ExamSection.objects.create(
+            exam_version=version,
+            section_key="microscopic_finding",
+            section_label="MICROSCOPIC FINDING",
+            sort_order=2,
+            active=True,
+        )
+        micro_two = ExamSection.objects.create(
+            exam_version=version,
+            section_key="microscopic_finding_2",
+            section_label="MICROSCOPIC FINDING",
+            sort_order=3,
+            active=True,
+        )
+        macro_field = ExamField.objects.create(
+            exam_version=version,
+            section=macro,
+            field_key="macroscopic_finding_color",
+            field_label="COLOR",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+            config_json={},
+        )
+        micro_one_field = ExamField.objects.create(
+            exam_version=version,
+            section=micro_one,
+            field_key="microscopic_finding_pus",
+            field_label="PUS",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=2,
+            unit="/HPF",
+            active=True,
+            config_json={},
+        )
+        micro_two_field = ExamField.objects.create(
+            exam_version=version,
+            section=micro_two,
+            field_key="microscopic_finding_2_parasites",
+            field_label="PARASITES",
+            input_type=ExamFieldInputTypeChoices.TEXT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=3,
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="sectioned_report",
+            config_json={
+                "render_variant": "microscopy_sections",
+                "show_reference_ranges": False,
+                "show_units": True,
+                "option_to_sections": {
+                    "fecalysis": [
+                        "macroscopic_finding",
+                        "microscopic_finding",
+                        "microscopic_finding_2",
+                    ],
+                },
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=option,
+        )
+        self.create_result_value(item, macro_field, value_text="BROWN")
+        self.create_result_value(item, micro_one_field, value_number="1")
+        self.create_result_value(item, micro_two_field, value_text="NO OVA OR PARASITES SEEN")
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "MICROSCOPIC FINDING (1)")
+        self.assertContains(response, "MICROSCOPIC FINDING (2)")
+        self.assertContains(response, "PARASITES")
+        self.assertContains(response, "NO OVA OR PARASITES SEEN")

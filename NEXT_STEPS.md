@@ -10,6 +10,14 @@ Recently completed:
 - searchable/filterable user and master-data lists
 - temporary-password helper tools for onboarding/reset pages
 - clearer empty states, help text, and current-file previews
+- workbook recalibration audit completed
+- importer hardening completed
+- clinic confirmation queue documented
+- workbook re-imported under hardened importer
+- exam-specific print variants completed for `SEROLOGY` and `OGTT`
+- browser validation completed for `SEROLOGY` and `OGTT` in both screen preview and print-media mode
+- exam-specific print refinement completed for `HEMATOLOGY`, `URINE`, and `FECALYSIS`
+- browser validation completed for `HEMATOLOGY`, `URINE`, and `FECALYSIS` in both screen preview and print-media mode
 
 ## 1. Print / Render Engine Refinement
 
@@ -20,7 +28,7 @@ Why this is next:
 - an initial HTML print-preview layer now exists
 - organization/facility branding headers are now in the print flow
 - the next work is improving fidelity and coverage for real clinic use
-- `ABG` and `BBANK` custom variants are already implemented
+- `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, and `FECALYSIS` custom variants are already implemented
 - the next refinement targets should extend that pattern only where needed
 
 Starting points:
@@ -45,17 +53,39 @@ Implementation targets:
 - attachment-aware handling where needed
 - improve clinic-specific print fidelity for real imported exams
 - next likely candidates:
-- `SEROLOGY`
-- `OGTT`
-- `HEMATOLOGY`
+- `PROTIME/APTT`
+- `SEMEN`
+- `MICROBIOLOGY`
 - verify browser print-to-PDF keeps the same compact layout as on-screen preview
 - decide whether browser print is sufficient or PDF export is required
 
 Acceptance criteria:
-- at least one real imported exam can be rendered end-to-end
+- multiple real imported exams can be rendered end-to-end
 - result output is based on saved metadata and saved result values
 
-## 2. Master Data Import
+## 2. Clinic Confirmation Pass For Suspicious Source Items
+
+Goal:
+- keep a clean boundary between technical assumptions and clinic-confirmed truth
+
+Why:
+- importer hardening is now in place
+- some workbook items are still intentionally unresolved because they require clinic/lab confirmation, not developer guessing
+
+Starting points:
+- [workbook_recalibration_audit.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\workbook_recalibration_audit.md)
+- [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
+
+Targets:
+- suspicious glucose ranges
+- spelling/label confirmation such as `Typhidot`
+- unresolved signatory-name note in `FECALYSIS`
+- package meaning confirmation for combined exam options
+
+Acceptance criteria:
+- the project has a clear clinic-facing queue of items that must be confirmed instead of guessed
+
+## 3. Master Data Import
 
 Goal:
 - populate physicians, rooms, and signatories from known source data
@@ -72,7 +102,7 @@ Targets:
 Acceptance criteria:
 - admin does not need to create all common master data manually
 
-## 3. Admin Exam Builder
+## 4. Admin Exam Builder
 
 Goal:
 - allow controlled creation/editing of exam definitions inside the app
@@ -94,7 +124,7 @@ Do not build:
 Acceptance criteria:
 - admin can create a new draft exam version and publish it safely
 
-## 4. Review / Release Workflow
+## 5. Review / Release Workflow
 
 Goal:
 - move from plain encoding into clinic-ready result release
@@ -109,7 +139,7 @@ Requirements:
 Acceptance criteria:
 - request items can move through a controlled status flow
 
-## 5. Search / Reporting
+## 6. Search / Reporting
 
 Goal:
 - basic operational visibility

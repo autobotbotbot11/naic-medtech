@@ -100,7 +100,7 @@ UNSCOPED_FIELDS_BY_SHEET = {
     },
 }
 
-IMPORTER_SIGNATURE_VERSION = 6
+IMPORTER_SIGNATURE_VERSION = 9
 
 
 @dataclass
@@ -113,6 +113,25 @@ class ImportStats:
     created_fields: int = 0
     created_ranges: int = 0
     created_rules: int = 0
+
+
+@dataclass
+class SheetColumnConfig:
+    field_col: int = 1
+    input_type_col: int = 2
+    raw_options_col: int = 3
+    reference_col: int | None = None
+    notes_col: int | None = None
+    sheet_notes: list[str] | None = None
+
+
+HEADER_ALIASES = {
+    "field": {"field"},
+    "input_type": {"input type"},
+    "raw_options": {"dropdown list (options)", "selection / unit"},
+    "reference": {"normal value", "normal values", "normal range", "reference", "reference range"},
+    "notes": {"notes", "note"},
+}
 
 
 def normalize_text(value):
@@ -131,6 +150,65 @@ def split_multiline(value):
     parts = [normalize_text(part) for part in value.splitlines()]
     cleaned = [part for part in parts if part and set(part) != {"-"}]
     return cleaned
+
+
+def normalize_header(value):
+    return normalize_text(value).lower().rstrip(":")
+
+
+def resolve_sheet_columns(ws):
+    config = SheetColumnConfig(sheet_notes=[])
+
+    for col_idx in range(1, min(ws.max_column, 5) + 1):
+        header_value = ws.cell(1, col_idx).value
+        normalized_header = normalize_header(header_value)
+        if not normalized_header:
+            continue
+
+        matched_role = None
+        for role, aliases in HEADER_ALIASES.items():
+            if normalized_header in aliases:
+                matched_role = role
+                break
+
+        if matched_role == "field":
+            config.field_col = col_idx
+        elif matched_role == "input_type":
+            config.input_type_col = col_idx
+        elif matched_role == "raw_options":
+            config.raw_options_col = col_idx
+        elif matched_role == "reference":
+            config.reference_col = col_idx
+        elif matched_role == "notes":
+            config.notes_col = col_idx
+        elif col_idx >= 4:
+            config.sheet_notes.append(normalize_text(header_value))
+
+    return config
+
+
+def get_cell_text(ws, row_idx, col_idx):
+    if not col_idx:
+        return ""
+    return normalize_text(ws.cell(row_idx, col_idx).value)
+
+
+def get_cell_value(ws, row_idx, col_idx):
+    if not col_idx:
+        return ""
+    return ws.cell(row_idx, col_idx).value or ""
+
+
+def row_has_meaningful_content(field, input_type, raw_options, reference, notes):
+    return any(
+        [
+            field,
+            input_type,
+            normalize_text(raw_options),
+            reference,
+            notes,
+        ]
+    )
 
 
 def make_meta(sheet_name):
@@ -305,19 +383,38 @@ def build_field_config(field_input_type, raw_options, internal_note=""):
 
 
 def sheet_payload(ws):
+    column_config = resolve_sheet_columns(ws)
     rows = []
     for row_idx in range(1, ws.max_row + 1):
+        field = get_cell_text(ws, row_idx, column_config.field_col)
+        input_type = get_cell_text(ws, row_idx, column_config.input_type_col)
+        raw_options = get_cell_value(ws, row_idx, column_config.raw_options_col)
+        reference = get_cell_text(ws, row_idx, column_config.reference_col)
+        notes = get_cell_text(ws, row_idx, column_config.notes_col)
+
+        if not row_has_meaningful_content(field, input_type, raw_options, reference, notes):
+            continue
+
         row = {
             "row": row_idx,
-            "field": normalize_text(ws.cell(row_idx, 1).value),
-            "input_type": normalize_text(ws.cell(row_idx, 2).value),
-            "raw_options": ws.cell(row_idx, 3).value or "",
-            "reference": normalize_text(ws.cell(row_idx, 4).value),
-            "notes": normalize_text(ws.cell(row_idx, 5).value),
+            "field": field,
+            "input_type": input_type,
+            "raw_options": raw_options,
+            "reference": reference,
+            "notes": notes,
         }
-        if any(row.values()):
-            rows.append(row)
-    return rows
+        rows.append(row)
+    return {
+        "rows": rows,
+        "columns": {
+            "field": column_config.field_col,
+            "input_type": column_config.input_type_col,
+            "raw_options": column_config.raw_options_col,
+            "reference": column_config.reference_col,
+            "notes": column_config.notes_col,
+        },
+        "sheet_notes": column_config.sheet_notes or [],
+    }
 
 
 def payload_hash(payload):
@@ -515,6 +612,151 @@ def default_render_profile(sheet_name, has_sections, has_reference_ranges):
                 ],
             }
         )
+    elif sheet_name == "SEROLOGY":
+        config.update(
+            {
+                "render_variant": "serology_panel",
+                "show_reference_ranges": False,
+                "option_to_section_keys": {
+                    "dengue_test": "dengue_test",
+                    "tyhpidot": "typhidot",
+                },
+                "option_to_field_keys": {
+                    "hbsag_screening": ["hbsag_screening"],
+                    "vdrl": ["vdrl"],
+                    "anti_hcv": ["anti_hcv"],
+                    "aso_titer": ["aso_titer"],
+                },
+            }
+        )
+    elif sheet_name == "OGTT - Blood Chemistry":
+        config.update(
+            {
+                "render_variant": "ogtt_timeline",
+                "show_reference_ranges": True,
+                "option_to_section_keys": {
+                    "50g_ogtt": "50g_oral_glucose_tolerance",
+                    "75g_ogtt": "75g_oral_glucose_tolerance",
+                    "100g_ogtt": "100g_oral_glucose_tolerance",
+                },
+                "option_to_field_keys": {
+                    "2_hour_postprandial": ["2_hours_post_prandial"],
+                    "50g_oral_glucose_challenge": ["50_g_oral_glucose_challenge"],
+                },
+            }
+        )
+    elif sheet_name == "HEMATOLOGY":
+        config.update(
+            {
+                "render_variant": "hematology_panel",
+                "option_to_panels": {
+                    "cbc_platelet_count_blood_typing": [
+                        {"title": "Cell Counts", "keys": ["rbc_count", "wbc_count", "hemoglobin", "hematocrit", "platelet_count"]},
+                        {"title": "Differential Count", "keys": ["segmenters", "lymphocytes", "monocytes", "eosinophils", "stab"]},
+                        {"title": "Blood Typing", "keys": ["blood_typing"]},
+                    ],
+                    "hgb_hct_platelet_count": [
+                        {"title": "Core Results", "keys": ["hemoglobin", "hematocrit", "platelet_count"]},
+                    ],
+                    "blood_typing": [
+                        {"title": "Blood Typing", "keys": ["blood_typing"]},
+                    ],
+                    "cbc_platelet_count_esr": [
+                        {"title": "Cell Counts", "keys": ["rbc_count", "wbc_count", "hemoglobin", "hematocrit", "platelet_count"]},
+                        {"title": "Differential Count", "keys": ["segmenters", "lymphocytes", "monocytes", "eosinophils", "stab"]},
+                        {"title": "E.S.R.", "keys": ["esr"]},
+                    ],
+                    "cbc_platelet_count": [
+                        {"title": "Cell Counts", "keys": ["rbc_count", "wbc_count", "hemoglobin", "hematocrit", "platelet_count"]},
+                        {"title": "Differential Count", "keys": ["segmenters", "lymphocytes", "monocytes", "eosinophils", "stab"]},
+                    ],
+                },
+                "sex_specific_field_map": {
+                    "rbc_count": {
+                        "male": "rbc_count_m",
+                        "female": "rbc_count_f",
+                        "label": "RBC COUNT",
+                    },
+                    "hemoglobin": {
+                        "male": "hemoglobin_m",
+                        "female": "hemoglobin_f",
+                        "label": "HEMOGLOBIN",
+                    },
+                    "hematocrit": {
+                        "male": "hematocrit_m",
+                        "female": "hematocrit_f",
+                        "label": "HEMATOCRIT",
+                    },
+                    "esr": {
+                        "male": "esr_m",
+                        "female": "esr_f",
+                        "label": "E.S.R.",
+                    },
+                },
+            }
+        )
+    elif sheet_name == "URINE- Clinical Microscopy":
+        config.update(
+            {
+                "render_variant": "microscopy_sections",
+                "show_reference_ranges": False,
+                "option_to_sections": {
+                    "urinalysis": [
+                        "macroscopic_finding",
+                        "clinical_finding",
+                        "microscopic_finding",
+                    ],
+                    "urinalysis_urine_ketone": [
+                        "macroscopic_finding",
+                        "clinical_finding",
+                        "microscopic_finding",
+                    ],
+                    "urinalysis_pregnancy_test": [
+                        "macroscopic_finding",
+                        "clinical_finding",
+                        "microscopic_finding",
+                    ],
+                    "urinalysis_pregnancy_test_blood": [
+                        "macroscopic_finding",
+                        "clinical_finding",
+                        "microscopic_finding",
+                    ],
+                },
+                "option_to_field_keys": {
+                    "pregnancy_test": ["microscopic_finding_pregnancy_test"],
+                    "pregnancy_test_blood": ["microscopic_finding_pregnancy_test"],
+                },
+                "option_to_excluded_field_keys": {
+                    "urinalysis": ["microscopic_finding_pregnancy_test"],
+                    "urinalysis_urine_ketone": ["microscopic_finding_pregnancy_test"],
+                },
+            }
+        )
+    elif sheet_name == "FECALYSIS - Clinical Microscopy":
+        config.update(
+            {
+                "render_variant": "microscopy_sections",
+                "show_reference_ranges": False,
+                "option_to_sections": {
+                    "fecalysis": [
+                        "macroscopic_finding",
+                        "microscopic_finding",
+                        "microscopic_finding_2",
+                    ],
+                    "fecalysis_fobt": [
+                        "macroscopic_finding",
+                        "microscopic_finding",
+                        "microscopic_finding_2",
+                    ],
+                },
+                "option_to_field_keys": {
+                    "fobt": ["macroscopic_finding_fecal_occult_blood"],
+                },
+                "option_to_excluded_field_keys": {
+                    "fecalysis": ["macroscopic_finding_fecal_occult_blood"],
+                },
+            }
+        )
 
     return layout_type, config
 
@@ -534,6 +776,9 @@ def import_workbook(
     for ws in wb.worksheets:
         meta = make_meta(ws.title)
         payload = sheet_payload(ws)
+        payload_rows = payload["rows"]
+        raw_options_col = payload["columns"]["raw_options"]
+        sheet_notes = payload.get("sheet_notes", [])
         source_reference = build_source_reference(
             sheet_name=ws.title,
             payload=payload,
@@ -589,7 +834,7 @@ def import_workbook(
         section_sort_order = 0
         field_sort_order = 0
 
-        exam_option_lines = split_multiline(ws.cell(7, 3).value)
+        exam_option_lines = split_multiline(get_cell_value(ws, 7, raw_options_col))
         for position, option_label in enumerate(exam_option_lines, start=1):
             option = ExamOption.objects.create(
                 exam_version=version,
@@ -601,7 +846,7 @@ def import_workbook(
             options_by_key[option.option_key] = option
             stats.created_options += 1
 
-        for row in payload:
+        for row in payload_rows:
             field_label = row["field"]
             input_type = row["input_type"]
             raw_options = row["raw_options"]
@@ -697,6 +942,7 @@ def import_workbook(
 
         if ws.title == "COVID 19 ANTIGEN (RAPID TEST) -":
             field_sort_order += 1
+            covid_note = sheet_notes[0] if sheet_notes else "kelangan may picture sa result"
             attachment_field = ExamField.objects.create(
                 exam_version=version,
                 section=None,
@@ -711,7 +957,7 @@ def import_workbook(
                 help_text="",
                 placeholder_text="",
                 reference_text="",
-                config_json={"internal_note": "Imported from workbook note: kelangan may picture sa result"},
+                config_json={"internal_note": f"Imported from workbook note: {covid_note}"},
                 supports_attachment=True,
                 active=True,
             )

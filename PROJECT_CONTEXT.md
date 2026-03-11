@@ -43,6 +43,12 @@ Reason:
 - the workbook is more complete for fields, options, and expected input
 - the print templates are outdated and not fully aligned
 
+Important refinement after later audit:
+- the workbook is still the primary import/discovery artifact
+- but it is not clean enough to be treated as unquestionable final truth
+- the workbook contains developer notes, unresolved comments, spelling/spacing issues, and sheet-level structural inconsistencies
+- validated imported configuration inside the app should become the operational truth
+
 ## 3. Key Product Decision
 
 The original design problem was that exam attributes vary a lot, which makes a fixed table-per-exam database messy.
@@ -111,7 +117,7 @@ These were the major design risks discovered during analysis:
 
 4. `Rendering/printing`
 - dynamic exam data needs a separate rendering strategy
-- this is not yet fully implemented
+- an initial metadata-driven print engine now exists, but full clinic parity is still not complete for every exam
 
 5. `Admin safety`
 - future admin exam-builder must validate configurations before publish
@@ -163,10 +169,14 @@ Current implementation status:
 - request-item creation flow exists
 - dynamic result-entry UI exists
 - initial print preview/render layer exists
+- `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, and `HEMATOLOGY` now have dedicated print variants
+- `URINE` and `FECALYSIS` now use a dedicated microscopy print variant
+- `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, and `FECALYSIS` were browser-validated in both screen preview and print-media mode
 - operational app pages are protected behind authentication
+- a workbook recalibration audit has identified source-quality issues and importer-hardening work that should happen before deeper metadata-dependent feature work
 
 Not yet implemented:
-- advanced print layout parity and export flow
+- advanced print parity for the remaining exams and any future export flow
 - configurable admin exam-builder UI
 - master-data importer for physicians/rooms/signatories
 - release/approval workflow beyond basic statuses
@@ -238,9 +248,11 @@ What it currently does:
 Important importer behavior:
 - source versioning uses an importer signature, not just raw workbook content
 - this allows re-importing a new published version when importer logic changes
+- importer is now header-aware per sheet for `reference` vs `notes` handling
+- blank formatted rows are now excluded from payload hashing so formatting noise does not force new import versions
 
 Current importer signature:
-- `IMPORTER_SIGNATURE_VERSION = 6`
+- `IMPORTER_SIGNATURE_VERSION = 9`
 
 Special handling already implemented:
 - `SEROLOGY` and `OGTT` unscoped fields are fixed
@@ -250,31 +262,38 @@ Special handling already implemented:
 - workbook rows labeled `NOTE` are skipped during import and are not rendered as encoder or print fields
 - `ABG` gets a dedicated compact print variant
 - `BBANK` gets a dedicated crossmatch print variant
+- `SEROLOGY` gets a focused option-aware print variant
+- `OGTT` gets a timeline-style option-aware print variant
+- `HEMATOLOGY` gets a panel-based option-aware print variant with sex-specific field resolution
+- `URINE` and `FECALYSIS` use a microscopy-focused print variant that supports section-based and field-only package rendering
+- field-based option variants now require explicit field mappings and do not fall back to the general section
+- duplicate microscopy section titles can be numbered in the print renderer, e.g. `MICROSCOPIC FINDING (1)` and `MICROSCOPIC FINDING (2)`, to avoid ambiguous headings without altering workbook source labels
+- `BBANK` latest published import no longer misreads the vital-signs developer note as `reference_text`
 
 ## 10. Current Local Data State
 
 As of the last verified state in this repository:
 - `16` exam definitions exist
 - `16` published exam versions exist
-- the current published versions in the local database are `v6` for all imported exams
+- the current published versions in the local database are `v9` for all imported exams
 
 Published exam codes in local DB:
-- `abg:v6`
-- `bbank:v6`
-- `bcfemale:v6`
-- `bcmale:v6`
-- `cardiaci:v6`
-- `covid-19-antigen-rapid-test:v6`
-- `fecalysis:v6`
-- `hba1c:v6`
-- `hematology:v6`
-- `hiv-1-2-testing:v6`
-- `microbiology:v6`
-- `ogtt:v6`
-- `protime-aptt:v6`
-- `semen:v6`
-- `serology:v6`
-- `urine:v6`
+- `abg:v9`
+- `bbank:v9`
+- `bcfemale:v9`
+- `bcmale:v9`
+- `cardiaci:v9`
+- `covid-19-antigen-rapid-test:v9`
+- `fecalysis:v9`
+- `hba1c:v9`
+- `hematology:v9`
+- `hiv-1-2-testing:v9`
+- `microbiology:v9`
+- `ogtt:v9`
+- `protime-aptt:v9`
+- `semen:v9`
+- `serology:v9`
+- `urine:v9`
 
 Important note:
 - these version numbers reflect repeated local imports during development
@@ -419,28 +438,36 @@ Important note:
 Recommended next implementation order:
 
 1. print/render engine refinement
-- initial HTML print preview is already implemented
+- importer hardening and workbook recalibration baseline are already done
+- remaining data-review follow-up items are listed in [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
 - continue from `ExamRenderProfile`
-- improve layout fidelity for real clinic output
+- improve layout fidelity for the remaining real clinic exams
+- `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, and `FECALYSIS` are already implemented and browser-validated
+- next likely print targets are `PROTIME/APTT`, `SEMEN`, and `MICROBIOLOGY`
 - decide whether PDF generation is needed or browser-print is enough
 
-2. master-data import
+2. clinic confirmation pass for suspicious source items
+- audit findings are documented in [workbook_recalibration_audit.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\workbook_recalibration_audit.md)
+- clinic-facing queue is documented in [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
+- confirm suspicious ranges, spelling, signatory names, and package meanings
+
+3. master-data import
 - physicians
 - rooms
 - signatories
 - organization/facility branding is already admin-manageable, but the workbook-based importers for other master data do not exist yet
 
-3. admin exam-builder UI
+4. admin exam-builder UI
 - create draft exam versions
 - add fields/options/sections/rules
 - validate before publish
 
-4. release workflow
+5. release workflow
 - medtech/pathologist assignment
 - review/release actions
 - printed/released timestamps
 
-5. reports/search
+6. reports/search
 - abnormal results
 - per-exam daily counts
 - patient result history
@@ -457,6 +484,8 @@ Most useful ones:
 - [system_erd.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\system_erd.md)
 - [versioning_and_rules_design.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\versioning_and_rules_design.md)
 - [admin_exam_builder_flow.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\admin_exam_builder_flow.md)
+- [workbook_recalibration_audit.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\workbook_recalibration_audit.md)
+- [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
 
 ## 16. Fast Onboarding For a New Agent
 

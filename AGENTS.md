@@ -96,9 +96,20 @@ Already implemented:
 - facility-branded print header
 - ABG compact print variant
 - BBANK crossmatch print variant
+- SEROLOGY focused print variant
+- OGTT timeline print variant
+- HEMATOLOGY panel print variant
+- URINE and FECALYSIS microscopy print variant
+- browser-level print validation for SEROLOGY, OGTT, HEMATOLOGY, URINE, and FECALYSIS
+- workbook recalibration audit doc capturing source-quality and importer-risk findings
+- importer hardening:
+- header-aware reference/note mapping
+- meaningful-row payload hashing
+- workbook re-import to published `v9` versions
+- clinic confirmation queue for unresolved workbook items
 
 Not yet implemented:
-- advanced print fidelity / export flow
+- advanced print parity for the remaining exams and any future export flow
 - admin exam-builder UI
 - master-data importer
 - full release workflow
@@ -119,6 +130,10 @@ If you are changing exam-import behavior, also run:
 ```powershell
 python backend\manage.py import_exam_workbook --file "NAIC MEDTECH SYSTEM DATA.xlsx"
 ```
+
+Before continuing deeper metadata-dependent feature work, review:
+- [tmp/analysis/workbook_recalibration_audit.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\workbook_recalibration_audit.md)
+- [tmp/analysis/clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
 
 ## If You Change the Architecture or Workflow
 

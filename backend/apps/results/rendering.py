@@ -1,3 +1,4 @@
+from collections import Counter, defaultdict
 from decimal import Decimal
 
 from django.utils import timezone
@@ -209,6 +210,33 @@ def entries_by_field_keys(groups, field_keys):
     return [entry for field_key in field_keys if (entry := first_entry_by_field_key(groups, field_key))]
 
 
+def field_entries_for_group(group):
+    return split_group_entries(group)["fields"]
+
+
+def entries_with_values(entries):
+    return [entry for entry in entries if entry.get("has_value")]
+
+
+def nonempty_groups(groups):
+    populated = []
+    for group in groups:
+        valued_entries = entries_with_values(field_entries_for_group(group))
+        grouped_entries = [entry for entry in split_group_entries(group)["grouped"] if entry.get("has_value")]
+        note_entries = split_group_entries(group)["notes"]
+        if valued_entries or grouped_entries or note_entries:
+            populated.append(
+                {
+                    "title": group["title"],
+                    "section_key": group["section_key"],
+                    "entries": valued_entries,
+                    "grouped_entries": grouped_entries,
+                    "notes": note_entries,
+                }
+            )
+    return populated
+
+
 def split_group_entries(group):
     if not group:
         return {"fields": [], "grouped": [], "notes": []}
@@ -218,6 +246,79 @@ def split_group_entries(group):
         "grouped": [entry for entry in group["entries"] if entry["kind"] == "grouped"],
         "notes": [entry for entry in group["entries"] if entry["kind"] == "note"],
     }
+
+
+def clone_entry(entry, **updates):
+    cloned = dict(entry)
+    cloned.update(updates)
+    return cloned
+
+
+def filter_entries(entries, excluded_field_keys=None):
+    excluded_field_keys = set(excluded_field_keys or [])
+    return [entry for entry in entries if entry.get("field_key") not in excluded_field_keys]
+
+
+def option_section_groups(groups, section_keys, excluded_field_keys=None, populated_only=False):
+    section_groups = []
+    for section_key in section_keys:
+        group = first_group_by_section_key(groups, section_key)
+        if not group:
+            continue
+        entries = filter_entries(field_entries_for_group(group), excluded_field_keys)
+        if populated_only:
+            entries = entries_with_values(entries)
+        if entries:
+            section_groups.append(
+                {
+                    "title": group["title"],
+                    "section_key": group["section_key"],
+                    "entries": entries,
+                }
+            )
+    return section_groups
+
+
+def disambiguate_duplicate_group_titles(groups):
+    title_counts = Counter(group.get("title", "") for group in groups if group.get("title"))
+    title_indexes = defaultdict(int)
+    disambiguated = []
+    for group in groups:
+        title = group.get("title", "")
+        if title and title_counts[title] > 1:
+            title_indexes[title] += 1
+            group = {**group, "title": f"{title} ({title_indexes[title]})"}
+        disambiguated.append(group)
+    return disambiguated
+
+
+def resolve_sex_specific_entry(groups, token, sex_specific_field_map, sex_value):
+    config = sex_specific_field_map.get(token)
+    if not config:
+        return first_entry_by_field_key(groups, token)
+
+    preferred_key = config.get(sex_value or "")
+    fallback_keys = [preferred_key] if preferred_key else []
+    fallback_keys.extend(
+        field_key
+        for field_key in (config.get("female"), config.get("male"))
+        if field_key and field_key not in fallback_keys
+    )
+
+    for field_key in fallback_keys:
+        entry = first_entry_by_field_key(groups, field_key)
+        if entry:
+            return clone_entry(entry, label=config.get("label", entry["label"]))
+    return None
+
+
+def resolve_entry_tokens(groups, tokens, sex_specific_field_map, sex_value):
+    entries = []
+    for token in tokens:
+        entry = resolve_sex_specific_entry(groups, token, sex_specific_field_map, sex_value)
+        if entry:
+            entries.append(entry)
+    return entries
 
 
 def build_abg_variant_context(groups, render_config):
@@ -274,11 +375,235 @@ def build_bbank_variant_context(groups, render_config):
     }
 
 
-def build_variant_context(render_variant, groups, render_config):
+def build_serology_variant_context(item, groups, render_config):
+    option_key = item.exam_option.option_key if item.exam_option else ""
+    option_label = item.exam_option.option_label if item.exam_option else item.exam_definition.exam_name
+    option_to_section_keys = render_config.get("option_to_section_keys", {})
+    option_to_field_keys = render_config.get("option_to_field_keys", {})
+
+    primary_section_key = option_to_section_keys.get(option_key)
+    primary_group = first_group_by_section_key(groups, primary_section_key) if primary_section_key else None
+    primary_entries = field_entries_for_group(primary_group) if primary_group else []
+    if not primary_entries:
+        primary_entries = entries_by_field_keys(groups, option_to_field_keys.get(option_key, []))
+
+    primary_entries = primary_entries or entries_with_values(
+        [
+            entry
+            for group in groups
+            for entry in field_entries_for_group(group)
+        ]
+    )
+
+    primary_field_keys = {entry.get("field_key") for entry in primary_entries}
+    supplemental_groups = []
+    for group in nonempty_groups(groups):
+        if primary_group and group["section_key"] == primary_group["section_key"]:
+            continue
+        filtered_entries = [entry for entry in group["entries"] if entry.get("field_key") not in primary_field_keys]
+        if filtered_entries or group["grouped_entries"] or group["notes"]:
+            supplemental_groups.append(
+                {
+                    "title": group["title"],
+                    "entries": filtered_entries,
+                    "grouped_entries": group["grouped_entries"],
+                    "notes": group["notes"],
+                }
+            )
+
+    return {
+        "option_label": option_label,
+        "primary_title": primary_group["title"] if primary_group else option_label,
+        "primary_entries": primary_entries,
+        "supplemental_groups": supplemental_groups,
+        "shows_single_result": len(primary_entries) == 1,
+    }
+
+
+def build_ogtt_variant_context(item, groups, render_config):
+    option_key = item.exam_option.option_key if item.exam_option else ""
+    option_label = item.exam_option.option_label if item.exam_option else item.exam_definition.exam_name
+    option_to_section_keys = render_config.get("option_to_section_keys", {})
+    option_to_field_keys = render_config.get("option_to_field_keys", {})
+
+    primary_section_key = option_to_section_keys.get(option_key)
+    primary_group = first_group_by_section_key(groups, primary_section_key) if primary_section_key else None
+    primary_entries = field_entries_for_group(primary_group) if primary_group else []
+    if not primary_entries:
+        primary_entries = entries_by_field_keys(groups, option_to_field_keys.get(option_key, []))
+
+    primary_entries = primary_entries or entries_with_values(
+        [
+            entry
+            for group in groups
+            for entry in field_entries_for_group(group)
+        ]
+    )
+
+    primary_field_keys = {entry.get("field_key") for entry in primary_entries}
+    supplemental_groups = []
+    for group in nonempty_groups(groups):
+        if primary_group and group["section_key"] == primary_group["section_key"]:
+            continue
+        filtered_entries = [entry for entry in group["entries"] if entry.get("field_key") not in primary_field_keys]
+        if filtered_entries or group["grouped_entries"] or group["notes"]:
+            supplemental_groups.append(
+                {
+                    "title": group["title"],
+                    "entries": filtered_entries,
+                    "grouped_entries": group["grouped_entries"],
+                    "notes": group["notes"],
+                }
+            )
+
+    abnormal_entries = [entry for entry in primary_entries if entry.get("abnormal_flag")]
+    return {
+        "option_label": option_label,
+        "timeline_title": primary_group["title"] if primary_group else option_label,
+        "timeline_entries": primary_entries,
+        "supplemental_groups": supplemental_groups,
+        "abnormal_entries": abnormal_entries,
+    }
+
+
+def build_hematology_variant_context(item, groups, render_config):
+    option_key = item.exam_option.option_key if item.exam_option else ""
+    option_label = item.exam_option.option_label if item.exam_option else item.exam_definition.exam_name
+    sex_value = (item.lab_request.sex_snapshot or "").lower()
+    sex_specific_field_map = render_config.get("sex_specific_field_map", {})
+    option_to_panels = render_config.get("option_to_panels", {})
+
+    panels = []
+    for panel_config in option_to_panels.get(option_key, []):
+        entries = resolve_entry_tokens(groups, panel_config.get("keys", []), sex_specific_field_map, sex_value)
+        if entries:
+            panels.append(
+                {
+                    "title": panel_config["title"],
+                    "entries": entries,
+                }
+            )
+
+    if not panels:
+        fallback_entries = entries_with_values(
+            [
+                entry
+                for group in groups
+                for entry in field_entries_for_group(group)
+            ]
+        )
+        if fallback_entries:
+            panels.append(
+                {
+                    "title": option_label,
+                    "entries": fallback_entries,
+                }
+            )
+
+    primary_field_keys = {
+        entry.get("field_key")
+        for panel in panels
+        for entry in panel["entries"]
+    }
+    supplemental_entries = [
+        entry
+        for group in groups
+        for entry in entries_with_values(field_entries_for_group(group))
+        if entry.get("field_key") not in primary_field_keys
+    ]
+
+    return {
+        "option_label": option_label,
+        "panels": panels,
+        "supplemental_entries": supplemental_entries,
+        "sex_label": sex_value.title() if sex_value else "",
+    }
+
+
+def build_microscopy_variant_context(item, groups, render_config):
+    option_key = item.exam_option.option_key if item.exam_option else ""
+    option_label = item.exam_option.option_label if item.exam_option else item.exam_definition.exam_name
+    option_to_sections = render_config.get("option_to_sections", {})
+    option_to_field_keys = render_config.get("option_to_field_keys", {})
+    option_to_excluded_field_keys = render_config.get("option_to_excluded_field_keys", {})
+
+    mapped_section_keys = option_to_sections.get(option_key, [])
+    mapped_field_keys = option_to_field_keys.get(option_key, [])
+    excluded_field_keys = option_to_excluded_field_keys.get(option_key, [])
+
+    section_groups = option_section_groups(
+        groups,
+        mapped_section_keys,
+        excluded_field_keys=excluded_field_keys,
+    )
+    focus_entries = filter_entries(
+        entries_by_field_keys(groups, mapped_field_keys),
+        excluded_field_keys=excluded_field_keys,
+    )
+
+    if not section_groups and not focus_entries:
+        fallback_groups = []
+        for group in nonempty_groups(groups):
+            entries = filter_entries(group["entries"], excluded_field_keys)
+            if entries:
+                fallback_groups.append(
+                    {
+                        "title": group["title"],
+                        "section_key": group["section_key"],
+                        "entries": entries,
+                    }
+                )
+        section_groups = fallback_groups
+
+    primary_field_keys = {
+        entry.get("field_key")
+        for group in section_groups
+        for entry in group["entries"]
+    }
+    primary_field_keys.update(entry.get("field_key") for entry in focus_entries)
+
+    supplemental_groups = []
+    for group in nonempty_groups(groups):
+        if group["section_key"] in {mapped_group["section_key"] for mapped_group in section_groups if mapped_group["section_key"]}:
+            continue
+        filtered_entries = [
+            entry
+            for entry in filter_entries(group["entries"], excluded_field_keys)
+            if entry.get("field_key") not in primary_field_keys
+        ]
+        if filtered_entries:
+            supplemental_groups.append(
+                {
+                    "title": group["title"],
+                    "entries": filtered_entries,
+                }
+            )
+
+    section_groups = disambiguate_duplicate_group_titles(section_groups)
+    supplemental_groups = disambiguate_duplicate_group_titles(supplemental_groups)
+
+    return {
+        "option_label": option_label,
+        "focus_entries": focus_entries,
+        "section_groups": section_groups,
+        "supplemental_groups": supplemental_groups,
+        "shows_single_focus": len(focus_entries) == 1,
+    }
+
+
+def build_variant_context(item, render_variant, groups, render_config):
     if render_variant == "abg_compact":
         return build_abg_variant_context(groups, render_config)
     if render_variant == "bbank_crossmatch":
         return build_bbank_variant_context(groups, render_config)
+    if render_variant == "serology_panel":
+        return build_serology_variant_context(item, groups, render_config)
+    if render_variant == "ogtt_timeline":
+        return build_ogtt_variant_context(item, groups, render_config)
+    if render_variant == "hematology_panel":
+        return build_hematology_variant_context(item, groups, render_config)
+    if render_variant == "microscopy_sections":
+        return build_microscopy_variant_context(item, groups, render_config)
     return {}
 
 
@@ -292,7 +617,7 @@ def build_result_print_context(item):
     render_config = render_profile.config_json if render_profile else {}
     groups = build_render_groups(item)
     render_variant = render_config.get("render_variant", "generic")
-    variant_context = build_variant_context(render_variant, groups, render_config)
+    variant_context = build_variant_context(item, render_variant, groups, render_config)
     lab_request = item.lab_request
     facility = lab_request.facility
     organization_name = lab_request.organization_name_snapshot

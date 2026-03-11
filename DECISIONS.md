@@ -116,6 +116,36 @@ Reason:
 Implication:
 - future print refinement should continue by adding exam-specific variants only when generic rendering is clearly insufficient
 
+### 2026-03-11: Extend Print Refinement To SEROLOGY and OGTT
+
+Decision:
+- add dedicated print variants for `SEROLOGY` and `OGTT`
+- validate them with browser-level checks in both normal preview mode and print-media mode
+
+Reason:
+- both exams contain real option-specific branches that are not represented cleanly by the generic renderer alone
+- they are strong tests of whether the workbook-driven metadata model can support both section-based and field-based print flows
+
+Implementation rule:
+- option-specific print variants must only use explicit section mappings
+- a missing section mapping must not silently fall back to the general section, because that leaks unrelated empty tests into the printed report
+
+### 2026-03-11: Extend Print Refinement To HEMATOLOGY, URINE, and FECALYSIS
+
+Decision:
+- add a dedicated panel-style print variant for `HEMATOLOGY`
+- add a dedicated microscopy-focused print variant for `URINE` and `FECALYSIS`
+- validate all three in both screen preview and print-media mode
+
+Reason:
+- these exams cover remaining high-value layout shapes that the generic renderer does not express cleanly
+- `HEMATOLOGY` needs option-aware grouping plus sex-specific field selection
+- `URINE` and `FECALYSIS` need a mixed model that can handle either section-based prints or single-field package prints without leaking unrelated values
+
+Implementation rules:
+- microscopy field-only packages must not render empty unrelated sections
+- duplicate microscopy section labels from the workbook may be disambiguated in the renderer with stable numbering like `(1)` and `(2)` for print clarity
+
 ### 2026-03-10: Importer Uses Signature-Based Versioning
 
 Decision:
@@ -257,6 +287,28 @@ Decision:
 Reason:
 - the target users are non-technical clinic staff
 - operational admin pages should reduce confusion, not expose raw system complexity
+
+### 2026-03-11: Treat the Workbook as a Primary Import Source, Not Unquestionable Truth
+
+Decision:
+- keep the workbook as the primary discovery/import source
+- do not assume every workbook value is already clean, final, or clinically validated
+- imported admin-correctable configuration inside the app should become the operational truth after review
+
+Reason:
+- the workbook contains developer notes, unresolved comments, spacing/label inconsistencies, and at least some structurally ambiguous data
+- relying on it blindly would push source errors directly into the live system
+
+### 2026-03-11: Make the Workbook Importer Header-Aware and Ignore Blank Formatting Noise
+
+Decision:
+- importer payload extraction must use sheet headers to determine which column means `reference` and which means `notes`
+- blank formatted/padded rows must not affect source hashing or versioning
+
+Reason:
+- the workbook does not use one universal sheet schema for columns 4 and 5
+- otherwise developer notes can be misread as patient-facing reference text
+- otherwise workbook formatting noise can create meaningless import-version churn
 
 ## Current Standing Decisions
 

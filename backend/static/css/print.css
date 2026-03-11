@@ -408,6 +408,177 @@ body {
     margin-top: 6px;
 }
 
+.report-chip {
+    display: inline-flex;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(24, 79, 103, 0.08);
+    border: 1px solid rgba(24, 79, 103, 0.18);
+    color: var(--accent);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.focus-subtitle {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.serology-focus,
+.ogtt-focus,
+.hematology-focus,
+.microscopy-focus {
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 20px;
+    background: linear-gradient(180deg, rgba(24, 79, 103, 0.06), rgba(255, 255, 255, 0.52));
+}
+
+.serology-focus-head,
+.ogtt-focus-head,
+.hematology-focus-head,
+.microscopy-focus-head {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.serology-focus-head .group-heading,
+.ogtt-focus-head .group-heading,
+.hematology-focus-head .group-heading,
+.microscopy-focus-head .group-heading {
+    margin: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.serology-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.serology-card-grid.is-single {
+    grid-template-columns: minmax(260px, 420px);
+}
+
+.serology-card,
+.ogtt-step {
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.serology-card strong,
+.ogtt-step strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 1.35rem;
+    line-height: 1.1;
+}
+
+.serology-label,
+.ogtt-step-label {
+    display: block;
+    color: var(--muted);
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.serology-reference,
+.ogtt-step-meta {
+    display: grid;
+    gap: 4px;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.ogtt-timeline {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.hematology-panels,
+.microscopy-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.hematology-panel-card,
+.microscopy-card {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.hematology-entry-list,
+.microscopy-entry-list {
+    display: grid;
+    gap: 10px;
+}
+
+.hematology-entry-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+    gap: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+}
+
+.hematology-entry-row:first-child,
+.microscopy-row:first-child {
+    padding-top: 0;
+    border-top: 0;
+}
+
+.microscopy-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+}
+
+.serology-supplemental {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.supplemental-heading {
+    margin: 0 0 12px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+}
+
+.serology-supplemental-list {
+    display: grid;
+    gap: 10px;
+}
+
+.supplemental-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+}
+
+.supplemental-row:first-child {
+    padding-top: 0;
+    border-top: 0;
+}
+
+.ogtt-alert p {
+    margin: 8px 0 0;
+}
+
 .attachment-block {
     margin-top: 10px;
 }
@@ -503,6 +674,23 @@ body {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .serology-card-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .ogtt-timeline {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .hematology-panels,
+    .microscopy-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .serology-supplemental {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .value-row {
         display: grid;
         grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
@@ -535,7 +723,13 @@ body {
     .abg-grid,
     .bbank-crossmatch,
     .bbank-summary-row,
-    .release-grid {
+    .release-grid,
+    .serology-card-grid,
+    .serology-card-grid.is-single,
+    .ogtt-timeline,
+    .hematology-panels,
+    .microscopy-grid,
+    .serology-supplemental {
         grid-template-columns: 1fr;
     }
 
@@ -543,6 +737,7 @@ body {
         grid-template-columns: 1fr;
     }
 
+    .hematology-entry-row,
     .value-output {
         text-align: left;
     }
