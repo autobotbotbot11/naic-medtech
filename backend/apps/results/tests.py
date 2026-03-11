@@ -1617,3 +1617,549 @@ class ResultEntryFlowTests(TestCase):
         self.assertContains(response, "MICROSCOPIC FINDING (2)")
         self.assertContains(response, "PARASITES")
         self.assertContains(response, "NO OVA OR PARASITES SEEN")
+
+    def test_coagulation_variant_respects_selected_option_sections(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="protime-variant",
+            exam_name="Protime Variant",
+            category="Hematology",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="protime-variant-v1",
+            published_at=timezone.now(),
+        )
+        protime_option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="protime",
+            option_label="PROTIME",
+            sort_order=1,
+            active=True,
+        )
+        ExamOption.objects.create(
+            exam_version=version,
+            option_key="aptt",
+            option_label="APTT",
+            sort_order=2,
+            active=True,
+        )
+        pro_section = ExamSection.objects.create(
+            exam_version=version,
+            section_key="pro_time",
+            section_label="PRO TIME",
+            sort_order=1,
+            active=True,
+        )
+        aptt_section = ExamSection.objects.create(
+            exam_version=version,
+            section_key="aptt",
+            section_label="APTT",
+            sort_order=2,
+            active=True,
+        )
+        pro_test = ExamField.objects.create(
+            exam_version=version,
+            section=pro_section,
+            field_key="pro_time_test",
+            field_label="TEST",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=1,
+            unit="seconds",
+            reference_text="10.0-13.9 seconds",
+            active=True,
+            config_json={},
+        )
+        pro_inr = ExamField.objects.create(
+            exam_version=version,
+            section=pro_section,
+            field_key="pro_time_inr",
+            field_label="INR",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=2,
+            reference_text="0.70-1.30",
+            active=True,
+            config_json={},
+        )
+        aptt_test = ExamField.objects.create(
+            exam_version=version,
+            section=aptt_section,
+            field_key="aptt_test",
+            field_label="TEST",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=3,
+            unit="seconds",
+            reference_text="22.2-37.9 seconds",
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="sectioned_report",
+            config_json={
+                "render_variant": "coagulation_panel",
+                "show_reference_ranges": True,
+                "show_units": True,
+                "option_to_sections": {
+                    "protime": ["pro_time"],
+                    "aptt": ["aptt"],
+                    "protime_aptt": ["pro_time", "aptt"],
+                },
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=protime_option,
+        )
+        self.create_result_value(
+            item,
+            pro_test,
+            value_number="15.8",
+            reference_text_snapshot="10.0-13.9 seconds",
+            abnormal_flag=True,
+            abnormal_reason="Above normal range (10.0-13.9 seconds)",
+        )
+        self.create_result_value(item, pro_inr, value_number="1.42", reference_text_snapshot="0.70-1.30")
+        self.create_result_value(item, aptt_test, value_number="31.4", reference_text_snapshot="22.2-37.9 seconds")
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "coagulation-panels")
+        self.assertContains(response, "PRO TIME")
+        self.assertContains(response, "15.8")
+        self.assertContains(response, "Flagged Values")
+        self.assertNotContains(response, ">APTT<", html=False)
+        self.assertNotContains(response, "31.4")
+
+    def test_semen_variant_groups_sample_details_and_sections(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="semen-variant",
+            exam_name="Semen Variant",
+            category="Clinical Microscopy",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="semen-variant-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="semen_analysis",
+            option_label="SEMEN ANALYSIS",
+            sort_order=1,
+            active=True,
+        )
+        motility = ExamSection.objects.create(
+            exam_version=version,
+            section_key="motility",
+            section_label="MOTILITY",
+            sort_order=1,
+            active=True,
+        )
+        morphology = ExamSection.objects.create(
+            exam_version=version,
+            section_key="morphology",
+            section_label="MORPHOLOGY",
+            sort_order=2,
+            active=True,
+        )
+        sperm_count = ExamSection.objects.create(
+            exam_version=version,
+            section_key="sperm_count",
+            section_label="SPERM COUNT",
+            sort_order=3,
+            active=True,
+        )
+        others = ExamSection.objects.create(
+            exam_version=version,
+            section_key="others",
+            section_label="OTHERS",
+            sort_order=4,
+            active=True,
+        )
+        time_collected = ExamField.objects.create(
+            exam_version=version,
+            field_key="time_collected",
+            field_label="TIME COLLECTED:",
+            input_type=ExamFieldInputTypeChoices.TEXT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+            config_json={},
+        )
+        total_volume = ExamField.objects.create(
+            exam_version=version,
+            field_key="total_volume",
+            field_label="TOTAL VOLUME:",
+            input_type=ExamFieldInputTypeChoices.TEXT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=2,
+            active=True,
+            config_json={},
+        )
+        motile = ExamField.objects.create(
+            exam_version=version,
+            section=motility,
+            field_key="motility_motile",
+            field_label="MOTILE:",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=3,
+            unit="%",
+            active=True,
+            config_json={},
+        )
+        abnormal = ExamField.objects.create(
+            exam_version=version,
+            section=morphology,
+            field_key="morphology_abnormal",
+            field_label="ABNORMAL",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=4,
+            unit="%",
+            active=True,
+            config_json={},
+        )
+        count_result = ExamField.objects.create(
+            exam_version=version,
+            section=sperm_count,
+            field_key="sperm_count_result",
+            field_label="RESULT",
+            input_type=ExamFieldInputTypeChoices.TEXT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=5,
+            active=True,
+            config_json={},
+        )
+        wbc = ExamField.objects.create(
+            exam_version=version,
+            section=others,
+            field_key="others_wbc",
+            field_label="WBC",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=6,
+            unit="/HPF",
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="sectioned_report",
+            config_json={
+                "render_variant": "semen_analysis",
+                "show_reference_ranges": False,
+                "show_units": True,
+                "sample_field_keys": ["time_collected", "total_volume"],
+                "section_keys": ["motility", "morphology", "sperm_count", "others"],
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=option,
+        )
+        self.create_result_value(item, time_collected, value_text="08:05 AM")
+        self.create_result_value(item, total_volume, value_text="2.5 mL")
+        self.create_result_value(item, motile, value_number="65")
+        self.create_result_value(item, abnormal, value_number="18")
+        self.create_result_value(item, count_result, value_text="58 million/mL")
+        self.create_result_value(item, wbc, value_number="1")
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "semen-sample-grid")
+        self.assertContains(response, "TIME COLLECTED:")
+        self.assertContains(response, "08:05 AM")
+        self.assertContains(response, "MOTILITY")
+        self.assertContains(response, "65")
+        self.assertContains(response, "SPERM COUNT")
+        self.assertContains(response, "58 million/mL")
+        self.assertContains(response, "WBC")
+
+    def test_single_result_focus_variant_centers_microbiology_result(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="microbiology-variant",
+            exam_name="Microbiology Variant",
+            category="Microbiology",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="microbiology-variant-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="koh_smear",
+            option_label="KOH SMEAR",
+            sort_order=1,
+            active=True,
+        )
+        result_field = ExamField.objects.create(
+            exam_version=version,
+            field_key="result",
+            field_label="RESULT",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="label_value_list",
+            config_json={
+                "render_variant": "single_result_focus",
+                "show_reference_ranges": False,
+                "show_units": True,
+                "field_keys": ["result"],
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=option,
+        )
+        self.create_result_value(
+            item,
+            result_field,
+            value_text="No fungal elements seen",
+            selected_option_value="no_fungal_elements_seen",
+            selected_option_label_snapshot="No fungal elements seen",
+        )
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "single-focus-card")
+        self.assertContains(response, "KOH SMEAR")
+        self.assertContains(response, "No fungal elements seen")
+
+    def test_field_based_serology_variant_can_render_multiple_marker_cards(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="cardiaci-variant",
+            exam_name="Cardiac Marker Variant",
+            category="Serology",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="cardiaci-variant-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="ck_mb_tni_bnp",
+            option_label="CK-MB, TNI, BNP",
+            sort_order=1,
+            active=True,
+        )
+        ck_mb = ExamField.objects.create(
+            exam_version=version,
+            field_key="ck_mb",
+            field_label="CK-MB",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=1,
+            unit="ng/mL",
+            reference_text="0.0 - 4.3 ng/mL",
+            active=True,
+            config_json={},
+        )
+        troponin = ExamField.objects.create(
+            exam_version=version,
+            field_key="troponin_i",
+            field_label="TROPONIN - I",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=2,
+            unit="ng/mL",
+            reference_text="0.0 - 0.02 ng/mL",
+            active=True,
+            config_json={},
+        )
+        bnp = ExamField.objects.create(
+            exam_version=version,
+            field_key="bnp",
+            field_label="BNP",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=3,
+            unit="pg/mL",
+            reference_text="0.0 - 100 pg/mL",
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="result_table",
+            config_json={
+                "render_variant": "serology_panel",
+                "show_reference_ranges": True,
+                "show_units": True,
+                "option_to_field_keys": {
+                    "ck_mb_tni_bnp": ["ck_mb", "troponin_i", "bnp"],
+                },
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=option,
+        )
+        self.create_result_value(item, ck_mb, value_number="4.1", reference_text_snapshot="0.0 - 4.3 ng/mL")
+        self.create_result_value(
+            item,
+            troponin,
+            value_number="0.03",
+            reference_text_snapshot="0.0 - 0.02 ng/mL",
+            abnormal_flag=True,
+            abnormal_reason="Above normal range (0.0 - 0.02 ng/mL)",
+        )
+        self.create_result_value(item, bnp, value_number="78", reference_text_snapshot="0.0 - 100 pg/mL")
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "CK-MB, TNI, BNP")
+        self.assertContains(response, "CK-MB")
+        self.assertContains(response, "TROPONIN - I")
+        self.assertContains(response, "BNP")
+        self.assertContains(response, "0.03")
+
+    def test_chemistry_panel_variant_groups_populated_results(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="bcmale-variant",
+            exam_name="Blood Chemistry Male Variant",
+            category="Blood Chemistry",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="bcmale-variant-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="fbs_lipid_profile",
+            option_label="FBS, LIPID PROFILE",
+            sort_order=1,
+            active=True,
+        )
+        fbs = ExamField.objects.create(
+            exam_version=version,
+            field_key="fasting_blood_sugar",
+            field_label="FASTING BLOOD SUGAR",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=1,
+            unit="mg/dL",
+            reference_text="70.27-124.32 mg/dL",
+            active=True,
+            config_json={},
+        )
+        cholesterol = ExamField.objects.create(
+            exam_version=version,
+            field_key="cholesterol",
+            field_label="CHOLESTEROL",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=2,
+            unit="mg/dL",
+            reference_text="0 - 200 mg/dL",
+            active=True,
+            config_json={},
+        )
+        hdl = ExamField.objects.create(
+            exam_version=version,
+            field_key="hdl_cholesterol",
+            field_label="HDL CHOLESTEROL",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=3,
+            unit="mg/dL",
+            reference_text="30 - 85 mg/dL",
+            active=True,
+            config_json={},
+        )
+        alt = ExamField.objects.create(
+            exam_version=version,
+            field_key="sgptalt",
+            field_label="SGPT(ALT)",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=4,
+            unit="U/L",
+            reference_text="0 - 34 U/L",
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="result_table",
+            config_json={
+                "render_variant": "chemistry_panel",
+                "show_reference_ranges": True,
+                "show_units": True,
+                "panel_groups": [
+                    {"title": "Glucose Studies", "keys": ["fasting_blood_sugar", "random_blood_sugar", "hgt"]},
+                    {"title": "Lipid Profile", "keys": ["cholesterol", "triglyceride", "hdl_cholesterol", "ldl_cholesterol", "vldl_cholesterol"]},
+                    {"title": "Liver Enzymes", "keys": ["sgotast", "sgptalt"]},
+                ],
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=option,
+        )
+        self.create_result_value(item, fbs, value_number="95", reference_text_snapshot="70.27-124.32 mg/dL")
+        self.create_result_value(item, cholesterol, value_number="182", reference_text_snapshot="0 - 200 mg/dL")
+        self.create_result_value(item, hdl, value_number="49", reference_text_snapshot="30 - 85 mg/dL")
+        self.create_result_value(item, alt, value_number="28", reference_text_snapshot="0 - 34 U/L")
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "chemistry-panels")
+        self.assertContains(response, "Glucose Studies")
+        self.assertContains(response, "FASTING BLOOD SUGAR")
+        self.assertContains(response, "Lipid Profile")
+        self.assertContains(response, "CHOLESTEROL")
+        self.assertContains(response, "HDL CHOLESTEROL")
+        self.assertContains(response, "Liver Enzymes")
+        self.assertContains(response, "SGPT(ALT)")

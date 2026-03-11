@@ -97,6 +97,17 @@ class WorkbookImportHelpersTests(SimpleTestCase):
         self.assertEqual(config["option_to_section_keys"]["75g_ogtt"], "75g_oral_glucose_tolerance")
         self.assertEqual(config["option_to_field_keys"]["2_hour_postprandial"], ["2_hours_post_prandial"])
 
+    def test_default_render_profile_sets_cardiaci_variant(self):
+        layout_type, config = default_render_profile(
+            "CARDIACI - Serology",
+            has_sections=False,
+            has_reference_ranges=True,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.RESULT_TABLE)
+        self.assertEqual(config["render_variant"], "serology_panel")
+        self.assertEqual(config["option_to_field_keys"]["ck_mb_tni_bnp"], ["ck_mb", "troponin_i", "bnp"])
+
     def test_default_render_profile_sets_hematology_variant(self):
         layout_type, config = default_render_profile(
             "HEMATOLOGY",
@@ -111,6 +122,29 @@ class WorkbookImportHelpersTests(SimpleTestCase):
             config["option_to_panels"]["cbc_platelet_count_esr"][2]["keys"],
             ["esr"],
         )
+
+    def test_default_render_profile_sets_bcmale_variant(self):
+        layout_type, config = default_render_profile(
+            "BCMALE - Blood Chemistry",
+            has_sections=False,
+            has_reference_ranges=True,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.RESULT_TABLE)
+        self.assertEqual(config["render_variant"], "chemistry_panel")
+        self.assertEqual(config["panel_groups"][0]["keys"], ["fasting_blood_sugar", "random_blood_sugar", "hgt"])
+        self.assertEqual(config["panel_groups"][3]["title"], "Lipid Profile")
+
+    def test_default_render_profile_sets_bcfemale_variant(self):
+        layout_type, config = default_render_profile(
+            "BCFEMALE - Blood Chemistry",
+            has_sections=False,
+            has_reference_ranges=True,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.RESULT_TABLE)
+        self.assertEqual(config["render_variant"], "chemistry_panel")
+        self.assertEqual(config["panel_groups"][1]["keys"], ["blood_urea_nitrogen", "creatinine", "blood_uric_acid"])
 
     def test_default_render_profile_sets_urine_variant(self):
         layout_type, config = default_render_profile(
@@ -147,6 +181,43 @@ class WorkbookImportHelpersTests(SimpleTestCase):
             config["option_to_field_keys"]["fobt"],
             ["macroscopic_finding_fecal_occult_blood"],
         )
+
+    def test_default_render_profile_sets_protime_variant(self):
+        layout_type, config = default_render_profile(
+            "PROTIME, APTT - Hematology",
+            has_sections=True,
+            has_reference_ranges=True,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.SECTIONED_REPORT)
+        self.assertEqual(config["render_variant"], "coagulation_panel")
+        self.assertEqual(config["option_to_sections"]["protime_aptt"], ["pro_time", "aptt"])
+
+    def test_default_render_profile_sets_semen_variant(self):
+        layout_type, config = default_render_profile(
+            "SEMEN - Clinical Microscopy",
+            has_sections=True,
+            has_reference_ranges=False,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.SECTIONED_REPORT)
+        self.assertEqual(config["render_variant"], "semen_analysis")
+        self.assertEqual(
+            config["sample_field_keys"],
+            ["time_collected", "time_received", "total_volume", "liquefaction_time"],
+        )
+        self.assertEqual(config["section_keys"], ["motility", "morphology", "sperm_count", "others"])
+
+    def test_default_render_profile_sets_microbiology_variant(self):
+        layout_type, config = default_render_profile(
+            "MICROBIOLOGY",
+            has_sections=False,
+            has_reference_ranges=False,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.LABEL_VALUE_LIST)
+        self.assertEqual(config["render_variant"], "single_result_focus")
+        self.assertEqual(config["field_keys"], ["result"])
 
 
 class WorkbookImportIntegrationTests(TestCase):

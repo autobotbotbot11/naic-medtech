@@ -92,14 +92,18 @@ Implemented:
 - medtech/pathologist selection in result entry
 - initial HTML print preview for saved results
 - facility-branded print header
-- exam-specific print variants for `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, and `HEMATOLOGY`
+- exam-specific print variants for `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, and `PROTIME/APTT`
 - microscopy-focused print variant for `URINE` and `FECALYSIS`
-- browser validation completed for `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, and `FECALYSIS` in both screen preview and print-media mode
+- dedicated analysis print variant for `SEMEN`
+- single-result focus print variant for `MICROBIOLOGY`
+- focused marker-card print variant for `CARDIACI`
+- chemistry-panel print variant for `BCMALE` and `BCFEMALE`
+- browser validation completed for `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, `FECALYSIS`, `PROTIME/APTT`, `SEMEN`, `MICROBIOLOGY`, `CARDIACI`, `BCMALE`, and `BCFEMALE` in both screen preview and print-media mode
 - workbook recalibration audit identifying source-data and importer-hardening issues
 - importer hardening completed:
 - header-aware note/reference mapping
 - blank-row-safe source hashing
-- workbook re-imported to latest published `v9` versions
+- workbook re-imported to latest published `v11` versions
 
 Not yet implemented:
 - custom admin exam builder UI

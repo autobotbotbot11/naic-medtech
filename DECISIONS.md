@@ -146,6 +146,40 @@ Implementation rules:
 - microscopy field-only packages must not render empty unrelated sections
 - duplicate microscopy section labels from the workbook may be disambiguated in the renderer with stable numbering like `(1)` and `(2)` for print clarity
 
+### 2026-03-11: Extend Print Refinement To PROTIME/APTT, SEMEN, and MICROBIOLOGY
+
+Decision:
+- add a dedicated coagulation-panel print variant for `PROTIME/APTT`
+- add a dedicated analysis print variant for `SEMEN`
+- add a dedicated single-result focus print variant for `MICROBIOLOGY`
+- validate all three in both screen preview and print-media mode
+
+Reason:
+- these exams cover the remaining core report shapes in the workbook that were still on generic rendering
+- `PROTIME/APTT` needs option-aware section handling for `PROTIME`, `APTT`, and combined `PROTIME, APTT`
+- `SEMEN` benefits from separating collection/sample details from the interpretation sections
+- `MICROBIOLOGY` is a better fit as a focused single-result report than as a generic label-value row
+
+Implementation rules:
+- option-specific coagulation reports must not leak values from non-selected sections into the rendered report
+- when a coagulation panel includes abnormal results, the numeric result stays highlighted in the panel and the explanation is summarized in a separate `Flagged Values` block
+
+### 2026-03-11: Extend Print Refinement To CARDIACI, BCMALE, and BCFEMALE
+
+Decision:
+- use a focused field-card print variant for `CARDIACI`
+- use a chemistry-panel print variant for `BCMALE` and `BCFEMALE`
+- validate all three in both screen preview and print-media mode
+
+Reason:
+- `CARDIACI` is structurally a compact marker set and does not need a full table layout
+- `BCMALE` and `BCFEMALE` have no workbook sections, but their saved results become much more clinic-readable when grouped into business-meaningful chemistry panels
+- the chemistry sheets are package-heavy, so showing only populated saved values is a safer rendering rule than forcing every possible field into the report
+
+Implementation rules:
+- field-based focused-card variants must not duplicate the selected-test subtitle when the primary title already matches the option label
+- chemistry panels group populated results into glucose, renal, electrolyte/mineral, lipid, liver-enzyme, and additional-result buckets
+
 ### 2026-03-10: Importer Uses Signature-Based Versioning
 
 Decision:

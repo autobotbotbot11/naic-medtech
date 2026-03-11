@@ -18,6 +18,10 @@ Recently completed:
 - browser validation completed for `SEROLOGY` and `OGTT` in both screen preview and print-media mode
 - exam-specific print refinement completed for `HEMATOLOGY`, `URINE`, and `FECALYSIS`
 - browser validation completed for `HEMATOLOGY`, `URINE`, and `FECALYSIS` in both screen preview and print-media mode
+- exam-specific print refinement completed for `PROTIME/APTT`, `SEMEN`, and `MICROBIOLOGY`
+- browser validation completed for `PROTIME/APTT`, `SEMEN`, and `MICROBIOLOGY` in both screen preview and print-media mode
+- exam-specific print refinement completed for `CARDIACI`, `BCMALE`, and `BCFEMALE`
+- browser validation completed for `CARDIACI`, `BCMALE`, and `BCFEMALE` in both screen preview and print-media mode
 
 ## 1. Print / Render Engine Refinement
 
@@ -28,7 +32,7 @@ Why this is next:
 - an initial HTML print-preview layer now exists
 - organization/facility branding headers are now in the print flow
 - the next work is improving fidelity and coverage for real clinic use
-- `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, and `FECALYSIS` custom variants are already implemented
+- `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, `FECALYSIS`, `PROTIME/APTT`, `SEMEN`, `MICROBIOLOGY`, `CARDIACI`, `BCMALE`, and `BCFEMALE` custom variants are already implemented
 - the next refinement targets should extend that pattern only where needed
 
 Starting points:
@@ -53,9 +57,9 @@ Implementation targets:
 - attachment-aware handling where needed
 - improve clinic-specific print fidelity for real imported exams
 - next likely candidates:
-- `PROTIME/APTT`
-- `SEMEN`
-- `MICROBIOLOGY`
+- `HBA1C`
+- `HIV 1 and 2 Testing`
+- `COVID 19 Antigen Rapid Test`
 - verify browser print-to-PDF keeps the same compact layout as on-screen preview
 - decide whether browser print is sufficient or PDF export is required
 

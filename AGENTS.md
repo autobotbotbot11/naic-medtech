@@ -100,12 +100,17 @@ Already implemented:
 - OGTT timeline print variant
 - HEMATOLOGY panel print variant
 - URINE and FECALYSIS microscopy print variant
-- browser-level print validation for SEROLOGY, OGTT, HEMATOLOGY, URINE, and FECALYSIS
+- PROTIME/APTT coagulation-panel print variant
+- SEMEN analysis print variant
+- MICROBIOLOGY single-result focus print variant
+- CARDIACI focused marker-card print variant
+- BCMALE and BCFEMALE chemistry-panel print variants
+- browser-level print validation for SEROLOGY, OGTT, HEMATOLOGY, URINE, FECALYSIS, PROTIME/APTT, SEMEN, MICROBIOLOGY, CARDIACI, BCMALE, and BCFEMALE
 - workbook recalibration audit doc capturing source-quality and importer-risk findings
 - importer hardening:
 - header-aware reference/note mapping
 - meaningful-row payload hashing
-- workbook re-import to published `v9` versions
+- workbook re-import to published `v11` versions
 - clinic confirmation queue for unresolved workbook items
 
 Not yet implemented:

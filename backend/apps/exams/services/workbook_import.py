@@ -100,7 +100,7 @@ UNSCOPED_FIELDS_BY_SHEET = {
     },
 }
 
-IMPORTER_SIGNATURE_VERSION = 9
+IMPORTER_SIGNATURE_VERSION = 11
 
 
 @dataclass
@@ -629,6 +629,16 @@ def default_render_profile(sheet_name, has_sections, has_reference_ranges):
                 },
             }
         )
+    elif sheet_name == "CARDIACI - Serology":
+        config.update(
+            {
+                "render_variant": "serology_panel",
+                "show_reference_ranges": True,
+                "option_to_field_keys": {
+                    "ck_mb_tni_bnp": ["ck_mb", "troponin_i", "bnp"],
+                },
+            }
+        )
     elif sheet_name == "OGTT - Blood Chemistry":
         config.update(
             {
@@ -642,6 +652,18 @@ def default_render_profile(sheet_name, has_sections, has_reference_ranges):
                 "option_to_field_keys": {
                     "2_hour_postprandial": ["2_hours_post_prandial"],
                     "50g_oral_glucose_challenge": ["50_g_oral_glucose_challenge"],
+                },
+            }
+        )
+    elif sheet_name == "PROTIME, APTT - Hematology":
+        config.update(
+            {
+                "render_variant": "coagulation_panel",
+                "show_reference_ranges": True,
+                "option_to_sections": {
+                    "protime": ["pro_time"],
+                    "aptt": ["aptt"],
+                    "protime_aptt": ["pro_time", "aptt"],
                 },
             }
         )
@@ -693,6 +715,64 @@ def default_render_profile(sheet_name, has_sections, has_reference_ranges):
                         "label": "E.S.R.",
                     },
                 },
+            }
+        )
+    elif sheet_name in {"BCMALE - Blood Chemistry", "BCFEMALE - Blood Chemistry"}:
+        config.update(
+            {
+                "render_variant": "chemistry_panel",
+                "show_reference_ranges": True,
+                "panel_groups": [
+                    {
+                        "title": "Glucose Studies",
+                        "keys": ["fasting_blood_sugar", "random_blood_sugar", "hgt"],
+                    },
+                    {
+                        "title": "Renal Function",
+                        "keys": ["blood_urea_nitrogen", "creatinine", "blood_uric_acid"],
+                    },
+                    {
+                        "title": "Electrolytes and Minerals",
+                        "keys": ["sodium", "potassium", "chloride", "ionized_calcium"],
+                    },
+                    {
+                        "title": "Lipid Profile",
+                        "keys": [
+                            "cholesterol",
+                            "triglyceride",
+                            "hdl_cholesterol",
+                            "ldl_cholesterol",
+                            "vldl_cholesterol",
+                        ],
+                    },
+                    {
+                        "title": "Liver Enzymes",
+                        "keys": ["sgotast", "sgptalt"],
+                    },
+                    {
+                        "title": "Additional Result",
+                        "keys": ["others"],
+                    },
+                ],
+            }
+        )
+    elif sheet_name == "SEMEN - Clinical Microscopy":
+        config.update(
+            {
+                "render_variant": "semen_analysis",
+                "show_reference_ranges": False,
+                "sample_field_keys": [
+                    "time_collected",
+                    "time_received",
+                    "total_volume",
+                    "liquefaction_time",
+                ],
+                "section_keys": [
+                    "motility",
+                    "morphology",
+                    "sperm_count",
+                    "others",
+                ],
             }
         )
     elif sheet_name == "URINE- Clinical Microscopy":
@@ -755,6 +835,14 @@ def default_render_profile(sheet_name, has_sections, has_reference_ranges):
                 "option_to_excluded_field_keys": {
                     "fecalysis": ["macroscopic_finding_fecal_occult_blood"],
                 },
+            }
+        )
+    elif sheet_name == "MICROBIOLOGY":
+        config.update(
+            {
+                "render_variant": "single_result_focus",
+                "show_reference_ranges": False,
+                "field_keys": ["result"],
             }
         )
 

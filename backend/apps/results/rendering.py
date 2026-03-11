@@ -591,6 +591,184 @@ def build_microscopy_variant_context(item, groups, render_config):
     }
 
 
+def build_chemistry_variant_context(item, groups, render_config):
+    option_label = item.exam_option.option_label if item.exam_option else item.exam_definition.exam_name
+    panel_groups = render_config.get("panel_groups", [])
+
+    panels = []
+    for panel_config in panel_groups:
+        entries = entries_with_values(entries_by_field_keys(groups, panel_config.get("keys", [])))
+        if entries:
+            panels.append(
+                {
+                    "title": panel_config["title"],
+                    "entries": entries,
+                }
+            )
+
+    if not panels:
+        fallback_entries = entries_with_values(
+            [
+                entry
+                for group in groups
+                for entry in field_entries_for_group(group)
+            ]
+        )
+        if fallback_entries:
+            panels.append(
+                {
+                    "title": option_label,
+                    "entries": fallback_entries,
+                }
+            )
+
+    primary_field_keys = {
+        entry.get("field_key")
+        for panel in panels
+        for entry in panel["entries"]
+    }
+    supplemental_entries = [
+        entry
+        for group in groups
+        for entry in entries_with_values(field_entries_for_group(group))
+        if entry.get("field_key") not in primary_field_keys
+    ]
+
+    return {
+        "option_label": option_label,
+        "panels": panels,
+        "supplemental_entries": supplemental_entries,
+    }
+
+
+def build_coagulation_variant_context(item, groups, render_config):
+    option_key = item.exam_option.option_key if item.exam_option else ""
+    option_label = item.exam_option.option_label if item.exam_option else item.exam_definition.exam_name
+    option_to_sections = render_config.get("option_to_sections", {})
+    mapped_section_keys = option_to_sections.get(option_key, [])
+    selected_section_keys = set(mapped_section_keys)
+
+    panels = option_section_groups(groups, mapped_section_keys)
+    if not panels:
+        panels = [
+            {
+                "title": group["title"],
+                "section_key": group["section_key"],
+                "entries": group["entries"],
+            }
+            for group in nonempty_groups(groups)
+        ]
+
+    primary_field_keys = {
+        entry.get("field_key")
+        for panel in panels
+        for entry in panel["entries"]
+    }
+    supplemental_groups = []
+    for group in nonempty_groups(groups):
+        if group["section_key"] in {panel["section_key"] for panel in panels if panel["section_key"]}:
+            continue
+        if selected_section_keys and group["section_key"] and group["section_key"] not in selected_section_keys:
+            continue
+        filtered_entries = [entry for entry in group["entries"] if entry.get("field_key") not in primary_field_keys]
+        if filtered_entries:
+            supplemental_groups.append(
+                {
+                    "title": group["title"],
+                    "entries": filtered_entries,
+                }
+            )
+
+    abnormal_entries = [
+        clone_entry(entry, section_title=panel["title"])
+        for panel in panels
+        for entry in panel["entries"]
+        if entry.get("abnormal_flag")
+    ]
+
+    return {
+        "option_label": option_label,
+        "panels": panels,
+        "supplemental_groups": supplemental_groups,
+        "abnormal_entries": abnormal_entries,
+        "shows_single_panel": len(panels) == 1,
+    }
+
+
+def build_semen_variant_context(item, groups, render_config):
+    option_label = item.exam_option.option_label if item.exam_option else item.exam_definition.exam_name
+    sample_entries = entries_by_field_keys(groups, render_config.get("sample_field_keys", []))
+    panels = option_section_groups(groups, render_config.get("section_keys", []))
+
+    if not panels:
+        panels = [
+            {
+                "title": group["title"],
+                "section_key": group["section_key"],
+                "entries": group["entries"],
+            }
+            for group in nonempty_groups(groups)
+            if group["section_key"]
+        ]
+
+    primary_field_keys = {entry.get("field_key") for entry in sample_entries}
+    primary_field_keys.update(
+        entry.get("field_key")
+        for panel in panels
+        for entry in panel["entries"]
+    )
+
+    supplemental_entries = [
+        entry
+        for group in nonempty_groups(groups)
+        for entry in group["entries"]
+        if entry.get("field_key") not in primary_field_keys
+    ]
+
+    return {
+        "option_label": option_label,
+        "sample_entries": sample_entries,
+        "panels": panels,
+        "supplemental_entries": supplemental_entries,
+    }
+
+
+def build_single_result_focus_context(item, groups, render_config):
+    option_key = item.exam_option.option_key if item.exam_option else ""
+    option_label = item.exam_option.option_label if item.exam_option else item.exam_definition.exam_name
+    option_to_field_keys = render_config.get("option_to_field_keys", {})
+    field_keys = option_to_field_keys.get(option_key) or render_config.get("field_keys", [])
+    focus_entries = entries_by_field_keys(groups, field_keys)
+
+    if not focus_entries:
+        focus_entries = entries_with_values(
+            [
+                entry
+                for group in groups
+                for entry in field_entries_for_group(group)
+            ]
+        )
+
+    primary_field_keys = {entry.get("field_key") for entry in focus_entries}
+    supplemental_groups = []
+    for group in nonempty_groups(groups):
+        filtered_entries = [entry for entry in group["entries"] if entry.get("field_key") not in primary_field_keys]
+        if filtered_entries:
+            supplemental_groups.append(
+                {
+                    "title": group["title"],
+                    "entries": filtered_entries,
+                }
+            )
+
+    return {
+        "option_label": option_label,
+        "focus_entries": focus_entries,
+        "supplemental_groups": supplemental_groups,
+        "shows_single_focus": len(focus_entries) == 1,
+    }
+
+
 def build_variant_context(item, render_variant, groups, render_config):
     if render_variant == "abg_compact":
         return build_abg_variant_context(groups, render_config)
@@ -604,6 +782,14 @@ def build_variant_context(item, render_variant, groups, render_config):
         return build_hematology_variant_context(item, groups, render_config)
     if render_variant == "microscopy_sections":
         return build_microscopy_variant_context(item, groups, render_config)
+    if render_variant == "chemistry_panel":
+        return build_chemistry_variant_context(item, groups, render_config)
+    if render_variant == "coagulation_panel":
+        return build_coagulation_variant_context(item, groups, render_config)
+    if render_variant == "semen_analysis":
+        return build_semen_variant_context(item, groups, render_config)
+    if render_variant == "single_result_focus":
+        return build_single_result_focus_context(item, groups, render_config)
     return {}
 
 

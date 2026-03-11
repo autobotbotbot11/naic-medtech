@@ -169,9 +169,12 @@ Current implementation status:
 - request-item creation flow exists
 - dynamic result-entry UI exists
 - initial print preview/render layer exists
-- `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, and `HEMATOLOGY` now have dedicated print variants
+- `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `PROTIME/APTT`, and `CARDIACI` now have dedicated print variants
 - `URINE` and `FECALYSIS` now use a dedicated microscopy print variant
-- `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, and `FECALYSIS` were browser-validated in both screen preview and print-media mode
+- `SEMEN` now uses a dedicated analysis print variant
+- `MICROBIOLOGY` now uses a dedicated single-result focus print variant
+- `BCMALE` and `BCFEMALE` now use a dedicated chemistry-panel print variant
+- `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, `FECALYSIS`, `PROTIME/APTT`, `SEMEN`, `MICROBIOLOGY`, `CARDIACI`, `BCMALE`, and `BCFEMALE` were browser-validated in both screen preview and print-media mode
 - operational app pages are protected behind authentication
 - a workbook recalibration audit has identified source-quality issues and importer-hardening work that should happen before deeper metadata-dependent feature work
 
@@ -252,7 +255,7 @@ Important importer behavior:
 - blank formatted rows are now excluded from payload hashing so formatting noise does not force new import versions
 
 Current importer signature:
-- `IMPORTER_SIGNATURE_VERSION = 9`
+- `IMPORTER_SIGNATURE_VERSION = 11`
 
 Special handling already implemented:
 - `SEROLOGY` and `OGTT` unscoped fields are fixed
@@ -266,6 +269,11 @@ Special handling already implemented:
 - `OGTT` gets a timeline-style option-aware print variant
 - `HEMATOLOGY` gets a panel-based option-aware print variant with sex-specific field resolution
 - `URINE` and `FECALYSIS` use a microscopy-focused print variant that supports section-based and field-only package rendering
+- `PROTIME/APTT` gets an option-aware coagulation panel variant
+- `SEMEN` gets a sample-summary analysis variant
+- `MICROBIOLOGY` gets a single-result focus variant
+- `CARDIACI` reuses the focused field-card renderer for cardiac markers
+- `BCMALE` and `BCFEMALE` use a chemistry-panel renderer that groups populated results into glucose, renal, electrolyte, lipid, liver-enzyme, and additional-result panels
 - field-based option variants now require explicit field mappings and do not fall back to the general section
 - duplicate microscopy section titles can be numbered in the print renderer, e.g. `MICROSCOPIC FINDING (1)` and `MICROSCOPIC FINDING (2)`, to avoid ambiguous headings without altering workbook source labels
 - `BBANK` latest published import no longer misreads the vital-signs developer note as `reference_text`
@@ -275,25 +283,25 @@ Special handling already implemented:
 As of the last verified state in this repository:
 - `16` exam definitions exist
 - `16` published exam versions exist
-- the current published versions in the local database are `v9` for all imported exams
+- the current published versions in the local database are `v11` for all imported exams
 
 Published exam codes in local DB:
-- `abg:v9`
-- `bbank:v9`
-- `bcfemale:v9`
-- `bcmale:v9`
-- `cardiaci:v9`
-- `covid-19-antigen-rapid-test:v9`
-- `fecalysis:v9`
-- `hba1c:v9`
-- `hematology:v9`
-- `hiv-1-2-testing:v9`
-- `microbiology:v9`
-- `ogtt:v9`
-- `protime-aptt:v9`
-- `semen:v9`
-- `serology:v9`
-- `urine:v9`
+- `abg:v11`
+- `bbank:v11`
+- `bcfemale:v11`
+- `bcmale:v11`
+- `cardiaci:v11`
+- `covid-19-antigen-rapid-test:v11`
+- `fecalysis:v11`
+- `hba1c:v11`
+- `hematology:v11`
+- `hiv-1-2-testing:v11`
+- `microbiology:v11`
+- `ogtt:v11`
+- `protime-aptt:v11`
+- `semen:v11`
+- `serology:v11`
+- `urine:v11`
 
 Important note:
 - these version numbers reflect repeated local imports during development
@@ -442,8 +450,8 @@ Recommended next implementation order:
 - remaining data-review follow-up items are listed in [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
 - continue from `ExamRenderProfile`
 - improve layout fidelity for the remaining real clinic exams
-- `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, and `FECALYSIS` are already implemented and browser-validated
-- next likely print targets are `PROTIME/APTT`, `SEMEN`, and `MICROBIOLOGY`
+- `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, `FECALYSIS`, `PROTIME/APTT`, `SEMEN`, `MICROBIOLOGY`, `CARDIACI`, `BCMALE`, and `BCFEMALE` are already implemented and browser-validated
+- next likely print targets are `HBA1C`, `HIV 1 and 2 Testing`, and `COVID 19 Antigen Rapid Test`
 - decide whether PDF generation is needed or browser-print is enough
 
 2. clinic confirmation pass for suspicious source items
