@@ -98,16 +98,18 @@ Implemented:
 - single-result focus print variant for `MICROBIOLOGY`
 - focused marker-card print variant for `CARDIACI`
 - chemistry-panel print variant for `BCMALE` and `BCFEMALE`
-- browser validation completed for `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, `FECALYSIS`, `PROTIME/APTT`, `SEMEN`, `MICROBIOLOGY`, `CARDIACI`, `BCMALE`, and `BCFEMALE` in both screen preview and print-media mode
+- single-result focus print variant for `HBA1C`
+- rapid-test print variants for `HIV 1 and 2 Testing` and `COVID 19 Antigen Rapid Test`
+- browser validation completed for all current imported exams in both screen preview and print-media mode
 - workbook recalibration audit identifying source-data and importer-hardening issues
 - importer hardening completed:
 - header-aware note/reference mapping
 - blank-row-safe source hashing
-- workbook re-imported to latest published `v11` versions
+- workbook re-imported to latest published `v12` versions
 
 Not yet implemented:
 - custom admin exam builder UI
-- advanced print parity for the remaining exams and any future export flow
+- final client-driven print parity polish and any future export flow
 - reports/dashboard
 - master-data importer for physicians, rooms, and signatories
 

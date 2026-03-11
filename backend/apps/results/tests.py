@@ -2163,3 +2163,241 @@ class ResultEntryFlowTests(TestCase):
         self.assertContains(response, "HDL CHOLESTEROL")
         self.assertContains(response, "Liver Enzymes")
         self.assertContains(response, "SGPT(ALT)")
+
+    def test_single_result_focus_variant_shows_hba1c_reference_and_unit(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="hba1c-variant",
+            exam_name="HBA1C Variant",
+            category="Blood Chemistry",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="hba1c-variant-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="hba1c_clover",
+            option_label="HBA1C (CLOVER)",
+            sort_order=1,
+            active=True,
+        )
+        result_field = ExamField.objects.create(
+            exam_version=version,
+            field_key="result",
+            field_label="Result",
+            input_type=ExamFieldInputTypeChoices.DECIMAL,
+            data_type=ExamFieldDataTypeChoices.DECIMAL,
+            sort_order=1,
+            unit="%",
+            reference_text="NORMAL VALUE = 4.0 - 5.6 %",
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="result_table",
+            config_json={
+                "render_variant": "single_result_focus",
+                "show_reference_ranges": True,
+                "show_units": True,
+                "field_keys": ["result"],
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=option,
+        )
+        self.create_result_value(
+            item,
+            result_field,
+            value_number="6.1",
+            reference_text_snapshot="NORMAL VALUE = 4.0 - 5.6 %",
+            abnormal_flag=True,
+            abnormal_reason="Above normal range (4.0 - 5.6 %)",
+        )
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "single-focus-card")
+        self.assertContains(response, "Result (%)")
+        self.assertContains(response, "6.1")
+        self.assertContains(response, "NORMAL VALUE = 4.0 - 5.6 %")
+
+    def test_rapid_test_variant_renders_meta_and_result(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="hiv-variant",
+            exam_name="HIV Variant",
+            category="Serology",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="hiv-variant-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="hiv_testing",
+            option_label="HIV TESTING",
+            sort_order=1,
+            active=True,
+        )
+        lot_number = ExamField.objects.create(
+            exam_version=version,
+            field_key="lot_number",
+            field_label="LOT NUMBER",
+            input_type=ExamFieldInputTypeChoices.TEXT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+            config_json={},
+        )
+        test_result = ExamField.objects.create(
+            exam_version=version,
+            field_key="test_result",
+            field_label="TEST RESULT",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=2,
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="label_value_list",
+            config_json={
+                "render_variant": "rapid_test_panel",
+                "show_reference_ranges": False,
+                "show_units": True,
+                "meta_field_keys": ["lot_number"],
+                "result_field_keys": ["test_result"],
+                "attachment_field_keys": [],
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=option,
+        )
+        self.create_result_value(item, lot_number, value_text="HIV-LOT-240311")
+        self.create_result_value(
+            item,
+            test_result,
+            value_text="NON-REACTIVE",
+            selected_option_value="non_reactive",
+            selected_option_label_snapshot="NON-REACTIVE",
+        )
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "rapid-test-meta-grid")
+        self.assertContains(response, "LOT NUMBER")
+        self.assertContains(response, "HIV-LOT-240311")
+        self.assertContains(response, "TEST RESULT")
+        self.assertContains(response, "NON-REACTIVE")
+
+    def test_rapid_test_variant_renders_attachment_block(self):
+        exam_definition = ExamDefinition.objects.create(
+            exam_code="covid-variant",
+            exam_name="COVID Variant",
+            category="Serology",
+            active=True,
+        )
+        version = ExamDefinitionVersion.objects.create(
+            exam_definition=exam_definition,
+            version_no=1,
+            version_status=ExamVersionStatusChoices.PUBLISHED,
+            source_type="test",
+            source_reference="covid-variant-v1",
+            published_at=timezone.now(),
+        )
+        option = ExamOption.objects.create(
+            exam_version=version,
+            option_key="covid_19_antigen_test",
+            option_label="COVID 19-ANTIGEN TEST",
+            sort_order=1,
+            active=True,
+        )
+        test_result = ExamField.objects.create(
+            exam_version=version,
+            field_key="test_result",
+            field_label="TEST RESULT",
+            input_type=ExamFieldInputTypeChoices.SELECT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=1,
+            active=True,
+            config_json={},
+        )
+        result_image = ExamField.objects.create(
+            exam_version=version,
+            field_key="result_image",
+            field_label="Result Image",
+            input_type=ExamFieldInputTypeChoices.ATTACHMENT,
+            data_type=ExamFieldDataTypeChoices.STRING,
+            sort_order=2,
+            supports_attachment=True,
+            active=True,
+            config_json={},
+        )
+        ExamRenderProfile.objects.create(
+            exam_version=version,
+            layout_type="label_value_list",
+            config_json={
+                "render_variant": "rapid_test_panel",
+                "show_reference_ranges": False,
+                "show_units": True,
+                "meta_field_keys": [],
+                "result_field_keys": ["test_result"],
+                "attachment_field_keys": ["result_image"],
+            },
+            active=True,
+        )
+        item = LabRequestItem.objects.create(
+            lab_request=self.lab_request,
+            exam_definition=exam_definition,
+            exam_definition_version=version,
+            exam_option=option,
+        )
+        self.create_result_value(
+            item,
+            test_result,
+            value_text="REACTIVE",
+            selected_option_value="reactive",
+            selected_option_label_snapshot="REACTIVE",
+        )
+        attachment = Attachment.objects.create(
+            lab_request_item=item,
+            field=result_image,
+            attachment_type=result_image.field_key,
+            file=SimpleUploadedFile("covid-result.jpg", b"image-bytes", content_type="image/jpeg"),
+            original_name="covid-result.jpg",
+            mime_type="image/jpeg",
+        )
+        self.create_result_value(
+            item,
+            result_image,
+            value_text="covid-result.jpg",
+            value_json={"attachment_id": attachment.id, "file_name": "covid-result.jpg"},
+        )
+
+        response = self.client.get(reverse("item_result_print", args=[item.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "rapid-test-attachments")
+        self.assertContains(response, "Result Image")
+        self.assertContains(response, "covid-result.jpg")

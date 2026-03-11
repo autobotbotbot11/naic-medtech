@@ -100,7 +100,7 @@ UNSCOPED_FIELDS_BY_SHEET = {
     },
 }
 
-IMPORTER_SIGNATURE_VERSION = 11
+IMPORTER_SIGNATURE_VERSION = 12
 
 
 @dataclass
@@ -843,6 +843,34 @@ def default_render_profile(sheet_name, has_sections, has_reference_ranges):
                 "render_variant": "single_result_focus",
                 "show_reference_ranges": False,
                 "field_keys": ["result"],
+            }
+        )
+    elif sheet_name == "HBA1C - Blood Chemistry":
+        config.update(
+            {
+                "render_variant": "single_result_focus",
+                "show_reference_ranges": True,
+                "field_keys": ["result"],
+            }
+        )
+    elif sheet_name == "HIV 1&2 TESTING - Serology":
+        config.update(
+            {
+                "render_variant": "rapid_test_panel",
+                "show_reference_ranges": False,
+                "meta_field_keys": ["lot_number"],
+                "result_field_keys": ["test_result"],
+                "attachment_field_keys": [],
+            }
+        )
+    elif sheet_name == "COVID 19 ANTIGEN (RAPID TEST) -":
+        config.update(
+            {
+                "render_variant": "rapid_test_panel",
+                "show_reference_ranges": False,
+                "meta_field_keys": [],
+                "result_field_keys": ["test_result"],
+                "attachment_field_keys": ["result_image"],
             }
         )
 

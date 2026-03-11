@@ -636,7 +636,7 @@
                     <div class="serology-card-grid {% if variant_context.shows_single_focus %}is-single{% endif %}">
                         {% for entry in variant_context.focus_entries %}
                             <article class="serology-card single-focus-card {% if entry.abnormal_flag %}abnormal{% endif %}">
-                                <span class="serology-label">{{ entry.label }}</span>
+                                <span class="serology-label">{{ entry.label }}{% if summary.show_units and entry.unit %} ({{ entry.unit }}){% endif %}</span>
                                 <strong>{{ entry.value_display }}</strong>
                                 {% if summary.show_reference_ranges and entry.reference_text %}
                                     <span class="serology-reference">{{ entry.reference_text }}</span>
@@ -647,6 +647,83 @@
                             </article>
                         {% endfor %}
                     </div>
+                </section>
+
+                {% if variant_context.supplemental_groups %}
+                    <section class="report-group">
+                        <h2 class="group-heading">Additional Saved Results</h2>
+                        <div class="serology-supplemental">
+                            {% for group in variant_context.supplemental_groups %}
+                                <article class="summary-card">
+                                    <h3 class="supplemental-heading">{{ group.title|default:"Other Result" }}</h3>
+                                    <div class="serology-supplemental-list">
+                                        {% for entry in group.entries %}
+                                            <div class="supplemental-row {% if entry.abnormal_flag %}abnormal{% endif %}">
+                                                <span>{{ entry.label }}</span>
+                                                <strong>{{ entry.value_display }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    </section>
+                {% endif %}
+
+            {% elif render_variant == "rapid_test_panel" %}
+                <section class="report-group rapid-test-focus">
+                    <div class="rapid-test-focus-head">
+                        <span class="report-chip">Selected Test</span>
+                        <h2 class="group-heading">{{ variant_context.option_label }}</h2>
+                    </div>
+
+                    {% if variant_context.meta_entries %}
+                        <div class="rapid-test-meta-grid">
+                            {% for entry in variant_context.meta_entries %}
+                                <article class="summary-card rapid-test-meta-card">
+                                    <span class="card-label">{{ entry.label }}</span>
+                                    <strong>{{ entry.value_display }}</strong>
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if variant_context.result_entries %}
+                        <div class="serology-card-grid {% if variant_context.shows_single_result %}is-single{% endif %}">
+                            {% for entry in variant_context.result_entries %}
+                                <article class="serology-card single-focus-card {% if entry.abnormal_flag %}abnormal{% endif %}">
+                                    <span class="serology-label">{{ entry.label }}{% if summary.show_units and entry.unit %} ({{ entry.unit }}){% endif %}</span>
+                                    <strong>{{ entry.value_display }}</strong>
+                                    {% if summary.show_reference_ranges and entry.reference_text %}
+                                        <span class="serology-reference">{{ entry.reference_text }}</span>
+                                    {% endif %}
+                                    {% if entry.abnormal_reason %}
+                                        <span class="flag">{{ entry.abnormal_reason }}</span>
+                                    {% endif %}
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if variant_context.attachment_entries %}
+                        <div class="rapid-test-attachments">
+                            {% for entry in variant_context.attachment_entries %}
+                                <article class="summary-card rapid-test-attachment-card">
+                                    <span class="card-label">{{ entry.label }}</span>
+                                    {% if entry.attachment %}
+                                        <div class="attachment-block">
+                                            <a href="{{ entry.attachment.url }}" target="_blank" rel="noopener">{{ entry.attachment.name }}</a>
+                                            {% if entry.attachment.is_image %}
+                                                <img src="{{ entry.attachment.url }}" alt="{{ entry.attachment.name }}">
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <strong>{{ entry.value_display }}</strong>
+                                    {% endif %}
+                                </article>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </section>
 
                 {% if variant_context.supplemental_groups %}

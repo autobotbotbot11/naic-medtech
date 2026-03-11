@@ -434,7 +434,8 @@ body {
 .chemistry-focus,
 .coagulation-focus,
 .semen-focus,
-.single-focus {
+.single-focus,
+.rapid-test-focus {
     border: 1px solid var(--line);
     border-radius: 20px;
     padding: 20px;
@@ -448,7 +449,8 @@ body {
 .chemistry-focus-head,
 .coagulation-focus-head,
 .semen-focus-head,
-.single-focus-head {
+.single-focus-head,
+.rapid-test-focus-head {
     display: grid;
     gap: 10px;
     margin-bottom: 16px;
@@ -461,7 +463,8 @@ body {
 .chemistry-focus-head .group-heading,
 .coagulation-focus-head .group-heading,
 .semen-focus-head .group-heading,
-.single-focus-head .group-heading {
+.single-focus-head .group-heading,
+.rapid-test-focus-head .group-heading {
     margin: 0;
     padding-bottom: 0;
     border-bottom: 0;
@@ -522,7 +525,9 @@ body {
 .chemistry-panels,
 .coagulation-panels,
 .semen-panels,
-.semen-sample-grid {
+.semen-sample-grid,
+.rapid-test-meta-grid,
+.rapid-test-attachments {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
@@ -534,7 +539,9 @@ body {
 .coagulation-panel-card,
 .semen-panel-card,
 .semen-sample-card,
-.single-focus-card {
+.single-focus-card,
+.rapid-test-meta-card,
+.rapid-test-attachment-card {
     background: rgba(255, 255, 255, 0.72);
 }
 
@@ -738,7 +745,9 @@ body {
     .chemistry-panels,
     .coagulation-panels,
     .semen-panels,
-    .semen-sample-grid {
+    .semen-sample-grid,
+    .rapid-test-meta-grid,
+    .rapid-test-attachments {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -789,6 +798,8 @@ body {
     .coagulation-panels.is-single,
     .semen-panels,
     .semen-sample-grid,
+    .rapid-test-meta-grid,
+    .rapid-test-attachments,
     .serology-supplemental {
         grid-template-columns: 1fr;
     }

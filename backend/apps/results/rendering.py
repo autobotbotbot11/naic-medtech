@@ -769,6 +769,34 @@ def build_single_result_focus_context(item, groups, render_config):
     }
 
 
+def build_rapid_test_variant_context(item, groups, render_config):
+    option_label = item.exam_option.option_label if item.exam_option else item.exam_definition.exam_name
+    meta_entries = entries_by_field_keys(groups, render_config.get("meta_field_keys", []))
+    result_entries = entries_by_field_keys(groups, render_config.get("result_field_keys", []))
+    attachment_entries = entries_by_field_keys(groups, render_config.get("attachment_field_keys", []))
+
+    primary_field_keys = {entry.get("field_key") for entry in meta_entries + result_entries + attachment_entries}
+    supplemental_groups = []
+    for group in nonempty_groups(groups):
+        filtered_entries = [entry for entry in group["entries"] if entry.get("field_key") not in primary_field_keys]
+        if filtered_entries:
+            supplemental_groups.append(
+                {
+                    "title": group["title"],
+                    "entries": filtered_entries,
+                }
+            )
+
+    return {
+        "option_label": option_label,
+        "meta_entries": meta_entries,
+        "result_entries": result_entries,
+        "attachment_entries": attachment_entries,
+        "supplemental_groups": supplemental_groups,
+        "shows_single_result": len(result_entries) == 1,
+    }
+
+
 def build_variant_context(item, render_variant, groups, render_config):
     if render_variant == "abg_compact":
         return build_abg_variant_context(groups, render_config)
@@ -790,6 +818,8 @@ def build_variant_context(item, render_variant, groups, render_config):
         return build_semen_variant_context(item, groups, render_config)
     if render_variant == "single_result_focus":
         return build_single_result_focus_context(item, groups, render_config)
+    if render_variant == "rapid_test_panel":
+        return build_rapid_test_variant_context(item, groups, render_config)
     return {}
 
 

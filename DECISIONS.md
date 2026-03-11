@@ -180,6 +180,24 @@ Implementation rules:
 - field-based focused-card variants must not duplicate the selected-test subtitle when the primary title already matches the option label
 - chemistry panels group populated results into glucose, renal, electrolyte/mineral, lipid, liver-enzyme, and additional-result buckets
 
+### 2026-03-11: Extend Print Refinement To HBA1C, HIV 1 and 2 Testing, and COVID 19 Antigen Rapid Test
+
+Decision:
+- use a single-result focus print variant for `HBA1C`
+- use a rapid-test panel print variant for `HIV 1 and 2 Testing`
+- use a rapid-test panel print variant with attachment preview for `COVID 19 Antigen Rapid Test`
+- validate all three in both screen preview and print-media mode
+
+Reason:
+- `HBA1C` is better expressed as a focused score/result card than as a generic one-row table
+- `HIV` and `COVID` are rapid-test style reports where meta values, final result, and optional image evidence need distinct presentation
+- `COVID` specifically exercises the attachment-aware rendering path on a real imported exam
+
+Implementation rules:
+- the `HBA1C` focus card must keep the `%` unit and visible reference range
+- rapid-test panels separate metadata cards, result cards, and attachment blocks instead of collapsing everything into a generic label-value list
+- attachment-aware rapid-test output must remain stable in both preview and print media
+
 ### 2026-03-10: Importer Uses Signature-Based Versioning
 
 Decision:

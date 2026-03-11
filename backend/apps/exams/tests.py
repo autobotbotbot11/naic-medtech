@@ -219,6 +219,42 @@ class WorkbookImportHelpersTests(SimpleTestCase):
         self.assertEqual(config["render_variant"], "single_result_focus")
         self.assertEqual(config["field_keys"], ["result"])
 
+    def test_default_render_profile_sets_hba1c_variant(self):
+        layout_type, config = default_render_profile(
+            "HBA1C - Blood Chemistry",
+            has_sections=False,
+            has_reference_ranges=True,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.RESULT_TABLE)
+        self.assertEqual(config["render_variant"], "single_result_focus")
+        self.assertTrue(config["show_reference_ranges"])
+        self.assertEqual(config["field_keys"], ["result"])
+
+    def test_default_render_profile_sets_hiv_variant(self):
+        layout_type, config = default_render_profile(
+            "HIV 1&2 TESTING - Serology",
+            has_sections=False,
+            has_reference_ranges=False,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.LABEL_VALUE_LIST)
+        self.assertEqual(config["render_variant"], "rapid_test_panel")
+        self.assertEqual(config["meta_field_keys"], ["lot_number"])
+        self.assertEqual(config["result_field_keys"], ["test_result"])
+
+    def test_default_render_profile_sets_covid_variant(self):
+        layout_type, config = default_render_profile(
+            "COVID 19 ANTIGEN (RAPID TEST) -",
+            has_sections=False,
+            has_reference_ranges=False,
+        )
+
+        self.assertEqual(layout_type, RenderLayoutTypeChoices.LABEL_VALUE_LIST)
+        self.assertEqual(config["render_variant"], "rapid_test_panel")
+        self.assertEqual(config["result_field_keys"], ["test_result"])
+        self.assertEqual(config["attachment_field_keys"], ["result_image"])
+
 
 class WorkbookImportIntegrationTests(TestCase):
     def write_workbook(self, path, sheet_title, rows, exam_options=None, headers=None):

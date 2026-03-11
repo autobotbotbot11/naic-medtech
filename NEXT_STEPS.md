@@ -22,6 +22,8 @@ Recently completed:
 - browser validation completed for `PROTIME/APTT`, `SEMEN`, and `MICROBIOLOGY` in both screen preview and print-media mode
 - exam-specific print refinement completed for `CARDIACI`, `BCMALE`, and `BCFEMALE`
 - browser validation completed for `CARDIACI`, `BCMALE`, and `BCFEMALE` in both screen preview and print-media mode
+- exam-specific print refinement completed for `HBA1C`, `HIV 1 and 2 Testing`, and `COVID 19 Antigen Rapid Test`
+- browser validation completed for `HBA1C`, `HIV 1 and 2 Testing`, and `COVID 19 Antigen Rapid Test` in both screen preview and print-media mode
 
 ## 1. Print / Render Engine Refinement
 
@@ -31,9 +33,8 @@ Goal:
 Why this is next:
 - an initial HTML print-preview layer now exists
 - organization/facility branding headers are now in the print flow
-- the next work is improving fidelity and coverage for real clinic use
-- `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, `FECALYSIS`, `PROTIME/APTT`, `SEMEN`, `MICROBIOLOGY`, `CARDIACI`, `BCMALE`, and `BCFEMALE` custom variants are already implemented
-- the next refinement targets should extend that pattern only where needed
+- all current imported exams now have dedicated, browser-validated print variants
+- the remaining work in this track is clinic-specific parity polish, real-print review, and export strategy
 
 Starting points:
 - [backend/apps/exams/models.py](C:\Users\acer\Desktop\naic-app\backend\apps\exams\models.py)
@@ -55,16 +56,14 @@ Implementation targets:
 - reference ranges
 - abnormal highlighting
 - attachment-aware handling where needed
-- improve clinic-specific print fidelity for real imported exams
-- next likely candidates:
-- `HBA1C`
-- `HIV 1 and 2 Testing`
-- `COVID 19 Antigen Rapid Test`
+- preserve the current variant set for all `16` imported exams
+- refine only when actual clinic review exposes a concrete parity gap
 - verify browser print-to-PDF keeps the same compact layout as on-screen preview
 - decide whether browser print is sufficient or PDF export is required
 
 Acceptance criteria:
-- multiple real imported exams can be rendered end-to-end
+- all current imported exams render end-to-end from saved metadata and saved result values
+- further work in this area is polish/export, not missing core exam coverage
 - result output is based on saved metadata and saved result values
 
 ## 2. Clinic Confirmation Pass For Suspicious Source Items

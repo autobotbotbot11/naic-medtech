@@ -174,12 +174,14 @@ Current implementation status:
 - `SEMEN` now uses a dedicated analysis print variant
 - `MICROBIOLOGY` now uses a dedicated single-result focus print variant
 - `BCMALE` and `BCFEMALE` now use a dedicated chemistry-panel print variant
-- `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, `FECALYSIS`, `PROTIME/APTT`, `SEMEN`, `MICROBIOLOGY`, `CARDIACI`, `BCMALE`, and `BCFEMALE` were browser-validated in both screen preview and print-media mode
+- `HBA1C` now uses a dedicated single-result focus print variant
+- `HIV 1 and 2 Testing` and `COVID 19 Antigen Rapid Test` now use dedicated rapid-test print variants
+- all current imported exams were browser-validated in both screen preview and print-media mode
 - operational app pages are protected behind authentication
 - a workbook recalibration audit has identified source-quality issues and importer-hardening work that should happen before deeper metadata-dependent feature work
 
 Not yet implemented:
-- advanced print parity for the remaining exams and any future export flow
+- final client-driven print parity polish and any future export flow
 - configurable admin exam-builder UI
 - master-data importer for physicians/rooms/signatories
 - release/approval workflow beyond basic statuses
@@ -255,7 +257,7 @@ Important importer behavior:
 - blank formatted rows are now excluded from payload hashing so formatting noise does not force new import versions
 
 Current importer signature:
-- `IMPORTER_SIGNATURE_VERSION = 11`
+- `IMPORTER_SIGNATURE_VERSION = 12`
 
 Special handling already implemented:
 - `SEROLOGY` and `OGTT` unscoped fields are fixed
@@ -283,25 +285,25 @@ Special handling already implemented:
 As of the last verified state in this repository:
 - `16` exam definitions exist
 - `16` published exam versions exist
-- the current published versions in the local database are `v11` for all imported exams
+- the current published versions in the local database are `v12` for all imported exams
 
 Published exam codes in local DB:
-- `abg:v11`
-- `bbank:v11`
-- `bcfemale:v11`
-- `bcmale:v11`
-- `cardiaci:v11`
-- `covid-19-antigen-rapid-test:v11`
-- `fecalysis:v11`
-- `hba1c:v11`
-- `hematology:v11`
-- `hiv-1-2-testing:v11`
-- `microbiology:v11`
-- `ogtt:v11`
-- `protime-aptt:v11`
-- `semen:v11`
-- `serology:v11`
-- `urine:v11`
+- `abg:v12`
+- `bbank:v12`
+- `bcfemale:v12`
+- `bcmale:v12`
+- `cardiaci:v12`
+- `covid-19-antigen-rapid-test:v12`
+- `fecalysis:v12`
+- `hba1c:v12`
+- `hematology:v12`
+- `hiv-1-2-testing:v12`
+- `microbiology:v12`
+- `ogtt:v12`
+- `protime-aptt:v12`
+- `semen:v12`
+- `serology:v12`
+- `urine:v12`
 
 Important note:
 - these version numbers reflect repeated local imports during development
@@ -449,9 +451,8 @@ Recommended next implementation order:
 - importer hardening and workbook recalibration baseline are already done
 - remaining data-review follow-up items are listed in [clinic_confirmation_queue.md](C:\Users\acer\Desktop\naic-app\tmp\analysis\clinic_confirmation_queue.md)
 - continue from `ExamRenderProfile`
-- improve layout fidelity for the remaining real clinic exams
-- `ABG`, `BBANK`, `SEROLOGY`, `OGTT`, `HEMATOLOGY`, `URINE`, `FECALYSIS`, `PROTIME/APTT`, `SEMEN`, `MICROBIOLOGY`, `CARDIACI`, `BCMALE`, and `BCFEMALE` are already implemented and browser-validated
-- next likely print targets are `HBA1C`, `HIV 1 and 2 Testing`, and `COVID 19 Antigen Rapid Test`
+- all current imported exams now have dedicated, browser-validated print variants
+- remaining work in this track is last-mile clinic parity polish, attachment/branding review on real data, and deciding whether browser print is sufficient or PDF export is required
 - decide whether PDF generation is needed or browser-print is enough
 
 2. clinic confirmation pass for suspicious source items
